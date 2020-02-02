@@ -1,0 +1,17 @@
+spring:
+  profiles:
+    include: dao
+  devtools:
+    restart:
+      additional-paths: src/main/java
+      enabled: true
+      exclude: WEB-INF/**
+    http:
+      encoding:
+        charset: UTF-8
+        enabled: true
+        force: true
+server:
+  port: 8082
+  servlet:
+    context-path: /dev
