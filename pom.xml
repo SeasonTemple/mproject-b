@@ -16,7 +16,7 @@
 	</parent>
 	<groupId>com.seasontemple.mproject</groupId>
 	<artifactId>mproject</artifactId>
-	<version>1.0.0-SNAPSHOT</version>
+	<version>${mproject.version}</version>
 	<name>mproject</name>
 	<packaging>pom</packaging>
 	<description>Demo project for Spring Boot</description>
@@ -25,10 +25,10 @@
 		<java.version>1.8</java.version>
 		<mproject.version>1.0.0-SNAPSHOT</mproject.version>
 		<mybatis-plus.version>3.1.2</mybatis-plus.version>
-		<druid.version>1.1.6</druid.version>
+		<druid.version>1.1.10</druid.version>
 		<jasypt.version>2.1.0</jasypt.version>
 		<shiro.version>1.4.1</shiro.version>
-		<lombok.verion>1.18.10</lombok.verion>
+		<hutool.version>5.2.3</hutool.version>
 	</properties>
 
 	<dependencyManagement>
@@ -58,8 +58,6 @@
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
-				<version>${lombok.version}</version>
-				<scope>provided</scope>
 				<optional>true</optional>
 			</dependency>
 			<!--MyBatis Plus-->
@@ -71,15 +69,9 @@
 			<!--druins数据源-->
 			<dependency>
 				<groupId>com.alibaba</groupId>
-				<artifactId>druid-spring-boot-starter</artifactId>
+				<artifactId>druid</artifactId>
 				<version>${druid.version}</version>
 			</dependency>
-
-			<dependency>
-				<groupId>org.springframework.boot</groupId>
-				<artifactId>spring-boot-starter-jdbc</artifactId>
-			</dependency>
-
 			<!--热部署实现-->
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
@@ -92,20 +84,17 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-starter-log4j2</artifactId>
 			</dependency>
-
 			<!-- 加上这个才能辨认到log4j2.yml文件 -->
 			<dependency>
 				<groupId>com.fasterxml.jackson.dataformat</groupId>
 				<artifactId>jackson-dataformat-yaml</artifactId>
 			</dependency>
-
 			<!--Java Simplified Encryption 加密插件-->
-			<dependency>
+			<!--<dependency>
 				<groupId>com.github.ulisesbocchio</groupId>
 				<artifactId>jasypt-spring-boot-starter</artifactId>
 				<version>${jasypt.version}</version>
-			</dependency>
-
+			</dependency>-->
 			<!-- Apache Shiro 安全框架 -->
 			<dependency>
 				<groupId>org.apache.shiro</groupId>
@@ -113,6 +102,12 @@
 				<version>${shiro.version}</version>
 			</dependency>
 
+			<!-- Hutool 多用途Java工具库 -->
+			<dependency>
+				<groupId>cn.hutool</groupId>
+				<artifactId>hutool-all</artifactId>
+				<version>${hutool.version}</version>
+			</dependency>
 		</dependencies>
 	</dependencyManagement>
 
@@ -135,19 +130,13 @@
 		</dependency>
 	</dependencies>-->
 
-	<build>
+	<!--<build>
 		<plugins>
-			<!-- 注意: 因为我们不需要demo-parent是一个可运行的项目，所以修改原来的打包方式为maven打包方式 -->
 			<plugin>
-				<groupId>org.apache.maven.plugins</groupId>
-				<artifactId>maven-compiler-plugin</artifactId>
-				<version>3.1</version>
-				<configuration>
-					<source>${java.version}</source>
-					<target>${java.version}</target>
-				</configuration>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-maven-plugin</artifactId>
 			</plugin>
 		</plugins>
-	</build>
+	</build>-->
 
 </project>
