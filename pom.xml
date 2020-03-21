@@ -26,52 +26,81 @@
 		<mproject.version>1.0.0-SNAPSHOT</mproject.version>
 		<mybatis-plus.version>3.1.2</mybatis-plus.version>
 		<druid.version>1.1.10</druid.version>
-		<jasypt.version>2.1.0</jasypt.version>
+		<spring-boot-starter-data-redis>2.2.2.RELEASE</spring-boot-starter-data-redis>
+		<lombok.version>1.18.10</lombok.version>
+		<!--<jasypt.version>2.1.0</jasypt.version>-->
 		<shiro.version>1.4.1</shiro.version>
 		<hutool.version>5.2.3</hutool.version>
+		<protostuff.version>1.6.0</protostuff.version>
 	</properties>
 
 	<dependencyManagement>
 		<dependencies>
-			<!--聚合项目依赖-->
-			<dependency>
-				<groupId>com.seasontemple.mproject</groupId>
-				<artifactId>mproject-dao</artifactId>
-				<version>${mproject.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.seasontemple.mproject</groupId>
-				<artifactId>mproject-service</artifactId>
-				<version>${mproject.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.seasontemple.mproject</groupId>
-				<artifactId>mproject-utils</artifactId>
-				<version>${mproject.version}</version>
-			</dependency>
-			<dependency>
-				<groupId>com.seasontemple.mproject</groupId>
-				<artifactId>mproject-web</artifactId>
-				<version>${mproject.version}</version>
-			</dependency>
-			<!--lombok简化POJO代码-->
+			<!--
+				 聚合项目依赖开始
+				<dependency>
+					<groupId>com.seasontemple.mproject</groupId>
+					<artifactId>mproject-dao</artifactId>
+					<version>${mproject.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>com.seasontemple.mproject</groupId>
+					<artifactId>mproject-service</artifactId>
+					<version>${mproject.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>com.seasontemple.mproject</groupId>
+					<artifactId>mproject-utils</artifactId>
+					<version>${mproject.version}</version>
+				</dependency>
+				<dependency>
+					<groupId>com.seasontemple.mproject</groupId>
+					<artifactId>mproject-web</artifactId>
+					<version>${mproject.version}</version>
+				</dependency>
+				 聚合项目依赖结束
+			-->
+			<!--
+			 模块Dao依赖部分开始
+			lombok简化POJO代码
 			<dependency>
 				<groupId>org.projectlombok</groupId>
 				<artifactId>lombok</artifactId>
+				<version>${lombok.version}</version>
+				<scope>provided</scope>
 				<optional>true</optional>
 			</dependency>
-			<!--MyBatis Plus-->
+			 MyBatis Plus
 			<dependency>
 				<groupId>com.baomidou</groupId>
 				<artifactId>mybatis-plus-boot-starter</artifactId>
 				<version>${mybatis-plus.version}</version>
 			</dependency>
-			<!--druins数据源-->
+			<dependency>
+				<groupId>com.baomidou</groupId>
+				<artifactId>mybatis-plus</artifactId>
+				<version>${mybatis-plus.version}</version>
+			</dependency>
+			 druid 数据源
 			<dependency>
 				<groupId>com.alibaba</groupId>
-				<artifactId>druid</artifactId>
+				<artifactId>druid-spring-boot-starter</artifactId>
 				<version>${druid.version}</version>
 			</dependency>
+			 MySQL 数据库驱动
+			<dependency>
+				<groupId>mysql</groupId>
+				<artifactId>mysql-connector-java</artifactId>
+			</dependency>
+			 Redis相关
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-starter-data-redis</artifactId>
+				<version>2.2.2.RELEASE</version>
+			</dependency>
+			 模块Dao依赖部分结束
+			-->
+
 			<!--热部署实现-->
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
@@ -89,12 +118,6 @@
 				<groupId>com.fasterxml.jackson.dataformat</groupId>
 				<artifactId>jackson-dataformat-yaml</artifactId>
 			</dependency>
-			<!--Java Simplified Encryption 加密插件-->
-			<!--<dependency>
-				<groupId>com.github.ulisesbocchio</groupId>
-				<artifactId>jasypt-spring-boot-starter</artifactId>
-				<version>${jasypt.version}</version>
-			</dependency>-->
 			<!-- Apache Shiro 安全框架 -->
 			<dependency>
 				<groupId>org.apache.shiro</groupId>
@@ -107,6 +130,17 @@
 				<groupId>cn.hutool</groupId>
 				<artifactId>hutool-all</artifactId>
 				<version>${hutool.version}</version>
+			</dependency>
+			<!-- Protostuff 相关 -->
+			<dependency>
+				<groupId>io.protostuff</groupId>
+				<artifactId>protostuff-core</artifactId>
+				<version>${protostuff.version}</version>
+			</dependency>
+			<dependency>
+				<groupId>io.protostuff</groupId>
+				<artifactId>protostuff-runtime</artifactId>
+				<version>${protostuff.version}</version>
 			</dependency>
 		</dependencies>
 	</dependencyManagement>
@@ -130,13 +164,30 @@
 		</dependency>
 	</dependencies>-->
 
-	<!--<build>
+	<build>
 		<plugins>
-			<plugin>
+			<!--<plugin>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
+			</plugin>-->
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>${maven-compiler-plugin.version}</version>
+				<configuration>
+					<source>${java.version}</source>
+					<target>${java.version}</target>
+				</configuration>
+			</plugin>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-surefire-plugin</artifactId>
+				<version>${maven-surefire-plugin.version}</version>
+				<configuration>
+					<skipTests>true</skipTests>  <!--默认关掉单元测试 -->
+				</configuration>
 			</plugin>
 		</plugins>
-	</build>-->
+	</build>
 
 </project>

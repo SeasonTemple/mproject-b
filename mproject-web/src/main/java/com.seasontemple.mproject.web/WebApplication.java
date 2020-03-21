@@ -11,6 +11,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  */
 
 @SpringBootApplication(scanBasePackages = "com.seasontemple.mproject")
+//@ComponentScan("com.seasontemple.mproject")
 public class WebApplication {
 
     public static void main(String[] args) {

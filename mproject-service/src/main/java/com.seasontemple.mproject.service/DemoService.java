@@ -1,5 +1,7 @@
 package com.seasontemple.mproject.service;
 
+import com.seasontemple.mproject.dao.entity.TestBean;
+
 /**
  * @author Season Temple
  * @program: mproject
@@ -9,4 +11,6 @@ package com.seasontemple.mproject.service;
 public interface DemoService {
 
     String test();
+
+    TestBean getDetail();
 }

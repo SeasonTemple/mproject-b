@@ -1,5 +1,6 @@
 package com.seasontemple.mproject.service.impl;
 
+import com.seasontemple.mproject.dao.entity.TestBean;
 import com.seasontemple.mproject.service.DemoService;
 import org.springframework.stereotype.Service;
 
@@ -17,5 +18,13 @@ public class DemoServiceImpl implements DemoService {
     public String test() {
         return "interface test";
     }
+
+    @Override
+    public TestBean getDetail() {
+        TestBean t = new TestBean();
+        t.setId(1);
+        return t;
+    }
+
 
 }

@@ -1,8 +1,8 @@
 package com.seasontemple.mproject.web.controller;
 
+import com.seasontemple.mproject.dao.entity.TestBean;
 import com.seasontemple.mproject.service.DemoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -25,4 +25,10 @@ public class DemoController {
     public String test() {
         return demoService.test();
     }
+
+    @GetMapping("/getDetail")
+    public TestBean getDetail() {
+        return demoService.getDetail();
+    }
+
 }

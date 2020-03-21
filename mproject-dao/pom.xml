@@ -11,13 +11,14 @@
 	<packaging>jar</packaging>
 	<artifactId>mproject-dao</artifactId>
 
+	<!--<properties>
+		<mybatis-plus.version>3.1.2</mybatis-plus.version>
+		<druid.version>1.1.10</druid.version>
+		<shiro.version>1.4.1</shiro.version>
+		<spring-boot-starter-data-redis>2.2.2.RELEASE</spring-boot-starter-data-redis>
+		<lombok.version>1.18.10</lombok.version>
+	</properties>-->
 	<dependencies>
-		<!--MySQL数据库连接驱动-->
-		<dependency>
-			<groupId>mysql</groupId>
-			<artifactId>mysql-connector-java</artifactId>
-			<scope>runtime</scope>
-		</dependency>
 		<!--lombok简化POJO代码-->
 		<dependency>
 			<groupId>org.projectlombok</groupId>
@@ -26,22 +27,34 @@
 			<scope>provided</scope>
 			<optional>true</optional>
 		</dependency>
-		<!--MyBatis Plus-->
+		<!-- MyBatis Plus -->
 		<dependency>
 			<groupId>com.baomidou</groupId>
 			<artifactId>mybatis-plus-boot-starter</artifactId>
 			<version>${mybatis-plus.version}</version>
 		</dependency>
-		<!--druins数据源-->
+		<dependency>
+			<groupId>com.baomidou</groupId>
+			<artifactId>mybatis-plus</artifactId>
+			<version>${mybatis-plus.version}</version>
+		</dependency>
+		<!-- druid 数据源 -->
 		<dependency>
 			<groupId>com.alibaba</groupId>
-			<artifactId>druid</artifactId>
+			<artifactId>druid-spring-boot-starter</artifactId>
 			<version>${druid.version}</version>
 		</dependency>
-
+		<!-- MySQL 数据库驱动 -->
+		<dependency>
+			<groupId>mysql</groupId>
+			<artifactId>mysql-connector-java</artifactId>
+			<scope>runtime</scope>
+		</dependency>
+		<!-- Redis 相关 -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-jdbc</artifactId>
+			<artifactId>spring-boot-starter-data-redis</artifactId>
+			<version>${spring-boot-starter-data-redis}</version>
 		</dependency>
 
 	</dependencies>
