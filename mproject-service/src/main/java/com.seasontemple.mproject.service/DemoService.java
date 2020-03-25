@@ -1,6 +1,6 @@
 package com.seasontemple.mproject.service;
 
-import com.seasontemple.mproject.dao.entity.TestBean;
+import com.seasontemple.mproject.dao.pojo.TestBean;
 
 /**
  * @author Season Temple

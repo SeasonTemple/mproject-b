@@ -13,25 +13,35 @@
 	<artifactId>mproject-service</artifactId>
 
 	<dependencies>
-		<!--<dependency>
-			<groupId>com.seasontemple.mproject</groupId>
-			<artifactId>mproject-utils</artifactId>
-		</dependency>-->
-		<!--<dependency>
-			<groupId>com.seasontemple.mproject</groupId>
-			<artifactId>mproject-dao</artifactId>
-		</dependency>-->
+		<!-- Springboot web starter -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 		</dependency>
+		<!-- Dao 层依赖 -->
 		<dependency>
 			<groupId>com.seasontemple.mproject</groupId>
 			<artifactId>mproject-dao</artifactId>
-			<version>1.0.0-SNAPSHOT</version>
+			<version>${mproject.version}</version>
 			<scope>compile</scope>
 		</dependency>
-
+		<!-- Hutool 多用途Java工具库 -->
+		<dependency>
+			<groupId>cn.hutool</groupId>
+			<artifactId>hutool-all</artifactId>
+			<version>${hutool.version}</version>
+		</dependency>
+		<!-- Protostuff 相关 -->
+		<dependency>
+			<groupId>io.protostuff</groupId>
+			<artifactId>protostuff-core</artifactId>
+			<version>${protostuff.version}</version>
+		</dependency>
+		<dependency>
+			<groupId>io.protostuff</groupId>
+			<artifactId>protostuff-runtime</artifactId>
+			<version>${protostuff.version}</version>
+		</dependency>
 	</dependencies>
 
 </project>

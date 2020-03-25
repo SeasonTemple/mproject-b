@@ -1,4 +1,4 @@
-package com.seasontemple.mproject.dao.entity;
+package com.seasontemple.mproject.dao.pojo;
 import lombok.Data;
 
 /**
@@ -12,4 +12,5 @@ public class TestBean {
     private int id;
     private String name;
     private String type;
+
 }
