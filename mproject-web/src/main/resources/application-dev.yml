@@ -1,4 +1,10 @@
 spring:
+  jackson:
+    date-format: yyyy/MM/dd HH:mm:ss
+  # 日期时区
+    time-zone: GMT+8
+  # 返回值null不显示
+    default-property-inclusion: non_null
   profiles:
     include: dao
   devtools:
@@ -6,12 +12,59 @@ spring:
       additional-paths: src/main/java
       enabled: true
       exclude: WEB-INF/**
-    http:
-      encoding:
-        charset: UTF-8
-        enabled: true
-        force: true
+  http:
+    encoding:
+      charset: UTF-8
+      enabled: true
+      force: true
 server:
   port: 8082
   servlet:
-    context-path: /dev
+    context-path: /
+swagger:
+  apply-default-response-messages: false # 取消使用默认预定义的响应消息,并使用自定义响应消息
+  base-package: com.seasontemple.mproject
+  base-path: /**
+  contact:
+    email: fnc1997@foxmail.com
+    name: SeasonTemple
+    url: http://seasontemple.top
+  description: Starter for swagger 2.x
+  enabled: true
+  exclude-path: /error, /ops/**
+  global-response-message:
+    get:
+      - code: 401
+        message: 页面不存在
+      - code: 500
+        message: 系统内部错误
+        modelRef: ERROR
+    post:
+      - code: 500
+        message: 系统内部错误
+        modelRef: ERROR
+  globalOperationParameters:
+    - description: some description one
+      modelRef: string
+      name: name one
+      parameterType: header
+      required: true
+    - description: some description two
+      modelRef: string
+      name: name two
+      parameterType: body
+      required: false
+  license: Apache License, Version 2.0
+  licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.html
+  termsOfServiceUrl: https://github.com/dyc87112/spring-boot-starter-swagger
+  title: spring-boot-starter-swagger
+  version: 1.9.0.RELEASE
+  ui-config:
+    submit-methods: get,post
+logging:
+  config: classpath:log4j2.xml
+#  config: classpath:logback-dev.xml
+#  level: info
+#  file: -Dlog4j.skipJansi=false
+#    path: D:\IDEA Projects\mprojectLog-dev.log
+
