@@ -31,6 +31,7 @@
 		<shiro.version>1.4.1</shiro.version>
 		<hutool.version>5.2.3</hutool.version>
 		<protostuff.version>1.6.0</protostuff.version>
+		<swagger.version>1.9.1.RELEASE</swagger.version>
 	</properties>
 
 	<dependencyManagement>
@@ -58,8 +59,6 @@
 				<artifactId>shiro-spring</artifactId>
 				<version>${shiro.version}</version>
 			</dependency>
-
-
 
 		</dependencies>
 	</dependencyManagement>
