@@ -1,4 +1,4 @@
-package com.seasontemple.mproject.web.controller;
+package com.seasontemple.mproject.web.handler;
 
 import com.seasontemple.mproject.dao.pojo.TestBean;
 import com.seasontemple.mproject.service.DemoService;
