@@ -4,7 +4,7 @@ import com.spring4all.swagger.EnableSwagger2Doc;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.context.annotation.ComponentScan;
+
 
 /**
  * @author Season Temple
@@ -18,9 +18,8 @@ import org.springframework.context.annotation.ComponentScan;
 public class WebApplication {
 
     public static void main(String[] args) {
-        System.setProperty("spring.devtools.restart.enabled", "false");
+//        System.setProperty("spring.devtools.restart.enabled", "true");
         SpringApplication.run(WebApplication.class, args);
     }
 }
-
 

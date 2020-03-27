@@ -3,13 +3,10 @@ package com.seasontemple.mproject.utils.tool;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.boot.autoconfigure.condition.ConditionalOnMissingBean;
 import org.springframework.context.annotation.Bean;
-import org.springframework.context.annotation.ComponentScan;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Primary;
 import org.springframework.http.converter.json.Jackson2ObjectMapperBuilder;
 
-import java.text.DateFormat;
-import java.text.SimpleDateFormat;
 
 import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
@@ -19,6 +16,7 @@ import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
  * @description: Jackson配置
  * @create: 2020/03/26 22:43:05
  */
+/*
 @Configuration
 public class JacksonConfig {
 
@@ -31,4 +29,4 @@ public class JacksonConfig {
         return om;
     }
 
-}
+}*/

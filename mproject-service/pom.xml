@@ -14,7 +14,7 @@
 
 	<dependencies>
 		<!-- Springboot web starter -->
-		<dependency>
+		<!--<dependency>
 			<groupId>org.springframework.boot</groupId>
 			<artifactId>spring-boot-starter-web</artifactId>
 			<exclusions>
@@ -23,7 +23,7 @@
 					<artifactId>spring-boot-starter-logging</artifactId>
 				</exclusion>
 			</exclusions>
-		</dependency>
+		</dependency>-->
 		<!-- Dao 层依赖 -->
 		<dependency>
 			<groupId>com.seasontemple.mproject</groupId>
@@ -37,7 +37,7 @@
 			<artifactId>hutool-all</artifactId>
 			<version>${hutool.version}</version>
 		</dependency>
-		<!-- Protostuff 相关 -->
+		<!--&lt;!&ndash; Protostuff 相关 &ndash;&gt;
 		<dependency>
 			<groupId>io.protostuff</groupId>
 			<artifactId>protostuff-core</artifactId>
@@ -47,7 +47,7 @@
 			<groupId>io.protostuff</groupId>
 			<artifactId>protostuff-runtime</artifactId>
 			<version>${protostuff.version}</version>
-		</dependency>
+		</dependency>-->
 	</dependencies>
 
 </project>

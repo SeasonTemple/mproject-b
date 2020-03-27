@@ -49,7 +49,7 @@ spring:
         # 登录名
         login-username: admin
         # 登录密码
-        login-password: 123456
+        login-password: 1234567
 mybatis-plus:
   mapper-locations: classpath:/com/example/demo/mapper/*/*.xml
   typeAliasesPackage: com.example.demo.entity

@@ -7,11 +7,10 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.seasontemple.mproject.dao.entity.MpMenu;
-import com.seasontemple.mproject.web.service.MpMenuService;
+import com.seasontemple.mproject.service.service.MpMenuService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
  * 菜单表(MpMenu)表控制层
  *
  * @author SeasonTemple
- * @since 2020-03-26 21:47:46
+ * @since 2020-03-27 21:07:20
  */
 @RestController
 @RequestMapping("mpMenu")

@@ -7,11 +7,10 @@ import com.baomidou.mybatisplus.extension.api.ApiController;
 import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.seasontemple.mproject.dao.entity.MpInformation;
-import com.seasontemple.mproject.web.service.MpInformationService;
+import com.seasontemple.mproject.service.service.MpInformationService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import javax.annotation.Resource;
 import java.io.Serializable;
 import java.util.List;
 
@@ -19,7 +18,7 @@ import java.util.List;
  * 系统消息表(MpInformation)表控制层
  *
  * @author SeasonTemple
- * @since 2020-03-26 21:47:46
+ * @since 2020-03-27 21:07:20
  */
 @RestController
 @RequestMapping("mpInformation")

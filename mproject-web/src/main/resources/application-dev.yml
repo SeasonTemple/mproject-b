@@ -10,8 +10,8 @@ spring:
   devtools:
     restart:
       additional-paths: src/main/java
-      enabled: true
       exclude: WEB-INF/**
+      enabled: true
   http:
     encoding:
       charset: UTF-8
@@ -62,9 +62,9 @@ swagger:
   ui-config:
     submit-methods: get,post
 logging:
-  config: classpath:log4j2.xml
+  config: classpath:log4j2-dev.xml
+#  level: INFO
 #  config: classpath:logback-dev.xml
-#  level: info
 #  file: -Dlog4j.skipJansi=false
 #    path: D:\IDEA Projects\mprojectLog-dev.log
 

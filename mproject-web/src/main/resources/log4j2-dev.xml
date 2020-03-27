@@ -2,16 +2,17 @@
 <Configuration>
 	<properties>
 		<property name="LOG_HOME">./logs</property>
+		<property name="LOG_PATTERN">%clr{[ %d{yyyy-MM-dd HH:mm:ss.SSS} ]}{faint} [%clr{%5p} ] %clr{[ PID: ${sys:PID} ]}{magenta} %clr{---}{faint} %clr{[ %t ]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx </property>
 	</properties>
 	<Appenders>
 		<!--*********************控制台日志***********************-->
 		<Console name="consoleAppender" target="SYSTEM_OUT">
 			<!--设置日志格式及颜色-->
-			<PatternLayout
+			<PatternLayout pattern="${LOG_PATTERN}" disableAnsi="false" noConsoleNoAnsi="false"/>
+			<!--<PatternLayout
 					pattern="%style{%d{ISO8601}}{bright,green} %highlight{%-5level} [%style{%t}{bright,blue}] %style{%C{1.}}{bright,yellow}: %msg%n%style{%throwable}{red}"
-					disableAnsi="false" noConsoleNoAnsi="false"/>
+					disableAnsi="false" noConsoleNoAnsi="false"/>-->
 		</Console>
-
 		<!--*********************文件日志***********************-->
 		<!--debug级别日志-->
 		<RollingFile name="debugFileAppender"
