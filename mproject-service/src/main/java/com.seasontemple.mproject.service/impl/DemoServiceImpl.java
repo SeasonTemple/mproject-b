@@ -22,6 +22,9 @@ public class DemoServiceImpl implements DemoService {
     @Override
     public TestBean getDetail() {
         TestBean t = new TestBean();
+        t.setId(1);
+        t.setName("face");
+        t.setType("2");
         return t;
     }
 

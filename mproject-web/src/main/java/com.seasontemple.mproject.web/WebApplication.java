@@ -1,5 +1,9 @@
 package com.seasontemple.mproject.web;
 
+import com.baomidou.mybatisplus.autoconfigure.MybatisPlusPropertiesCustomizer;
+import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
+import com.seasontemple.mproject.utils.tool.CustomIdGenerator;
+import com.seasontemple.mproject.utils.tool.JacksonProtobufSupport;
 import com.spring4all.swagger.EnableSwagger2Doc;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
@@ -19,7 +23,10 @@ public class WebApplication {
 
     public static void main(String[] args) {
 //        System.setProperty("spring.devtools.restart.enabled", "true");
+//        System.setProperty("logging.level.web", "DEBUG ");
         SpringApplication.run(WebApplication.class, args);
+
     }
+
 }
 

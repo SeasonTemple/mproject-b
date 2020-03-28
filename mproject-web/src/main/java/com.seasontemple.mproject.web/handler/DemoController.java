@@ -2,10 +2,14 @@ package com.seasontemple.mproject.web.handler;
 
 import com.seasontemple.mproject.dao.pojo.TestBean;
 import com.seasontemple.mproject.service.DemoService;
+import lombok.extern.log4j.Log4j2;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.LinkedHashMap;
+import java.util.Map;
 
 /**
  * @author Season Temple
@@ -16,6 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequestMapping("demo")
+@Log4j2
 public class DemoController {
 
     @Autowired
@@ -27,9 +32,11 @@ public class DemoController {
     }
 
     @GetMapping("/getDetail")
-    public TestBean getDetail() {
-        TestBean t = demoService.getDetail();
-        return t;
+    public Map<String, TestBean> getDetail() {
+        Map<String, TestBean> m = new LinkedHashMap<>();
+        m.put("t", demoService.getDetail());
+        log.info(m);
+        return m;
 
     }
 

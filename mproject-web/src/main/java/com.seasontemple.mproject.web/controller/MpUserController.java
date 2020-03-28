@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.service.service.MpUserService;
+import lombok.extern.log4j.Log4j2;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -20,6 +22,7 @@ import java.util.List;
  * @author SeasonTemple
  * @since 2020-03-27 21:07:20
  */
+@Log4j2
 @RestController
 @RequestMapping("mpUser")
 public class MpUserController extends ApiController {

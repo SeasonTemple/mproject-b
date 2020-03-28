@@ -33,6 +33,10 @@
 		<protostuff.version>1.6.0</protostuff.version>
 		<swagger.version>1.9.1.RELEASE</swagger.version>
 		<slf4j-simple.version>2.2.1.RELEASE</slf4j-simple.version>
+		<mybatis-plus-generator.version>3.3.1.tmp</mybatis-plus-generator.version>
+		<jackson-datatype-protobuf.version>0.9.11-jackson2.9</jackson-datatype-protobuf.version>
+<!--		<java-jwt.version>3.10.0</java-jwt.version>-->
+		<jjwt.verison>0.9.1</jjwt.verison>
 	</properties>
 
 	<dependencyManagement>
@@ -49,33 +53,13 @@
 				<artifactId>jackson-dataformat-yaml</artifactId>
 			</dependency>-->
 			<!-- Apache Shiro 安全框架 -->
-			<dependency>
+			<!--<dependency>
 				<groupId>org.apache.shiro</groupId>
 				<artifactId>shiro-spring</artifactId>
 				<version>${shiro.version}</version>
-			</dependency>
-
+			</dependency>-->
 		</dependencies>
 	</dependencyManagement>
-
-	<!--<dependencies>
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter</artifactId>
-		</dependency>
-
-		<dependency>
-			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-test</artifactId>
-			<scope>test</scope>
-			<exclusions>
-				<exclusion>
-					<groupId>org.junit.vintage</groupId>
-					<artifactId>junit-vintage-engine</artifactId>
-				</exclusion>
-			</exclusions>
-		</dependency>
-	</dependencies>-->
 
 	<build>
 		<plugins>

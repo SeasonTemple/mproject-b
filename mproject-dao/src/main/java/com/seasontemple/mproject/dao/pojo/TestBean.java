@@ -1,5 +1,7 @@
 package com.seasontemple.mproject.dao.pojo;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Data;
+
 
 /**
  * @author Season Temple
@@ -12,5 +14,8 @@ public class TestBean {
     private int id;
     private String name;
     private String type;
+    private int flag;
+    @JsonIgnore
+    private String code;
 
 }

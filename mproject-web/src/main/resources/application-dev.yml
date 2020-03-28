@@ -1,10 +1,10 @@
 spring:
   jackson:
-    date-format: yyyy/MM/dd HH:mm:ss
+#    date-format: yyyy/MM/dd HH:mm:ss
   # 日期时区
     time-zone: GMT+8
   # 返回值null不显示
-    default-property-inclusion: non_null
+#    default-property-inclusion: non_null
   profiles:
     include: dao
   devtools:
@@ -12,6 +12,7 @@ spring:
       additional-paths: src/main/java
       exclude: WEB-INF/**
       enabled: true
+    add-properties: false
   http:
     encoding:
       charset: UTF-8
@@ -48,12 +49,12 @@ swagger:
       modelRef: string
       name: name one
       parameterType: header
-      required: true
-    - description: some description two
-      modelRef: string
-      name: name two
-      parameterType: body
       required: false
+#    - description: some description two
+#      modelRef: string
+#      name: name two
+#      parameterType: body
+#      required: false
   license: Apache License, Version 2.0
   licenseUrl: https://www.apache.org/licenses/LICENSE-2.0.html
   termsOfServiceUrl: https://github.com/dyc87112/spring-boot-starter-swagger
@@ -63,7 +64,9 @@ swagger:
     submit-methods: get,post
 logging:
   config: classpath:log4j2-dev.xml
-#  level: INFO
+  level:
+    web:
+      DEBUG
 #  config: classpath:logback-dev.xml
 #  file: -Dlog4j.skipJansi=false
 #    path: D:\IDEA Projects\mprojectLog-dev.log
