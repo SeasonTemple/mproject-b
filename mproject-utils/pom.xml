@@ -63,22 +63,22 @@
 			<version>${mybatis-plus-generator.version}</version>
 		</dependency>
 		<!-- JWT Token生成 -->
-		<!--<dependency>
+		<dependency>
 			<groupId>com.auth0</groupId>
 			<artifactId>java-jwt</artifactId>
 			<version>${java-jwt.version}</version>
-		</dependency>-->
+		</dependency>
 		<dependency>
 			<groupId>io.jsonwebtoken</groupId>
 			<artifactId>jjwt</artifactId>
 			<version>${jjwt.verison}</version>
 		</dependency>
-		<dependency>
+		<!--<dependency>
 			<groupId>com.seasontemple.mproject</groupId>
 			<artifactId>mproject-dao</artifactId>
 			<version>1.0.0-SNAPSHOT</version>
 			<scope>compile</scope>
-		</dependency>
+		</dependency>-->
 		<!--<dependency>
 			<groupId>com.seasontemple.mproject</groupId>
 			<artifactId>mproject-web</artifactId>

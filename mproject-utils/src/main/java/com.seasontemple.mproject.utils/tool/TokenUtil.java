@@ -1,6 +1,18 @@
 package com.seasontemple.mproject.utils.tool;
 
-import com.seasontemple.mproject.dao.entity.MpUser;
+
+import cn.hutool.core.collection.CollUtil;
+import io.jsonwebtoken.Claims;
+import io.jsonwebtoken.lang.Objects;
+import org.springframework.cglib.core.internal.Function;
+
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
+
+import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 
 /**
@@ -11,34 +23,66 @@ import com.seasontemple.mproject.dao.entity.MpUser;
  */
 public interface TokenUtil {
 
-    static String ISSUER = "Season Temple";
+    static String ISDEFAULT = "st";
+
+    enum Iss {
+        ISUER("user", 1),
+        ISADMIN("admin", 2),
+        ISCUSTOM("custom", 3);
+
+        private String userIss;
+        private int roleId;
+        private static final Iss[] values = Iss.values();
+
+        Iss(String userIss, int roleId) {
+            this.userIss = userIss;
+            this.roleId = roleId;
+        }
+
+        public static String match(int roleId) {
+            List<Iss> res = Arrays.stream(values).filter(s -> s.roleId == roleId).collect(Collectors.toList());
+            return res.size() > 0 ? CollUtil.join(res, "-") : ISDEFAULT + "-";
+        }
+    }
 
     /**
      * 生成Token
      *
-     * @return Token
+     * @param claims
+     * @param ttlMillis
+     * @return 生成的Token字符串
      */
-    String generate(MpUser userBean, long ttlMillis);
+    String generate(Map<String, Object> claims, long ttlMillis);
 
     /**
-     * Token校验
+     * 验证token
      *
-     * @return 校验结果
+     * @param jwtToken
+     * @return 验证结果
      */
-    boolean verify();
+    boolean verify(String jwtToken);
 
     /**
      * Token加密
      *
      * @return 加密后的Token
-     */
-    String encrypt();
+     *//*
+    String encrypt();*/
 
     /**
-     * Token解析
+     * 解析Token
      *
-     * @return 原始Token
+     * @param token
+     * @return token中的信息
      */
-    String parse(String token);
+    Claims parse(String token);
+
+    /**
+     * 指定签发人前缀
+     *
+     * @param roleId
+     * @return 匹配的签发人前缀
+     */
+    String getIss(int roleId);
 
 }
