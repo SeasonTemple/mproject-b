@@ -1,5 +1,7 @@
 package com.seasontemple.mproject.web.shiro;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 import cn.hutool.log.StaticLog;
 import com.seasontemple.mproject.utils.tool.TokenUtil;
 import org.apache.shiro.authc.*;

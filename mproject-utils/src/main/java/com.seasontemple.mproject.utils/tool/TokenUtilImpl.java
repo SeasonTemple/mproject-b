@@ -51,7 +51,7 @@ public class TokenUtilImpl implements TokenUtil {
         this.signatureAlgorithm = signatureAlgorithm;
     }
 
-    public TokenUtilImpl build(String secretKey, SignatureAlgorithm signatureAlgorithm) {
+    public static TokenUtilImpl build(String secretKey, SignatureAlgorithm signatureAlgorithm) {
         return StrUtil.isEmpty(secretKey) ? new TokenUtilImpl() : new TokenUtilImpl(secretKey, signatureAlgorithm);
     }
 
@@ -109,7 +109,7 @@ public class TokenUtilImpl implements TokenUtil {
     }
 
     /*public static void main(String[] args) {
-        TokenUtil tokenUtil = new TokenUtilImpl().build("", SignatureAlgorithm.HS256);
+        TokenUtil tokenUtil = TokenUtilImpl.build("", SignatureAlgorithm.HS256);
         Map<String, Object> claims = new HashMap<>();
         claims.put("id", "d28dsadkjahf");
         claims.put("username", "12345");

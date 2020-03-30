@@ -1,8 +1,6 @@
 package com.seasontemple.mproject.web.shiro;
 
-import cn.hutool.log.Log;
 import cn.hutool.log.StaticLog;
-import lombok.extern.log4j.Log4j2;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
 import javax.servlet.ServletRequest;
@@ -15,6 +13,9 @@ import java.io.IOException;
  * @author Season Temple
  * @program: mproject
  * @description: Shiro-JWT拦截器，拦截
+ * 自定义一个Filter，用来拦截所有的请求判断是否携带Token
+ * isAccessAllowed()判断是否携带了有效的JwtToken
+ * onAccessDenied()是没有携带JwtToken的时候进行账号密码登录，登录成功允许访问，登录失败拒绝访问
  * @create: 2020/03/29 21:24:51
  */
 public class JwtFilter extends AccessControlFilter {
