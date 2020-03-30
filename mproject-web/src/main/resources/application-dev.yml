@@ -67,6 +67,8 @@ logging:
   level:
     web:
       DEBUG
+  file:
+    path: D:\IDEA Projects\logs
 #  config: classpath:logback-dev.xml
 #  file: -Dlog4j.skipJansi=false
 #    path: D:\IDEA Projects\mprojectLog-dev.log

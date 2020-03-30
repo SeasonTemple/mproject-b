@@ -18,6 +18,8 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ShiroRealm extends AuthorizingRealm {
 
+//    private static Log log = LogFactory.get();
+
     @Autowired
     private TokenUtil tokenUtil;
 
@@ -45,6 +47,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
         String jwt = (String) token.getPrincipal();
         if (jwt == null) {
+            StaticLog.error("jwtToken 不允许为空");
             throw new NullPointerException("jwtToken 不允许为空");
         }
         //判断

@@ -1,5 +1,6 @@
 package com.seasontemple.mproject.web.shiro;
 
+import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
 import org.apache.shiro.web.filter.AccessControlFilter;
 
@@ -22,19 +23,19 @@ public class JwtFilter extends AccessControlFilter {
 
     @Override
     protected boolean isAccessAllowed(ServletRequest servletRequest, ServletResponse servletResponse, Object o) throws Exception {
-        StaticLog.warn(" {} 方法被调用.", "isAccessAllowed");
+//        StaticLog.warn(" {} 方法被调用.", "isAccessAllowed");
         //这里先让它始终返回false来使用onAccessDenied()方法
         return false;
     }
 
     @Override
     protected boolean onAccessDenied(ServletRequest servletRequest, ServletResponse servletResponse) throws Exception {
-        StaticLog.warn(" {} 方法被调用.", "onAccessDenied");
+//        StaticLog.warn(" {} 方法被调用.", "onAccessDenied");
         //这个地方和前端约定，要求前端将jwtToken放在请求的Header部分
         //所以以后发起请求的时候就需要在Header中放一个Authorization，值就是对应的Token
         HttpServletRequest request = (HttpServletRequest) servletRequest;
         String jwt = request.getHeader("Authorization");
-        StaticLog.info("请求的 Header 中藏有 jwtToken {}", jwt);
+        StaticLog.warn("该请求的 Header 中 {}", !StrUtil.isNotEmpty(jwt) ? "没有token存在！登录异常！" : "的 token 为：" + jwt);
         JwtToken jwtToken = new JwtToken(jwt);
         /*
          * 下面就是固定写法
