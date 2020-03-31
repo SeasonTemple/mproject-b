@@ -4,12 +4,16 @@ import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SubjectFactory;
 import org.apache.shiro.realm.Realm;
+import org.apache.shiro.spring.LifecycleBeanPostProcessor;
+import org.apache.shiro.spring.security.interceptor.AuthorizationAttributeSourceAdvisor;
 import org.apache.shiro.spring.web.ShiroFilterFactoryBean;
 import org.apache.shiro.web.filter.authc.AnonymousFilter;
 import org.apache.shiro.web.filter.authc.LogoutFilter;
 import org.apache.shiro.web.mgt.DefaultWebSecurityManager;
+import org.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.DependsOn;
 
 import javax.servlet.Filter;
 import java.util.HashMap;
@@ -58,7 +62,7 @@ public class ShiroConfig {
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
         shiroFilter.setSecurityManager(securityManager());
-        shiroFilter.setLoginUrl("/unauthenticated");
+        shiroFilter.setLoginUrl("/");
         shiroFilter.setUnauthorizedUrl("/unauthorized");
         /**
          * 添加jwt过滤器，并在下面注册
@@ -76,10 +80,39 @@ public class ShiroConfig {
         Map<String, String> filterRuleMap = new LinkedHashMap<>();
         filterRuleMap.put("/login/*", "anon");
         filterRuleMap.put("/logout", "logout");
+        filterRuleMap.put("/css/**", "anon");
+        filterRuleMap.put("/js/**", "anon");
+        filterRuleMap.put("/img/**", "anon");
+        filterRuleMap.put("/druid/**", "anon");
         filterRuleMap.put("/**", "jwt");
         shiroFilter.setFilterChainDefinitionMap(filterRuleMap);
 
         return shiroFilter;
+    }
+    /**
+     * 开启shiro 注解模式
+     * 可以在controller中的方法前加上注解
+     * 如 @RequiresPermissions("userInfo:add")
+     * @return
+     */
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(){
+        AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor = new AuthorizationAttributeSourceAdvisor();
+        authorizationAttributeSourceAdvisor.setSecurityManager(securityManager());
+        return authorizationAttributeSourceAdvisor;
+    }
+
+    @Bean
+    public LifecycleBeanPostProcessor lifecycleBeanPostProcessor(){
+        return new LifecycleBeanPostProcessor();
+    }
+
+    @Bean
+    @DependsOn({"lifecycleBeanPostProcessor"})
+    public DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator(){
+        DefaultAdvisorAutoProxyCreator advisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
+        advisorAutoProxyCreator.setProxyTargetClass(true);
+        return advisorAutoProxyCreator;
     }
 
 }
