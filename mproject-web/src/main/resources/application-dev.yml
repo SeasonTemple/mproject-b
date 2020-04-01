@@ -65,11 +65,6 @@ swagger:
 logging:
   config: classpath:log4j2-dev.xml
   level:
-    web:
-      DEBUG
-  file:
-    path: D:\IDEA Projects\logs
-#  config: classpath:logback-dev.xml
-#  file: -Dlog4j.skipJansi=false
-#    path: D:\IDEA Projects\mprojectLog-dev.log
-
+    com.seasontemple.mproject.service: DEBUG
+#  file:
+#    path: D:\IDEA Projects\logs

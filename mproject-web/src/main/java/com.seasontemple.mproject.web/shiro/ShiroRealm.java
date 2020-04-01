@@ -1,7 +1,8 @@
 package com.seasontemple.mproject.web.shiro;
 
 import cn.hutool.log.StaticLog;
-import com.seasontemple.mproject.utils.tool.TokenUtil;
+import com.seasontemple.mproject.utils.exception.CustomException;
+import com.seasontemple.mproject.utils.token.TokenUtil;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
@@ -50,7 +51,7 @@ public class ShiroRealm extends AuthorizingRealm {
         }
         //判断
         if (!tokenUtil.verify(jwt)) {
-            throw new UnknownAccountException();
+            throw new CustomException("jwtToken验证失败");
         }
         //下面是验证这个user是否是真实存在的
         String username = (String) tokenUtil.parse(jwt).get("username");//判断数据库中username是否存在

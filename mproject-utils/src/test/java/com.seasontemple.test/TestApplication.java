@@ -1,10 +1,9 @@
 package com.seasontemple.test;
 
 //import com.seasontemple.mproject.web.WebApplication;
-import com.seasontemple.mproject.utils.tool.CustomIdGenerator;
+import com.seasontemple.mproject.utils.custom.CustomIdGenerator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 

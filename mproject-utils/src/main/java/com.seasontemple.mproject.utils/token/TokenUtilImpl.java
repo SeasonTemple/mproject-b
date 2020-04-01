@@ -1,9 +1,6 @@
-package com.seasontemple.mproject.utils.tool;
+package com.seasontemple.mproject.utils.token;
 
 import cn.hutool.core.convert.Convert;
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.text.StrFormatter;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
@@ -15,10 +12,14 @@ import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.util.codec.binary.Base64;
+import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.context.properties.ConfigurationProperties;
+import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 

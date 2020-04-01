@@ -1,18 +1,13 @@
-package com.seasontemple.mproject.utils.tool;
+package com.seasontemple.mproject.utils.token;
 
 
 import cn.hutool.core.collection.CollUtil;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.lang.Objects;
-import org.springframework.cglib.core.internal.Function;
 
 import java.util.Arrays;
-import java.util.Collections;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
-
-import static jdk.nashorn.internal.runtime.regexp.joni.Config.log;
 
 
 /**

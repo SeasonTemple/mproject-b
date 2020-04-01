@@ -1,10 +1,8 @@
-package com.seasontemple.mproject.utils.tool;
+package com.seasontemple.mproject.utils.custom;
 
 import cn.hutool.core.lang.Console;
 import cn.hutool.core.util.IdUtil;
 import com.baomidou.mybatisplus.core.incrementer.IdentifierGenerator;
-import com.baomidou.mybatisplus.core.toolkit.Sequence;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.stereotype.Component;
 
 

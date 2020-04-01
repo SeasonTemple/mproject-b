@@ -1,6 +1,9 @@
 package com.seasontemple.mproject.dao.entity;
 
 import java.io.Serializable;
+
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -16,20 +19,22 @@ import lombok.experimental.Accessors;
 @ApiModel("部门表")
 @Accessors(chain = true)
 public class MpDepartment implements Serializable {
+
+    private static final Log log = LogFactory.get();
     private static final long serialVersionUID = -58398175671472780L;
     /**
-    * 部门ID
-    */    
+     * 部门ID
+     */
     @ApiModelProperty("部门ID")
     private Integer id;
     /**
-    * 部门名称
-    */    
+     * 部门名称
+     */
     @ApiModelProperty("部门名称")
     private String depName;
     /**
-    * 部长ID
-    */    
+     * 部长ID
+     */
     @ApiModelProperty("部长ID")
     private String ministerId;
 
@@ -41,4 +46,4 @@ public class MpDepartment implements Serializable {
     protected Serializable pkVal() {
         return this.id;
     }
-    }
+}

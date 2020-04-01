@@ -3,10 +3,9 @@ package com.seasontemple.mproject.web.controller;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.StaticLog;
-import com.seasontemple.mproject.utils.tool.TokenUtil;
-import com.seasontemple.mproject.utils.tool.TokenUtilImpl;
+import com.seasontemple.mproject.utils.token.TokenUtil;
+import com.seasontemple.mproject.utils.token.TokenUtilImpl;
 import io.jsonwebtoken.SignatureAlgorithm;
-import lombok.extern.log4j.Log4j2;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 

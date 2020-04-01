@@ -3,6 +3,8 @@ package com.seasontemple.mproject.web.shiro;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import org.apache.shiro.authc.AuthenticationToken;
+import org.springframework.context.annotation.Bean;
+import org.springframework.stereotype.Repository;
 
 /**
  * @author Season Temple

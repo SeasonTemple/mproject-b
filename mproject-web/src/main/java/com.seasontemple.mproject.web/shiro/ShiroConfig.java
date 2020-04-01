@@ -55,6 +55,7 @@ public class ShiroConfig {
         securityManager.setSubjectDAO(subjectDAO);
         //禁止Subject的getSession方法
         securityManager.setSubjectFactory(subjectFactory());
+//        securityManager.setCacheManager(new CustomCacheManager());
         return securityManager;
     }
 
@@ -84,6 +85,7 @@ public class ShiroConfig {
         filterRuleMap.put("/js/**", "anon");
         filterRuleMap.put("/img/**", "anon");
         filterRuleMap.put("/druid/**", "anon");
+        filterRuleMap.put("/swagger/**", "anon");
         filterRuleMap.put("/**", "jwt");
         shiroFilter.setFilterChainDefinitionMap(filterRuleMap);
 

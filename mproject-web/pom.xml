@@ -93,12 +93,6 @@
 			<artifactId>shiro-redis</artifactId>
 			<version>${shiro-redis.version}</version>
 		</dependency>
-		<!-- redis -->
-		<dependency>
-			<groupId>redis.clients</groupId>
-			<artifactId>jedis</artifactId>
-			<version>${shiro-redis.version}</version>
-		</dependency>
 		<!-- Service、Dao、Utils 模块依赖 -->
 		<dependency>
 			<groupId>com.seasontemple.mproject</groupId>

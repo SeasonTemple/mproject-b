@@ -3,6 +3,8 @@ package com.seasontemple.mproject.dao.entity;
 import java.io.Serializable;
 import java.util.Date;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.*;
@@ -21,6 +23,8 @@ import lombok.experimental.Accessors;
 @ApiModel("用户表")
 @Accessors(chain = true)
 public class MpUser implements Serializable{
+
+    private static final Log log = LogFactory.get();
     private static final long serialVersionUID = 516005918734603946L;
     /**
      * 用户ID
