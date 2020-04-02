@@ -1,8 +1,12 @@
 package com.seasontemple.mproject.web.controller;
 
+import cn.hutool.core.util.ObjectUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.StaticLog;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.seasontemple.mproject.utils.custom.ResponseBean;
 import com.seasontemple.mproject.utils.token.TokenUtil;
 import com.seasontemple.mproject.utils.token.TokenUtilImpl;
 import io.jsonwebtoken.SignatureAlgorithm;
@@ -26,7 +30,7 @@ public class LoginController {
 
     @PostMapping(value = "/login/{username}{password}")
     public ResponseEntity<Map<String, String>> login(@RequestParam String username, @RequestParam String password) {
-        StaticLog.info("username：{},password：{}",username,password);
+        StaticLog.info("username：{},password：{}", username, password);
         Map<String, String> map = new HashMap<>();
         if (!"demoData".equals(username) || !"demoData".equals(password)) {
             map.put("msg", "用户名密码错误");
@@ -36,15 +40,15 @@ public class LoginController {
         Map<String, Object> chaim = new HashMap<>();
         chaim.put("username", username);
         chaim.put("password", password);
-        chaim.put("roleID","1");
+        chaim.put("roleID", "1");
         String jwtToken = tokenUtil.generate(chaim, 5 * 60 * 1000);
         map.put("msg", "登录成功");
         map.put("token", jwtToken);
         return ResponseEntity.ok(map);
     }
-    @GetMapping("/testdemo")
-    public ResponseEntity<String> testdemo() {
-        return ResponseEntity.ok("我爱蛋炒饭");
-    }
 
+    @GetMapping("/testdemo")
+    public ResponseBean testdemo() {
+        return ResponseBean.builder().msg("TestDemo").build().OK();
+    }
 }

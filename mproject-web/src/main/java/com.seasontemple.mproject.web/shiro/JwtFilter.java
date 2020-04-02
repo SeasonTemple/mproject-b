@@ -41,6 +41,7 @@ public class JwtFilter extends AccessControlFilter {
         whiteList.put("druid", "druid");
         whiteList.put("swagger", "swagger");
         whiteList.put("v2", "v2");
+        whiteList.put("testdemo", "testdemo");
         boolean res = whiteList.values().stream().anyMatch(w -> WebUtils.getRequestUri((HttpServletRequest) request).contains(w));
         StaticLog.warn("拦截到的请求体为: {}，匹配结果为：{}", WebUtils.getRequestUri((HttpServletRequest) request), res);
         return res;

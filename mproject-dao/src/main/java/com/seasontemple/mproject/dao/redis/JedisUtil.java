@@ -237,12 +237,11 @@ public class JedisUtil {
     }
 
     /**
-     * 获取过期剩余时间
+     * 获取Redis键过期剩余时间
      * @param key
-     * @return java.lang.String
-     * @author Wang926454
-     * @date 2018/9/11 16:26
+     * @return result
      */
+
     public static Long ttl(String key) {
         Long result = -2L;
         try (Jedis jedis = jedisPool.getResource()) {

@@ -2,6 +2,10 @@ package com.seasontemple.mproject.utils.token;
 
 
 import cn.hutool.core.collection.CollUtil;
+import com.auth0.jwt.JWT;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.seasontemple.mproject.utils.exception.CustomException;
 import io.jsonwebtoken.Claims;
 
 import java.util.Arrays;
@@ -79,5 +83,13 @@ public interface TokenUtil {
      * @return 匹配的签发人前缀
      */
     String getIss(int roleId);
+
+    /**
+     * 获得Token中的信息无需secret解密也能获得
+     * @param token
+     * @param claim
+     * @return token中Claim的信息，以字符串形式返回
+     */
+    String getClaim(String token, String claim);
 
 }

@@ -7,6 +7,9 @@ import cn.hutool.log.LogFactory;
 import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
+import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.interfaces.DecodedJWT;
+import com.seasontemple.mproject.utils.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -107,6 +110,18 @@ public class TokenUtilImpl implements TokenUtil {
     @Override
     public String getIss(int roleId) {
         return Iss.match(roleId);
+    }
+
+    @Override
+    public String getClaim(String token, String claim) {
+        try {
+            DecodedJWT jwt = JWT.decode(token);
+            // 只能输出String类型，如果是其他类型返回null
+            return jwt.getClaim(claim).asString();
+        } catch (JWTDecodeException e) {
+            log.error("解密Token中的公共信息出现JWTDecodeException异常:{}", e.getMessage());
+            throw new CustomException("解密Token中的公共信息出现JWTDecodeException异常:" + e.getMessage());
+        }
     }
 
     /*public static void main(String[] args) {
