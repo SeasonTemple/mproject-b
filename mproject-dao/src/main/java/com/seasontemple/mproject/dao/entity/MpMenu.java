@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Data
 @ApiModel("菜单表")
 @Accessors(chain = true)
-public class MpMenu implements Serializable {
+public class MpMenu {
 
     private static final Log log = LogFactory.get();
     private static final long serialVersionUID = -75826083419158953L;

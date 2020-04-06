@@ -46,16 +46,13 @@ public interface TokenUtil {
 
     /**
      * 生成Token
-     *
      * @param claims
-     * @param ttlMillis
      * @return 生成的Token字符串
      */
-    String generate(Map<String, Object> claims, long ttlMillis);
+    String generate(Map<String, Object> claims);
 
     /**
      * 验证token
-     *
      * @param jwtToken
      * @return 验证结果
      */
@@ -63,14 +60,12 @@ public interface TokenUtil {
 
     /**
      * Token加密
-     *
      * @return 加密后的Token
      *//*
     String encrypt();*/
 
     /**
      * 解析Token
-     *
      * @param token
      * @return token中的信息
      */
@@ -78,7 +73,6 @@ public interface TokenUtil {
 
     /**
      * 指定签发人前缀
-     *
      * @param roleId
      * @return 匹配的签发人前缀
      */

@@ -1,15 +1,10 @@
-package com.seasontemple.mproject.web.shiro;
+package com.seasontemple.mproject.web.shiro.jwt;
 
-import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.StaticLog;
 import com.fasterxml.jackson.databind.ObjectMapper;
-import com.puppycrawl.tools.checkstyle.utils.CommonUtils;
-import com.seasontemple.mproject.dao.redis.JedisUtil;
-import com.seasontemple.mproject.utils.custom.NormalConstant;
 import org.apache.shiro.web.filter.AccessControlFilter;
 import org.apache.shiro.web.util.WebUtils;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.ServletRequest;
@@ -18,8 +13,6 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 import java.util.*;
-import java.util.stream.Collectors;
-import java.util.stream.Stream;
 
 /**
  * @author Season Temple
@@ -39,12 +32,11 @@ public class JwtFilter extends AccessControlFilter {
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
         Map<String, String> whiteList = new HashMap<>();
         whiteList.put("druid", "druid");
-        whiteList.put("swagger", "swagger");
+        whiteList.put("swagger-ui", "swagger-ui");
         whiteList.put("v2", "v2");
-        whiteList.put("testdemo", "testdemo");
-        boolean res = whiteList.values().stream().anyMatch(w -> WebUtils.getRequestUri((HttpServletRequest) request).contains(w));
-        StaticLog.warn("拦截到的请求体为: {}，匹配结果为：{}", WebUtils.getRequestUri((HttpServletRequest) request), res);
-        return res;
+//        whiteList.put("login", "login");
+        StaticLog.warn("拦截到的请求体为: {}，匹配结果为：{}", WebUtils.getRequestUri((HttpServletRequest) request), request);
+        return whiteList.values().stream().anyMatch(w -> WebUtils.getRequestUri((HttpServletRequest) request).contains(w));
     }
 
     @Override
@@ -85,6 +77,7 @@ public class JwtFilter extends AccessControlFilter {
         HttpServletResponse httpResponse = (HttpServletResponse) response;
         httpResponse.setStatus(HttpServletResponse.SC_UNAUTHORIZED);
         httpResponse.getWriter().write("登录失败！");
+
     }
 
     /**
@@ -99,7 +92,7 @@ public class JwtFilter extends AccessControlFilter {
         // 获取当前最新时间戳
 //                String currentTimeMillis = String.valueOf(System.currentTimeMillis());
         // 读取配置文件，获取refreshTokenExpireTime属性
-        // PropertiesUtil.readProperties("config.properties");
+        // PropertiesUtil.readProperties("token-config.properties");
         // String refreshTokenExpireTime =
         // PropertiesUtil.getProperty("refreshTokenExpireTime");
         // 设置RefreshToken中的时间戳为当前最新时间戳，且刷新过期时间重新为30分钟过期(配置文件可配置refreshTokenExpireTime属性)

@@ -37,6 +37,7 @@ public class JacksonProtobufSupport {
             );
             jacksonObjectMapperBuilder.propertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
                     .dateFormat(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"))
+                    .timeZone("GMT+8")
                     .defaultViewInclusion(true)
                     .serializationInclusion(JsonInclude.Include.NON_NULL)
                     .modulesToInstall(ProtobufModule.class);

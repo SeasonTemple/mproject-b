@@ -18,6 +18,10 @@ spring:
       charset: UTF-8
       enabled: true
       force: true
+  mvc:
+    throw-exception-if-no-handler-found: true
+  resources:
+    add-mappings: false
 server:
   port: 8082
   servlet:
@@ -62,9 +66,8 @@ swagger:
   version: 1.9.0.RELEASE
   ui-config:
     submit-methods: get,post
+    show-request-headers: true
 logging:
   config: classpath:log4j2-dev.xml
   level:
-    com.seasontemple.mproject.service: DEBUG
-#  file:
-#    path: D:\IDEA Projects\logs
+    com.seasontemple.mproject.web: DEBUG

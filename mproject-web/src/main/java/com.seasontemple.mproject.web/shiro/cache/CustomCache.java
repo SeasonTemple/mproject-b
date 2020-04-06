@@ -1,11 +1,10 @@
-package com.seasontemple.mproject.web.shiro;
+package com.seasontemple.mproject.web.shiro.cache;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
-import org.apache.logging.log4j.util.PropertiesUtil;
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -98,7 +97,7 @@ public class CustomCache<K, V> implements Cache<K, V> {
     @Override
     public Set keys() {
         Set<byte[]> keys = Objects.requireNonNull(JedisUtil.getJedis()).keys("*".getBytes());
-        Set<Object> set = new HashSet<Object>();
+        Set<Object> set = new HashSet<>();
         for (byte[] bs : keys) {
             try {
                 set.add(om.readValue(bs, Object.class));
@@ -115,7 +114,7 @@ public class CustomCache<K, V> implements Cache<K, V> {
     @Override
     public Collection values() {
         Set keys = this.keys();
-        List<Object> values = new ArrayList<Object>();
+        List<Object> values = new ArrayList<>();
         for (Object key : keys) {
             values.add(JedisUtil.getObject(this.getKey(key)));
         }

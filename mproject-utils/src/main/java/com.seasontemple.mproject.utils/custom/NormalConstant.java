@@ -12,9 +12,14 @@ public class NormalConstant {
     }
 
     /**
-     * redis-OK
+     * redis-success
      */
-    public static final String OK = "OK";
+    public static final String OK = "success";
+
+    /**
+     * ttlMillis 默认Token有效时间
+     */
+    public static final long ttlMillis = 5 * 60 * 1000;
 
     /**
      * redis过期时间，以秒为单位，一分钟

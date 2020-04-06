@@ -1,7 +1,5 @@
 package com.seasontemple.test;
 
-//import com.seasontemple.mproject.web.WebApplication;
-import com.seasontemple.mproject.utils.custom.CustomIdGenerator;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.test.context.junit4.SpringRunner;
@@ -32,9 +30,9 @@ public class TestApplication {
 //        System.out.println(initializr.get());
 //    }
 
-    @Test
-    public void ccc() {
-        CustomIdGenerator t = new CustomIdGenerator();
-        t.nextUUID(this);
-    }
+//    @Test
+//    public void ccc() {
+//        CustomIdGenerator t = new CustomIdGenerator();
+//        t.nextUUID(this);
+//    }
 }

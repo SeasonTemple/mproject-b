@@ -1,10 +1,16 @@
-package com.seasontemple.mproject.web.shiro;
+package com.seasontemple.mproject.web.shiro.config;
 
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 import cn.hutool.log.StaticLog;
+import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
+import com.seasontemple.mproject.utils.token.TokenUtilImpl;
+import com.seasontemple.mproject.web.shiro.jwt.JwtToken;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationInfo;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,7 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
  */
 public class ShiroRealm extends AuthorizingRealm {
 
-//    private static Log log = LogFactory.get();
+    private static Log log = LogFactory.get();
 
     @Autowired
     private TokenUtil tokenUtil;
@@ -33,10 +39,34 @@ public class ShiroRealm extends AuthorizingRealm {
         return token instanceof JwtToken;
     }
 
-    //授权
+    /**
+     * @Description: 只有当需要检测用户权限的时候才会调用此方法
+     */
     @Override
     protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
-        return null;
+        SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
+        String account = tokenUtil.getClaim(principals.toString(), NormalConstant.ACCOUNT);
+        log.info("用户名为：{}", account);
+
+        /*UserDto userDto = new UserDto();
+        userDto.setAccount(account);
+        // 查询用户角色
+        List<RoleDto> roleDtos = roleMapper.findRoleByUser(userDto);
+        for (RoleDto roleDto : roleDtos) {
+            if (roleDto != null) {
+                // 添加角色
+                simpleAuthorizationInfo.addRole(roleDto.getName());
+                // 根据用户角色查询权限
+                List<PermissionDto> permissionDtos = permissionMapper.findPermissionByRole(roleDto);
+                for (PermissionDto permissionDto : permissionDtos) {
+                    if (permissionDto != null) {
+                        // 添加权限
+                        simpleAuthorizationInfo.addStringPermission(permissionDto.getPerCode());
+                    }
+                }
+            }
+        }*/
+        return simpleAuthorizationInfo;
     }
 
     //认证
@@ -55,7 +85,7 @@ public class ShiroRealm extends AuthorizingRealm {
         }
         //下面是验证这个user是否是真实存在的
         String username = (String) tokenUtil.parse(jwt).get("username");//判断数据库中username是否存在
-        StaticLog.info("在使用token登录 {}", username);
+        log.info("在使用token登录 {}", username);
         return new SimpleAuthenticationInfo(jwt, jwt, "JwtRealm");
         //这里返回的是类似账号密码的东西，但是jwtToken都是jwt字符串。还需要一个该Realm的类名
     }

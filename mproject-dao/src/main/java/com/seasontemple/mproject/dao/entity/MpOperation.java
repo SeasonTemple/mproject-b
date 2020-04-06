@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Data
 @ApiModel("权限操作表")
 @Accessors(chain = true)
-public class MpOperation implements Serializable {
+public class MpOperation {
 
     private static final Log log = LogFactory.get();
     private static final long serialVersionUID = 492043315021707840L;

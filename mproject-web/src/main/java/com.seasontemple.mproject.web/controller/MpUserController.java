@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.service.service.MpUserService;
+import io.swagger.annotations.ApiImplicitParam;
+import io.swagger.annotations.ApiImplicitParams;
 import lombok.extern.log4j.Log4j2;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -62,6 +64,7 @@ public class MpUserController extends ApiController {
      * @return 新增结果
      */
     @PostMapping
+    @ApiImplicitParams({ @ApiImplicitParam(paramType = "header", dataType = "String", name = "Authorization", value = "token标记", required = true) })
     public R insert(@RequestBody MpUser mpUser) {
         return success(this.mpUserService.save(mpUser));
     }

@@ -73,6 +73,12 @@
 			<artifactId>jjwt</artifactId>
 			<version>${jjwt.verison}</version>
 		</dependency>
+		<!-- 自定义的元数据依赖 -->
+		<dependency>
+			<groupId>org.springframework.boot</groupId>
+			<artifactId>spring-boot-configuration-processor</artifactId>
+			<optional>true</optional>
+		</dependency>
 		<!--<dependency>
 			<groupId>com.seasontemple.mproject</groupId>
 			<artifactId>mproject-dao</artifactId>

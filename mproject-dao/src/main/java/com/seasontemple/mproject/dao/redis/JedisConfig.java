@@ -1,6 +1,8 @@
 package com.seasontemple.mproject.dao.redis;
 
+import cn.hutool.log.Log;
 import cn.hutool.log.StaticLog;
+import com.seasontemple.mproject.utils.exception.CustomException;
 import lombok.Getter;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Value;
@@ -26,12 +28,17 @@ import redis.clients.jedis.JedisPoolConfig;
 @Getter
 public class JedisConfig {
 
+    private static Log log = Log.get();
+
+    @Value("${redis.pool.host}")
     private String host;
 
+    @Value("${redis.pool.port}")
     private int port;
 
     private String password;
 
+    @Value("${redis.pool.timeout}")
     private int timeout;
 
     @Value("${redis.pool.max-active}")
@@ -58,7 +65,7 @@ public class JedisConfig {
             StaticLog.info("初始化Redis连接池JedisPool成功! Redis地址: {}: {}", host, port);
             return jedisPool;
         } catch (Exception e) {
-            StaticLog.error("初始化Redis连接池JedisPool异常: {}", e.getMessage());
+            log.error("初始化Redis连接池JedisPool异常: {}", e.getMessage());
         }
         return null;
     }

@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seasontemple.mproject.dao.mapper.UserRoleMapper">
+
+    <resultMap type="com.seasontemple.mproject.dao.dto.UserRole" id="UserRoleMap">
+        <result property="id" column="id" jdbcType="VARCHAR"/>
+        <result property="userName" column="user_name" jdbcType="VARCHAR"/>
+        <result property="passWord" column="pass_word" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="VARCHAR"/>
+        <result property="token" column="token" jdbcType="VARCHAR"/>
+        <result property="accountStatus" column="account_status" jdbcType="INTEGER"/>
+        <result property="roleId" column="role_id" jdbcType="INTEGER"/>
+        <result property="roleName" column="role_name" jdbcType="VARCHAR"/>
+        <result property="roleState" column="role_state" jdbcType="INTEGER"/>
+        <result property="roleLimit" column="role_limit" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="selectById" resultMap="UserRoleMap">
+        select
+          id, user_name, pass_word, salt, token, account_status, role_id, role_name, role_state, role_limit
+        from mproject.user_role
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="UserRoleMap">
+        select
+          id, user_name, pass_word, salt, token, account_status, role_id, role_name, role_state, role_limit
+        from mproject.user_role
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="UserRoleMap">
+        select
+          id, user_name, pass_word, salt, token, account_status, role_id, role_name, role_state, role_limit
+        from mproject.user_role
+        <where>
+            <if test="id != null and id != ''">
+                and id = #{id}
+            </if>
+            <if test="userName != null and userName != ''">
+                and user_name = #{userName}
+            </if>
+            <if test="passWord != null and passWord != ''">
+                and pass_word = #{passWord}
+            </if>
+            <if test="salt != null and salt != ''">
+                and salt = #{salt}
+            </if>
+            <if test="token != null and token != ''">
+                and token = #{token}
+            </if>
+            <if test="accountStatus != null">
+                and account_status = #{accountStatus}
+            </if>
+            <if test="roleId != null">
+                and role_id = #{roleId}
+            </if>
+            <if test="roleName != null and roleName != ''">
+                and role_name = #{roleName}
+            </if>
+            <if test="roleState != null">
+                and role_state = #{roleState}
+            </if>
+            <if test="roleLimit != null">
+                and role_limit = #{roleLimit}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="false">
+        insert into mproject.user_role(id, user_name, pass_word, salt, token, account_status, role_id, role_name, role_state, role_limit)
+        values (#{id}, #{userName}, #{passWord}, #{salt}, #{token}, #{accountStatus}, #{roleId}, #{roleName}, #{roleState}, #{roleLimit})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mproject.user_role
+        <set>
+            <if test="id != null and id != ''">
+                id = #{id},
+            </if>
+            <if test="userName != null and userName != ''">
+                user_name = #{userName},
+            </if>
+            <if test="passWord != null and passWord != ''">
+                pass_word = #{passWord},
+            </if>
+            <if test="salt != null and salt != ''">
+                salt = #{salt},
+            </if>
+            <if test="token != null and token != ''">
+                token = #{token},
+            </if>
+            <if test="accountStatus != null">
+                account_status = #{accountStatus},
+            </if>
+            <if test="roleId != null">
+                role_id = #{roleId},
+            </if>
+            <if test="roleName != null and roleName != ''">
+                role_name = #{roleName},
+            </if>
+            <if test="roleState != null">
+                role_state = #{roleState},
+            </if>
+            <if test="roleLimit != null">
+                role_limit = #{roleLimit},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mproject.user_role where id = #{id}
+    </delete>
+
+</mapper>

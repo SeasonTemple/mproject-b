@@ -33,7 +33,7 @@ public class ResponseBean {
     /**
      * 返回的数据
      */
-    private Object data = new ObjectMapper();
+    private Object data;
 
     public void setData(Object data) {
         if (data == null) {
@@ -45,7 +45,7 @@ public class ResponseBean {
     /**
      * 成功响应
      */
-    public ResponseBean OK() {
+    public ResponseBean success() {
         this.code = ResultCode.SUCCESS;
         if (StringUtils.isBlank(this.msg)) {
             this.msg = "success.";
@@ -56,7 +56,7 @@ public class ResponseBean {
     /**
      * 请求成功，但业务逻辑处理不通过
      */
-    public ResponseBean NO() {
+    public ResponseBean failed() {
         this.code = ResultCode.ERROR;
         return this;
     }

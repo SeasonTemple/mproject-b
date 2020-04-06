@@ -1,4 +1,4 @@
-package com.seasontemple.mproject.web.shiro;
+package com.seasontemple.mproject.web.shiro.cache;
 
 import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
@@ -13,6 +13,6 @@ import org.apache.shiro.cache.CacheManager;
 public class CustomCacheManager implements CacheManager {
     @Override
     public <K, V> Cache<K, V> getCache(String s) throws CacheException {
-        return null;
+        return new CustomCache<K, V>();
     }
 }

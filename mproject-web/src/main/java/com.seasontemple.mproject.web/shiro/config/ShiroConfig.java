@@ -1,5 +1,8 @@
-package com.seasontemple.mproject.web.shiro;
+package com.seasontemple.mproject.web.shiro.config;
 
+import com.seasontemple.mproject.web.shiro.cache.CustomCacheManager;
+import com.seasontemple.mproject.web.shiro.jwt.JwtDefaultSubjectFactory;
+import com.seasontemple.mproject.web.shiro.jwt.JwtFilter;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
 import org.apache.shiro.mgt.SubjectFactory;
@@ -55,7 +58,8 @@ public class ShiroConfig {
         securityManager.setSubjectDAO(subjectDAO);
         //禁止Subject的getSession方法
         securityManager.setSubjectFactory(subjectFactory());
-//        securityManager.setCacheManager(new CustomCacheManager());
+        //指定使用自定义Cache缓存
+        securityManager.setCacheManager(new CustomCacheManager());
         return securityManager;
     }
 
@@ -70,7 +74,7 @@ public class ShiroConfig {
          * 也就是将jwtFilter注册到shiro的Filter中
          * 指定除了login和logout之外的请求都先经过jwtFilter
          */
-        Map<String, Filter> filterMap = new HashMap<>();
+        Map<String, Filter> filterMap = new HashMap<>(16);
         //这个地方其实另外两个filter可以不设置，默认就是
         filterMap.put("anon", new AnonymousFilter());
         filterMap.put("jwt", new JwtFilter());
@@ -79,6 +83,14 @@ public class ShiroConfig {
 
         // 拦截器
         Map<String, String> filterRuleMap = new LinkedHashMap<>();
+        //Swagger接口文档
+        filterRuleMap.put("/testdemo", "anon");
+        filterRuleMap.put("/v2/api-docs", "anon");
+        filterRuleMap.put("/webjars/**", "anon");
+        filterRuleMap.put("/swagger-resources/**", "anon");
+        filterRuleMap.put("/swagger-ui.html", "anon");
+        filterRuleMap.put("/doc.html", "anon");
+        // 公开接口
         filterRuleMap.put("/login/*", "anon");
         filterRuleMap.put("/logout", "logout");
         filterRuleMap.put("/css/**", "anon");

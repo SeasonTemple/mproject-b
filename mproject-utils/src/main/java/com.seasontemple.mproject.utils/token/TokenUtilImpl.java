@@ -1,6 +1,7 @@
 package com.seasontemple.mproject.utils.token;
 
 import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
@@ -9,16 +10,14 @@ import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
 import com.auth0.jwt.interfaces.DecodedJWT;
+import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.util.codec.binary.Base64;
-import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
-import org.springframework.boot.context.properties.ConfigurationProperties;
-import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Component;
 
@@ -33,13 +32,17 @@ import java.util.Map;
  * @create: 2020/03/28 23:02:38
  */
 @Component
+@EnableAutoConfiguration
+@PropertySource("classpath:token-config.properties")
 public class TokenUtilImpl implements TokenUtil {
 
     private static final Log log = LogFactory.get();
     // 默认密匙
-    private static final String defaultEncodedSecretKey = "seasontemple";
+    private static final String defaultEncodedSecretKey = cn.hutool.core.codec.Base64.encode("seasontemple");
     // 默认加密算法
     private static final SignatureAlgorithm defaultSignatureAlgorithm = SignatureAlgorithm.HS256;
+    // 默认token有效时间
+    private static final long ttlMillis = NormalConstant.ttlMillis;
 
     private TokenUtilImpl() {
         this.EncodedSecretKey = defaultEncodedSecretKey;
@@ -48,19 +51,19 @@ public class TokenUtilImpl implements TokenUtil {
 
     private final String EncodedSecretKey;
 
-    private final SignatureAlgorithm signatureAlgorithm;
+    private SignatureAlgorithm signatureAlgorithm;
 
-    private TokenUtilImpl(String secretKey, SignatureAlgorithm signatureAlgorithm) {
+    private TokenUtilImpl(String secretKey) {
         this.EncodedSecretKey = Base64.encodeBase64String(secretKey.getBytes());
-        this.signatureAlgorithm = signatureAlgorithm;
+        this.signatureAlgorithm = defaultSignatureAlgorithm;
     }
 
-    public static TokenUtilImpl build(String secretKey, SignatureAlgorithm signatureAlgorithm) {
-        return StrUtil.isEmpty(secretKey) ? new TokenUtilImpl() : new TokenUtilImpl(secretKey, signatureAlgorithm);
+    public static TokenUtilImpl build(String secretKey) {
+        return StrUtil.isEmpty(secretKey) ? new TokenUtilImpl() : new TokenUtilImpl(secretKey);
     }
 
     @Override
-    public String generate(Map<String, Object> claims, long ttlMillis) {
+    public String generate(Map<String, Object> claims) {
         // 签发时间（iat）：荷载部分的标准字段之一
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
@@ -68,11 +71,11 @@ public class TokenUtilImpl implements TokenUtil {
                 // 荷载部分的非标准字段/附加字段，一般写在标准的字段之前。
                 .setClaims(claims)
                 // JWT ID（jti）：荷载部分的标准字段之一，JWT 的唯一性标识，虽不强求，但尽量确保其唯一性。
-                .setId(Convert.toStr(claims.get("id")))
+                .setId(IdUtil.objectId())
                 // 签发时间（iat）：荷载部分的标准字段之一，代表这个 JWT 的生成时间。
                 .setIssuedAt(now)
                 // 签发人（iss）：荷载部分的标准字段之一，代表这个 JWT 的所有者。通常是 username 这样具有用户代表性的内容。
-                .setSubject(getIss(Convert.toInt(claims.get("roleID"))) + claims.get("username"))
+                .setSubject(getIss(Convert.toInt(claims.get("roleId"))) + claims.get("username"))
                 // 设置生成签名的算法和秘钥
                 .signWith(signatureAlgorithm, EncodedSecretKey);
         if (ttlMillis >= 0) {
@@ -83,6 +86,8 @@ public class TokenUtilImpl implements TokenUtil {
         }
         return builder.compact();
     }
+
+
 
     @Override
     public boolean verify(String jwtToken) {

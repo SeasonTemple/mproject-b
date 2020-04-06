@@ -19,7 +19,7 @@ import lombok.experimental.Accessors;
 @Data
 @ApiModel("用户详情表")
 @Accessors(chain = true)
-public class MpProfile implements Serializable {
+public class MpProfile {
 
     private static final Log log = LogFactory.get();
     private static final long serialVersionUID = 980249560477942643L;

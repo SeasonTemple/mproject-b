@@ -6,10 +6,13 @@ import java.util.Date;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.KeySequence;
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.data.annotation.Id;
 
 
 /**
@@ -22,15 +25,16 @@ import lombok.experimental.Accessors;
 @Data
 @ApiModel("用户表")
 @Accessors(chain = true)
-public class MpUser implements Serializable{
+public class MpUser {
 
     private static final Log log = LogFactory.get();
     private static final long serialVersionUID = 516005918734603946L;
+
     /**
      * 用户ID
      */
     @ApiModelProperty("用户ID")
-    @TableId(type = IdType.ASSIGN_ID)
+    @TableId(value = "id", type = IdType.ASSIGN_UUID)
     private String id;
     /**
      * 用户名
@@ -90,4 +94,5 @@ public class MpUser implements Serializable{
     protected Serializable pkVal() {
         return this.id;
     }
+
 }

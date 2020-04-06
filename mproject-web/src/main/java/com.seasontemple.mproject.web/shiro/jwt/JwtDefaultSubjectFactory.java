@@ -1,4 +1,4 @@
-package com.seasontemple.mproject.web.shiro;
+package com.seasontemple.mproject.web.shiro.jwt;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;

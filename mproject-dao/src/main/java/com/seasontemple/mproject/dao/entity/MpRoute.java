@@ -18,7 +18,7 @@ import lombok.experimental.Accessors;
 @Data
 @ApiModel("路由表")
 @Accessors(chain = true)
-public class MpRoute implements Serializable {
+public class MpRoute {
 
     private static final Log log = LogFactory.get();
     private static final long serialVersionUID = -75583034344336586L;
