@@ -63,7 +63,7 @@ public class TokenUtilImpl implements TokenUtil {
     }
 
     @Override
-    public String generate(Map<String, Object> claims) {
+    public String generate(Map<String, Object> claims, long ttlMillis) {
         // 签发时间（iat）：荷载部分的标准字段之一
         long nowMillis = System.currentTimeMillis();
         Date now = new Date(nowMillis);
@@ -74,8 +74,9 @@ public class TokenUtilImpl implements TokenUtil {
                 .setId(IdUtil.objectId())
                 // 签发时间（iat）：荷载部分的标准字段之一，代表这个 JWT 的生成时间。
                 .setIssuedAt(now)
+                .setAudience(claims.get("userName").toString())
                 // 签发人（iss）：荷载部分的标准字段之一，代表这个 JWT 的所有者。通常是 username 这样具有用户代表性的内容。
-                .setSubject(getIss(Convert.toInt(claims.get("roleId"))) + claims.get("username"))
+                .setSubject(getIss(Convert.toInt(claims.get("roleId"))) + claims.get("userName"))
                 // 设置生成签名的算法和秘钥
                 .signWith(signatureAlgorithm, EncodedSecretKey);
         if (ttlMillis >= 0) {
@@ -87,7 +88,29 @@ public class TokenUtilImpl implements TokenUtil {
         return builder.compact();
     }
 
-
+    public String sign(Map<String, Object> claims, long ttlMillis) {
+        // 签发时间（iat）：荷载部分的标准字段之一
+        long nowMillis = System.currentTimeMillis();
+        Date now = new Date(nowMillis);
+        JwtBuilder builder = Jwts.builder()
+                // 荷载部分的非标准字段/附加字段，一般写在标准的字段之前。
+                .setClaims(claims)
+                // JWT ID（jti）：荷载部分的标准字段之一，JWT 的唯一性标识，虽不强求，但尽量确保其唯一性。
+                .setId(IdUtil.objectId())
+                // 签发时间（iat）：荷载部分的标准字段之一，代表这个 JWT 的生成时间。
+                .setIssuedAt(now)
+                // 签发人（iss）：荷载部分的标准字段之一，代表这个 JWT 的所有者。通常是 username 这样具有用户代表性的内容。
+//                .setSubject(getIss(Convert.toInt(claims.get("roleId"))) + claims.get("username"))
+                // 设置生成签名的算法和秘钥
+                .signWith(signatureAlgorithm, EncodedSecretKey);
+        if (ttlMillis >= 0) {
+            long expMillis = nowMillis + ttlMillis;
+            Date exp = new Date(expMillis);
+            // 过期时间（exp）：荷载部分的标准字段之一，代表这个 JWT 的有效期。
+            builder.setExpiration(exp);
+        }
+        return builder.compact();
+    }
 
     @Override
     public boolean verify(String jwtToken) {

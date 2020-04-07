@@ -76,7 +76,7 @@ public class ShiroRealm extends AuthorizingRealm {
 
         String jwt = (String) token.getPrincipal();
         if (jwt == null) {
-            StaticLog.error("jwtToken 不允许为空");
+            log.error("jwtToken 不允许为空");
             throw new NullPointerException("jwtToken 不允许为空");
         }
         //判断

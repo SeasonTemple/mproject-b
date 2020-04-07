@@ -54,7 +54,7 @@ public class NormalConstant {
     /**
      * JWT-account:
      */
-    public static final String ACCOUNT = "account";
+    public static final String ACCOUNT = "username";
 
     /**
      * JWT-currentTimeMillis:

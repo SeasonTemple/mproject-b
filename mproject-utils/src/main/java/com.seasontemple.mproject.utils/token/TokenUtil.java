@@ -49,7 +49,7 @@ public interface TokenUtil {
      * @param claims
      * @return 生成的Token字符串
      */
-    String generate(Map<String, Object> claims);
+    String generate(Map<String, Object> claims, long ttlMillis);
 
     /**
      * 验证token

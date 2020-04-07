@@ -12,6 +12,7 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.servlet.NoHandlerFoundException;
 
 import javax.servlet.http.HttpServletRequest;
@@ -26,9 +27,12 @@ import java.util.Map;
  * @description: 自定义Shiro全局异常捕获增强
  * @create: 2020/04/05 00:25:30
  */
+@RestControllerAdvice
 public class CustomExceptionAdvice {
+
     /**
      * 捕捉所有Shiro异常
+     *
      * @param e
      * @return
      */
@@ -66,6 +70,7 @@ public class CustomExceptionAdvice {
 
     /**
      * 捕捉UnauthorizedException自定义异常
+     *
      * @return
      */
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
@@ -76,6 +81,7 @@ public class CustomExceptionAdvice {
 
     /**
      * 捕捉校验异常(BindException)
+     *
      * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -88,6 +94,7 @@ public class CustomExceptionAdvice {
 
     /**
      * 捕捉校验异常(MethodArgumentNotValidException)
+     *
      * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -100,6 +107,7 @@ public class CustomExceptionAdvice {
 
     /**
      * 捕捉其他所有自定义异常
+     *
      * @return
      */
     @ResponseStatus(HttpStatus.BAD_REQUEST)
@@ -110,6 +118,7 @@ public class CustomExceptionAdvice {
 
     /**
      * 捕捉404异常
+     *
      * @return
      */
     @ResponseStatus(HttpStatus.NOT_FOUND)
@@ -133,6 +142,7 @@ public class CustomExceptionAdvice {
 
     /**
      * 获取状态码
+     *
      * @param request
      * @return
      */
@@ -146,6 +156,7 @@ public class CustomExceptionAdvice {
 
     /**
      * 获取校验错误信息
+     *
      * @param fieldErrors
      * @return
      */

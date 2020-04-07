@@ -4,6 +4,7 @@ import com.spring4all.swagger.EnableSwagger2Doc;
 import org.mybatis.spring.annotation.MapperScan;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
+import springfox.documentation.swagger2.annotations.EnableSwagger2;
 
 
 /**
@@ -13,6 +14,7 @@ import org.springframework.boot.autoconfigure.SpringBootApplication;
  * @create: 2019/11/28 15:52:26
  */
 @EnableSwagger2Doc
+@EnableSwagger2
 @SpringBootApplication(scanBasePackages = "com.seasontemple.mproject")
 @MapperScan("com.seasontemple.mproject.dao.mapper")
 public class WebApplication {

@@ -12,7 +12,6 @@ import org.springframework.stereotype.Repository;
  * @description: JwtToken实体类
  * @create: 2020/03/29 21:33:57
  */
-//这个就类似UsernamePasswordToken
 public class JwtToken implements AuthenticationToken {
 
     private static final Log log = LogFactory.get();
@@ -31,5 +30,5 @@ public class JwtToken implements AuthenticationToken {
     public Object getCredentials() {
         return jwt;
     }
-    //返回的都是jwt
+
 }
