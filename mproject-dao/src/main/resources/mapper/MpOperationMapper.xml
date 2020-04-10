@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seasontemple.mproject.dao.mapper.MpOperationMapper">
+
+    <resultMap type="com.seasontemple.mproject.dao.entity.MpOperation" id="MpOperationMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="operationName" column="operation_name" jdbcType="VARCHAR"/>
+        <result property="authId" column="auth_id" jdbcType="INTEGER"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="selectById" resultMap="MpOperationMap">
+        select
+          id, operation_name, auth_id
+        from mproject.mp_operation
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="selectAllByLimit" resultMap="MpOperationMap">
+        select
+          id, operation_name, auth_id
+        from mproject.mp_operation
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="selectAll" resultMap="MpOperationMap">
+        select
+          id, operation_name, auth_id
+        from mproject.mp_operation
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="operationName != null and operationName != ''">
+                and operation_name = #{operationName}
+            </if>
+            <if test="authId != null">
+                and auth_id = #{authId}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="id" useGeneratedKeys="false">
+        insert into mproject.mp_operation(operation_name, auth_id)
+        values (#{operationName}, #{authId})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mproject.mp_operation
+        <set>
+            <if test="operationName != null and operationName != ''">
+                operation_name = #{operationName},
+            </if>
+            <if test="authId != null">
+                auth_id = #{authId},
+            </if>
+        </set>
+        where id = #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mproject.mp_operation where id = #{id}
+    </delete>
+
+</mapper>
