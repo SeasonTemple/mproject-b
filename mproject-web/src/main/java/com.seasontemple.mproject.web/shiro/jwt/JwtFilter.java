@@ -1,7 +1,5 @@
 package com.seasontemple.mproject.web.shiro.jwt;
 
-import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.StaticLog;
@@ -14,19 +12,16 @@ import com.seasontemple.mproject.utils.custom.ResponseBean;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
 import io.jsonwebtoken.Claims;
-import org.apache.logging.log4j.util.PropertiesUtil;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
-import org.springframework.web.bind.annotation.RequestMethod;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
-import javax.xml.crypto.Data;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.*;
@@ -66,18 +61,19 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
-      /*  HttpServletRequest httpServletRequest = (HttpServletRequest) request;
-        HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-        httpServletResponse.setHeader("Access-control-Allow-Origin", httpServletRequest.getHeader("Origin"));
-        httpServletResponse.setHeader("Access-Control-Allow-Methods", "GET,POST,OPTIONS,PUT,DELETE");
-        httpServletResponse.setHeader("Access-Control-Allow-Headers",
-                httpServletRequest.getHeader("Access-Control-Request-Headers"));
-        // 跨域时会首先发送一个OPTIONS请求，这里我们给OPTIONS请求直接返回正常状态
-        if (httpServletRequest.getMethod().equals(RequestMethod.OPTIONS.name())) {
-            httpServletResponse.setStatus(HttpStatus.OK.value());
-            return false;
-        }*/
-        return super.preHandle(request, response);
+
+//        Map<String, String> whiteList = new HashMap<>();
+//        whiteList.put("druid", "druid");
+//        whiteList.put("swagger", "swagger");
+//        whiteList.put("v2", "v2");
+//        whiteList.put("login", "login");
+//        StaticLog.warn("拦截到的请求体为: {}，匹配结果为：{}", WebUtils.getRequestUri((HttpServletRequest) request), request);
+//        boolean t = whiteList.values().stream().anyMatch(w -> WebUtils.getRequestUri((HttpServletRequest) request).contains(w));
+//        if (!t) {
+//            return false;
+//        } else {
+            return super.preHandle(request, response);
+//        }
     }
 
     @Override
@@ -110,9 +106,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                         msg = throwable.getMessage();
                     }
                 }
+
                 /**
-                 * 错误两种处理方式 1. 将非法请求转发到/401的Controller处理，抛出自定义无权访问异常被全局捕捉再返回Response信息 2.
-                 * 无需转发，直接返回Response信息 一般使用第二种(更方便)
+                 * 错误两种处理方式
+                 * 1. 将非法请求转发到/401的Controller处理，抛出自定义无权访问异常被全局捕捉再返回Response信息
+                 * 2.无需转发，直接返回Response信息 一般使用第二种(更方便)
                  */
                 // 直接返回Response信息
                 this.onLoginFail(response, msg);
@@ -157,11 +155,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         // 拿到当前Header中Authorization的AccessToken(Shiro中getAuthzHeader方法已经实现)
-//        String token = this.getAuthzHeader(request);
-        return true;
+        return StrUtil.isNotEmpty(this.getAuthzHeader(request));
     }
 
-     // 进行AccessToken登录认证授权
+    // 进行AccessToken登录认证授权
     @Override
     protected boolean executeLogin(ServletRequest request, ServletResponse response) throws Exception {
         // 拿到当前Header中Authorization的AccessToken(Shiro中getAuthzHeader方法已经实现)
@@ -181,11 +178,11 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         httpResponse.setContentType("application/json; charset=utf-8");
         ObjectMapper om = new ObjectMapper();
         try (PrintWriter out = httpResponse.getWriter()) {
-            String data = om.writeValueAsString(ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg( "无权访问(Unauthorized):" + msg).build());
+            String data = om.writeValueAsString(ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问(Unauthorized):" + msg).build());
             out.append(data);
         } catch (IOException e) {
             log.error("返回Response信息出现IOException异常：{}", e.getMessage());
-            throw new CustomException("返回Response信息出现IOException异常："+ e.getMessage());
+            throw new CustomException("返回Response信息出现IOException异常：" + e.getMessage());
         }
 
     }

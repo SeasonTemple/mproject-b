@@ -90,7 +90,9 @@ public class ShiroConfig {
         filterRuleMap.put("/swagger-resources/**", "anon");
         filterRuleMap.put("/swagger-ui.html", "anon");
         filterRuleMap.put("/doc.html", "anon");
+
         // 公开接口
+        filterRuleMap.put("/login", "anon");
         filterRuleMap.put("/login/*", "anon");
         filterRuleMap.put("/logout", "logout");
         filterRuleMap.put("/css/**", "anon");

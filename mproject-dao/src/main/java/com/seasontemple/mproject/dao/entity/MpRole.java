@@ -1,9 +1,6 @@
 package com.seasontemple.mproject.dao.entity;
 
 import java.io.Serializable;
-
-import cn.hutool.log.Log;
-import cn.hutool.log.LogFactory;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -12,35 +9,33 @@ import lombok.experimental.Accessors;
  * 角色表(MpRole)表实体类
  *
  * @author SeasonTemple
- * @since 2020-03-26 21:43:21
+ * @since 2020-04-09 22:47:32
  */
 @SuppressWarnings("serial")
 @Data
 @ApiModel("角色表")
 @Accessors(chain = true)
 public class MpRole {
-
-    private static final Log log = LogFactory.get();
-    private static final long serialVersionUID = -91195019613365320L;
+    private static final long serialVersionUID = -67701194894848067L;
     /**
-     * 角色ID
-     */
+    * 角色ID
+    */    
     @ApiModelProperty("角色ID")
     private Integer id;
     /**
-     * 角色名
-     */
+    * 角色名
+    */    
     @ApiModelProperty("角色名")
     private String roleName;
     /**
-     * 角色状态
-     */
+    * 角色状态
+    */    
     @ApiModelProperty("角色状态")
     private Integer state;
     /**
-     * 角色有效时间
-     */
-    @ApiModelProperty("角色有效时间")
+    * 角色有效时间(min)
+    */    
+    @ApiModelProperty("角色有效时间(min)")
     private Integer limitTime;
 
     /**
@@ -51,4 +46,4 @@ public class MpRole {
     protected Serializable pkVal() {
         return this.id;
     }
-}
+    }

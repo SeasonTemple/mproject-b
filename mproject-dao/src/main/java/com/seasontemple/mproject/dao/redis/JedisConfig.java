@@ -36,6 +36,7 @@ public class JedisConfig {
     @Value("${redis.pool.port}")
     private int port;
 
+    @Value("${redis.pool.password}")
     private String password;
 
     @Value("${redis.pool.timeout}")
@@ -61,7 +62,7 @@ public class JedisConfig {
             jedisPoolConfig.setMaxWaitMillis(maxWait);
             jedisPoolConfig.setMaxTotal(maxActive);
             jedisPoolConfig.setMinIdle(minIdle);
-            JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, null);
+            JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
             StaticLog.info("初始化Redis连接池JedisPool成功! Redis地址: {}: {}", host, port);
             return jedisPool;
         } catch (Exception e) {

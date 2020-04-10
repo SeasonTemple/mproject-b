@@ -39,7 +39,7 @@ public class UserRole {
     * 加密盐
     */    
     @ApiModelProperty("加密盐")
-    private String salt;
+    private byte[] salt;
     /**
     * 用户token
     */    

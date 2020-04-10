@@ -69,7 +69,7 @@ public class TokenUtilImpl implements TokenUtil {
         Date now = new Date(nowMillis);
         JwtBuilder builder = Jwts.builder()
                 // 荷载部分的非标准字段/附加字段，一般写在标准的字段之前。
-                .setClaims(claims)
+//                .setClaims(claims)
                 // JWT ID（jti）：荷载部分的标准字段之一，JWT 的唯一性标识，虽不强求，但尽量确保其唯一性。
                 .setId(IdUtil.objectId())
                 // 签发时间（iat）：荷载部分的标准字段之一，代表这个 JWT 的生成时间。
@@ -115,12 +115,10 @@ public class TokenUtilImpl implements TokenUtil {
     @Override
     public boolean verify(String jwtToken) {
         Algorithm algorithm = null;
-        switch (signatureAlgorithm) {
-            case HS256:
-                algorithm = Algorithm.HMAC256(Base64.decodeBase64(EncodedSecretKey));
-                break;
-            default:
-                throw new RuntimeException("不支持该算法");
+        if (signatureAlgorithm == SignatureAlgorithm.HS256) {
+            algorithm = Algorithm.HMAC256(Base64.decodeBase64(EncodedSecretKey));
+        } else {
+            throw new RuntimeException("不支持该算法");
         }
         JWTVerifier verifier = JWT.require(algorithm).build();
         verifier.verify(jwtToken);  // 校验不通过会抛出异常

@@ -1,25 +1,26 @@
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.NumberUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.StaticLog;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.fasterxml.jackson.core.JsonProcessingException;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.dao.mapper.MpUserMapper;
-import com.seasontemple.mproject.service.service.MpUserService;
-import com.seasontemple.mproject.utils.custom.ResultCode;
-import com.seasontemple.mproject.utils.exception.CustomException;
+import com.seasontemple.mproject.dao.redis.JedisUtil;
+import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.web.WebApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-import org.springframework.test.context.web.WebAppConfiguration;
-import org.springframework.web.bind.annotation.GetMapping;
 
-import java.io.IOException;
-import java.util.Optional;
+import java.time.LocalDateTime;
+import java.util.*;
 
 
 /**
@@ -30,13 +31,15 @@ import java.util.Optional;
  */
 @RunWith(SpringRunner.class)
 @SpringBootTest(classes = WebApplication.class)
-@WebAppConfiguration("src/main/resource")
 public class TestWebApplication {
 
     private static Log log = LogFactory.get(TestWebApplication.class);
 
     @Autowired
     private MpUserMapper mpUserMapper;
+
+//    @Value("${refreshTokenExpireTime}")
+//    private static String refreshTokenExpireTime;
 
 //    @Test
 //    public void test() {
@@ -48,5 +51,26 @@ public class TestWebApplication {
 //                .one();
 //        log.info("结果为：{}", loginUser);
 //    }
+
+   /* @Test
+    public void test() {
+        String content = "test卓哥";
+        Map aa = encryptSource(content);
+        StaticLog.warn("{}|{}", aa.get("salt"), aa.get("encrypt"));
+        Map bb;
+        bb = decryptSource(StrUtil.bytes(aa.get("salt").toString()), StrUtil.toString(aa.get("encrypt")));
+        StaticLog.warn("{}", aa.get("decrypt"));
+    }
+
+    public static Map encryptSource(String source) {
+        byte[] salt = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+        AES aes = SecureUtil.aes(salt);
+        String encrypt = aes.encryptHex(source);
+        return MapUtil.builder("salt", StrUtil.toString(salt)).put("encrypt", encrypt).build();
+    }
+
+    public Map decryptSource(AES aes, byte[] salt, String encrypt) {
+        return MapUtil.builder("decrypt", aes.decryptStr(encrypt, CharsetUtil.CHARSET_UTF_8)).build();
+    }*/
 
 }

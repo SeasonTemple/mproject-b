@@ -5,10 +5,7 @@ import java.util.Date;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import com.baomidou.mybatisplus.annotation.IdType;
-import com.baomidou.mybatisplus.annotation.KeySequence;
-import com.baomidou.mybatisplus.annotation.TableField;
-import com.baomidou.mybatisplus.annotation.TableId;
+import com.baomidou.mybatisplus.annotation.*;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -50,7 +47,7 @@ public class MpUser {
      * 加密盐
      */
     @ApiModelProperty("加密盐")
-    private String salt;
+    private byte[] salt;
     /**
      * 用户token
      */
@@ -60,6 +57,7 @@ public class MpUser {
      * 当前角色ID
      */
     @ApiModelProperty("当前角色ID")
+    @TableField(fill = FieldFill.INSERT)
     private Integer roleId;
     /**
      * 账号创建时间
@@ -67,6 +65,7 @@ public class MpUser {
     @ApiModelProperty("账号创建时间")
 //    @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @TableField(value = "createTime", fill = FieldFill.INSERT)
     private Date createTime;
     /**
      * 上次登录
@@ -74,11 +73,13 @@ public class MpUser {
     @ApiModelProperty("上次登录")
 //    @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
+    @TableField(value = "createTime", fill = FieldFill.INSERT_UPDATE)
     private Date lastLogin;
     /**
      * 账户状态
      */
     @ApiModelProperty("账户状态")
+    @TableField(fill = FieldFill.INSERT)
     private Integer status;
     /**
      * 用户详情ID

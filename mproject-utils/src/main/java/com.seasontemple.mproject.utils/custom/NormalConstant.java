@@ -1,5 +1,24 @@
 package com.seasontemple.mproject.utils.custom;
 
+import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.convert.Converter;
+import cn.hutool.core.map.MapUtil;
+import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.core.util.CharUtil;
+import cn.hutool.core.util.CharsetUtil;
+import cn.hutool.core.util.StrUtil;
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
+import cn.hutool.crypto.symmetric.SymmetricCrypto;
+import cn.hutool.log.StaticLog;
+import org.springframework.beans.factory.annotation.Value;
+
+import java.util.Arrays;
+import java.util.List;
+import java.util.Map;
+
 /**
  * @author Season Temple
  * @program: mproject
@@ -10,6 +29,32 @@ public class NormalConstant {
 
     private NormalConstant() {
     }
+
+/*    @Value("${encryptKey}")
+    private static String encryptKey;
+
+    public static Map<String, String> encrypt(String source) {
+        if (encryptKey.equals("AES")) {
+            byte[] aesKey = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+            AES aes = SecureUtil.aes(aesKey);
+            return MapUtil.builder("salt", Arrays.toString(aesKey)).put("encrypt", aes.encryptHex(source)).build();
+        } else {
+            byte[] desKey = SecureUtil.generateKey(SymmetricAlgorithm.DESede.getValue()).getEncoded();
+            SymmetricCrypto des = new SymmetricCrypto(SymmetricAlgorithm.DESede, desKey);
+            return MapUtil.builder("salt", Arrays.toString(desKey)).put("encrypt", des.encryptHex(source)).build();
+        }
+    }
+
+    public static Map<String, String> decrypt(String salt, String encrypt) {
+         if (encryptKey.equals("AES")) {
+             AES aes = SecureUtil.aes(salt.getBytes());
+             return MapUtil.builder("key", salt).put("res", aes.decryptStr(encrypt, CharsetUtil.CHARSET_UTF_8)).build();
+
+         } else {
+             SymmetricCrypto des = new SymmetricCrypto(SymmetricAlgorithm.DESede, salt.getBytes());
+             return MapUtil.builder("key", salt).put("res", des.decryptStr(encrypt)).build();
+        }
+    }*/
 
     /**
      * redis-success

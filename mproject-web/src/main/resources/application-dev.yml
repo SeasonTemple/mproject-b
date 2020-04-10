@@ -28,8 +28,8 @@ server:
     context-path: /
 swagger:
   apply-default-response-messages: false # 取消使用默认预定义的响应消息,并使用自定义响应消息
-  base-package: com.seasontemple.mproject.web
-  base-path: /
+  base-package: com.seasontemple.mproject
+  base-path: /**
   contact:
     email: fnc1997@foxmail.com
     name: SeasonTemple

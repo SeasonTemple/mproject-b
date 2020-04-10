@@ -1,6 +1,7 @@
 package com.seasontemple.mproject.web.controller;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
@@ -20,6 +21,9 @@ public class BaseController {
 
     @Autowired
     protected HttpServletResponse response;
+
+    @Value("${refreshTokenExpireTime}")
+    protected String refreshTokenExpireTime;
 
     /**
      * 获取当前请求

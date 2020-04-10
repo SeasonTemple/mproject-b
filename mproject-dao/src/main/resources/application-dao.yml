@@ -78,4 +78,4 @@ mybatis-plus:
     map-underscore-to-camel-case: true
     cache-enabled: false
     lazy-loading-enabled: true
-    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl
+#    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl

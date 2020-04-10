@@ -1,5 +1,8 @@
 package com.seasontemple.mproject.service.service.impl;
 
+import cn.hutool.crypto.SecureUtil;
+import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
@@ -8,11 +11,11 @@ import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.dao.mapper.MpUserMapper;
 import com.seasontemple.mproject.dao.mapper.UserRoleMapper;
 import com.seasontemple.mproject.service.service.LoginService;
+import com.seasontemple.mproject.utils.exception.CustomException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.beans.Transient;
 import java.util.Optional;
 
 
@@ -36,17 +39,27 @@ public class LoginServiceImpl implements LoginService {
 
     @Override
     public UserRole checkLogin(String username) {
-//        LambdaQueryWrapper<MpUser> queryWrapper = Wrappers.lambdaQuery();
-//        MpUser logUser = mpUserMapper.selectOne(queryWrapper.select(MpUser::getId, MpUser::getUserName, MpUser::getPassWord).eq(MpUser::getUserName, username));
+//        LambdaQueryWrapper<UserRole> queryWrapper = Wrappers.lambdaQuery();
+//        UserRole logUser = userRoleMapper.selectOne(queryWrapper.eq(UserRole::getUserName, username));
 //        log.warn("{}", logUser);
         return Optional.ofNullable(new LambdaQueryChainWrapper<>(userRoleMapper)
-                .select(UserRole::getId, UserRole::getUserName, UserRole::getPassWord,UserRole::getRoleId)
+                .select(UserRole::getId, UserRole::getUserName, UserRole::getPassWord, UserRole::getRoleId, UserRole::getSalt)
                 .eq(UserRole::getUserName, username)
-                .last("limit 1").one()).orElse(new UserRole());
+                .one()) .orElseThrow(()->new CustomException("查无此人"));
     }
 
     @Override
     public int register(MpUser mpUser) {
+        byte[] salt = SecureUtil.generateKey(SymmetricAlgorithm.AES.getValue()).getEncoded();
+        log.warn("{}",salt.length);
+        AES aes = SecureUtil.aes(salt);
+        mpUser.setSalt(salt);
+        mpUser.setPassWord(aes.encryptHex(mpUser.getPassWord()));
+//        mpUser.setCreateTime(new Date(System.currentTimeMillis()));
+//        mpUser.setLastLogin(new Date());
+//        mpUser.setRoleId(1);
+//        mpUser.setStatus(0);
         return mpUserMapper.insert(mpUser);
     }
+
 }
