@@ -8,6 +8,8 @@ import com.baomidou.mybatisplus.extension.api.R;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.service.service.MpUserService;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
+import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +50,8 @@ public class MpUserController extends ApiController {
      * @return 单条数据
      */
     @GetMapping("{id}")
+//    @RequiresRoles("USER")
+    @RequiresAuthentication
     public R selectOne(@PathVariable Serializable id) {
         return success(this.mpUserService.getById(id));
     }

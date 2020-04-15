@@ -1,8 +1,13 @@
 package com.seasontemple.mproject.dao.dto;
 
-import lombok.Builder;
+import cn.hutool.log.Log;
+import cn.hutool.log.LogFactory;
 import lombok.Data;
+import lombok.Getter;
+import lombok.Setter;
+import lombok.experimental.Accessors;
 
+import java.io.Serializable;
 import java.util.Date;
 
 /**
@@ -12,8 +17,10 @@ import java.util.Date;
  * @create: 2020/04/05 01:41:45
  */
 @Data
-@Builder
-public class LoginDto {
+@Accessors(chain = true)
+public class LoginDto{
+
+    private static Log log = Log.get();
 
     private String userName;
 
@@ -22,6 +29,8 @@ public class LoginDto {
     private String permission;
 
     private String roleName;
+
+    private byte[] salt;
 
     private String token;
 

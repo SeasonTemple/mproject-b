@@ -1,5 +1,6 @@
 package com.seasontemple.mproject.utils.exception;
 
+
 /**
  * @author Season Temple
  * @program: mproject

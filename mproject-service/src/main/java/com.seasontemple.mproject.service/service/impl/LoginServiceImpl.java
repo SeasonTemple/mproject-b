@@ -31,11 +31,14 @@ public class LoginServiceImpl implements LoginService {
 
     private static Log log = LogFactory.get(LoginServiceImpl.class);
 
-    @Autowired
-    private MpUserMapper mpUserMapper;
+    private final MpUserMapper mpUserMapper;
 
-    @Autowired
-    private UserRoleMapper userRoleMapper;
+    private final UserRoleMapper userRoleMapper;
+
+    public LoginServiceImpl(MpUserMapper mpUserMapper, UserRoleMapper userRoleMapper) {
+        this.mpUserMapper = mpUserMapper;
+        this.userRoleMapper = userRoleMapper;
+    }
 
     @Override
     public UserRole checkLogin(String username) {
@@ -45,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
         return Optional.ofNullable(new LambdaQueryChainWrapper<>(userRoleMapper)
                 .select(UserRole::getId, UserRole::getUserName, UserRole::getPassWord, UserRole::getRoleId, UserRole::getSalt)
                 .eq(UserRole::getUserName, username)
-                .one()) .orElseThrow(()->new CustomException("查无此人"));
+                .one()) .orElse(new UserRole());
     }
 
     @Override

@@ -17,6 +17,7 @@ import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
+import org.springframework.stereotype.Component;
 
 import javax.servlet.ServletRequest;
 import javax.servlet.ServletResponse;
@@ -45,37 +46,33 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
 
     private static final Log log = Log.get();
 
-    /*@Override
-    protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
-        Map<String, String> whiteList = new HashMap<>();
-        whiteList.put("druid", "druid");
-        whiteList.put("swagger", "swagger");
-        whiteList.put("v2", "v2");
-        whiteList.put("login", "login");
-        StaticLog.warn("拦截到的请求体为: {}，匹配结果为：{}", WebUtils.getRequestUri((HttpServletRequest) request), request);
-        return whiteList.values().stream().anyMatch(w -> WebUtils.getRequestUri((HttpServletRequest) request).contains(w));
-    }*/
-
     /**
      * 对跨域提供支持
      */
     @Override
     protected boolean preHandle(ServletRequest request, ServletResponse response) throws Exception {
 
-//        Map<String, String> whiteList = new HashMap<>();
-//        whiteList.put("druid", "druid");
-//        whiteList.put("swagger", "swagger");
-//        whiteList.put("v2", "v2");
-//        whiteList.put("login", "login");
-//        StaticLog.warn("拦截到的请求体为: {}，匹配结果为：{}", WebUtils.getRequestUri((HttpServletRequest) request), request);
-//        boolean t = whiteList.values().stream().anyMatch(w -> WebUtils.getRequestUri((HttpServletRequest) request).contains(w));
-//        if (!t) {
-//            return false;
-//        } else {
-            return super.preHandle(request, response);
+        /*Map<String, String> whiteList = new HashMap<>();
+        whiteList.put("druid", "druid");
+        whiteList.put("swagger", "swagger");
+        whiteList.put("v2", "v2");
+        whiteList.put("login", "login");
+        StaticLog.warn("拦截到的请求体为: {}，匹配结果为：{}", WebUtils.getRequestUri((HttpServletRequest) request), request);
+        boolean t = whiteList.values().stream().anyMatch(w -> WebUtils.getRequestUri((HttpServletRequest) request).contains(w));
+        if (t) {
+            return true;
+        } else {*/
+        return super.preHandle(request, response);
 //        }
     }
 
+    /**
+     * 这里我们详细说明下为什么最终返回的都是true，即允许访问 例如我们提供一个地址 GET /article 登入用户和游客看到的内容是不同的
+     * 如果在这里返回了false，请求会被直接拦截，用户看不到任何东西 所以我们在这里返回true，Controller中可以通过
+     * subject.isAuthenticated() 来判断用户是否登入
+     * 如果有些资源只有登入用户才能访问，我们只需要在方法上面加上 @RequiresAuthentication 注解即可
+     * 但是这样做有一个缺点，就是不能够对GET,POST等请求进行分别过滤鉴权(因为我们重写了官方的方法)，但实际上对应用影响不大
+     */
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object o) {
 //        StaticLog.warn(" {} 方法被调用.", "isAccessAllowed");
@@ -124,7 +121,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * 将executeLogin方法调用去除，如果没有去除将会循环调用doGetAuthenticationInfo方法
      */
     @Override
-    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) throws Exception {
+    protected boolean onAccessDenied(ServletRequest request, ServletResponse response) {
 //        StaticLog.warn(" {} 方法被调用.", "onAccessDenied");
         //这个地方和前端约定，要求前端将jwtToken放在请求的Header部分
         //所以以后发起请求的时候就需要在Header中放一个Authorization，值就是对应的Token
@@ -155,7 +152,7 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
         // 拿到当前Header中Authorization的AccessToken(Shiro中getAuthzHeader方法已经实现)
-        return StrUtil.isNotEmpty(this.getAuthzHeader(request));
+        return !StrUtil.isEmpty(this.getAuthzHeader(request));
     }
 
     // 进行AccessToken登录认证授权

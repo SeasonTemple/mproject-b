@@ -1,5 +1,6 @@
 package com.seasontemple.mproject.web.shiro.config;
 
+import cn.hutool.core.comparator.CompareUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
@@ -17,8 +18,11 @@ import com.seasontemple.mproject.dao.mapper.OperationAuthorityMapper;
 import com.seasontemple.mproject.dao.mapper.UserRoleMapper;
 import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
+import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
+import com.seasontemple.mproject.utils.token.TokenUtilImpl;
 import com.seasontemple.mproject.web.shiro.jwt.JwtToken;
+import io.jsonwebtoken.Claims;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
@@ -26,6 +30,8 @@ import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 import java.util.Objects;
@@ -37,15 +43,16 @@ import java.util.Optional;
  * @description: shiro域
  * @create: 2020/03/29 21:38:25
  */
+@Service
 public class ShiroRealm extends AuthorizingRealm {
 
     private static Log log = LogFactory.get();
 
     @Autowired
-    private TokenUtil tokenUtil;
+    private UserRoleMapper userRoleMapper;
 
     @Autowired
-    private UserRoleMapper userRoleMapper;
+    private TokenUtil tokenUtil;
 
     @Autowired
     private OperationAuthorityMapper operationAuthorityMapper;
@@ -65,7 +72,8 @@ public class ShiroRealm extends AuthorizingRealm {
      * @Description: 只有当需要检测用户权限的时候才会调用此方法
      */
     @Override
-    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) {
+    protected AuthorizationInfo doGetAuthorizationInfo(PrincipalCollection principals) throws AuthorizationException {
+        log.warn("进入角色授权......");
         SimpleAuthorizationInfo simpleAuthorizationInfo = new SimpleAuthorizationInfo();
         String account = tokenUtil.getClaim(principals.toString(), NormalConstant.ACCOUNT);
         log.info("用户名为：{}", account);
@@ -94,36 +102,38 @@ public class ShiroRealm extends AuthorizingRealm {
     //这个token就是从过滤器中传入的jwtToken
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
-
-        String jwt = (String) token.getPrincipal();
-        log.warn("{}", jwt);
+        String jwt = StrUtil.toString(token.getPrincipal()).trim();
+//        log.warn("{}", jwt);
         if (StrUtil.isEmpty(jwt)) {
             log.error("jwtToken 不允许为空");
 //            throw new NullPointerException("jwtToken 不允许为空");
             throw new AuthenticationException("jwtToken 不允许为空");
         }
-
+//        String password = StrUtil.toString(token.getCredentials());
         //下面是验证这个user是否是真实存在的
-        String username = (String) tokenUtil.parse(jwt).get("username");//判断数据库中username是否存在
+        String username = tokenUtil.getClaim(jwt, NormalConstant.ACCOUNT);//判断数据库中username是否存在
         UserRole logUser = Optional.ofNullable(new LambdaQueryChainWrapper<>(userRoleMapper)
                 .select(UserRole::getId, UserRole::getUserName, UserRole::getPassWord, UserRole::getRoleId)
                 .eq(UserRole::getUserName, username)
-                .last("limit 1").one()).orElse(new UserRole());
-        if (!StrUtil.isNotEmpty(logUser.getPassWord())) {
-            throw new AuthenticationException("该用户不存在！");
-        }
+                .last("limit 1").one()).orElseThrow(() -> new CustomException("该用户不存在"));
+        /*if (StrUtil.isEmpty(logUser.getPassWord())) {
+            throw new CustomException("该用户不存在！");
+        }*/
+        TokenUtil tokenTool = TokenUtilImpl.build(username);
         // 开始认证，要AccessToken认证通过，且Redis中存在RefreshToken，且两个Token时间戳一致
-        if (tokenUtil.verify(jwt) && JedisUtil.exists(NormalConstant.PREFIX_SHIRO_REFRESH_TOKEN + username)) {
+        if (tokenTool.verify(jwt) && JedisUtil.exists(NormalConstant.PREFIX_SHIRO_REFRESH_TOKEN + username)) {
             // 获取RefreshToken的时间戳
-            String currentTimeMillisRedis = Objects.requireNonNull(JedisUtil.getObject(NormalConstant.PREFIX_SHIRO_REFRESH_TOKEN + username)).toString();
+            Long currentTimeMillisRedis = Long.valueOf(JedisUtil.getJson(NormalConstant.PREFIX_SHIRO_REFRESH_TOKEN + username));
             // 获取AccessToken时间戳，与RefreshToken的时间戳对比
-            if (tokenUtil.getClaim(jwt, NormalConstant.CURRENT_TIME_MILLIS).equals(currentTimeMillisRedis)) {
-                return new SimpleAuthenticationInfo(token, token, "JwtRealm");
+            String nowTimeMillis = tokenTool.getClaim(jwt, NormalConstant.CURRENT_TIME_MILLIS);
+            if (CompareUtil.compare(nowTimeMillis, StrUtil.toString(currentTimeMillisRedis)) < 0) {
+                return new SimpleAuthenticationInfo(jwt, jwt, "shiroRealm");
             } else {
                 throw new AuthenticationException("Token已过期(Token expired or incorrect.)");
             }
         } else {
-            throw new AuthenticationException("jwtToken验证失败");
+//            throw new CustomException("jwtToken验证失败");
+            throw new CustomException("该用户已退出！");
         }
         /*if (!tokenUtil.verify(jwt)) {
 //            throw new CustomException("jwtToken验证失败");

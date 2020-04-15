@@ -1,5 +1,8 @@
 package com.seasontemple.mproject.web.controller;
 
+import org.apache.shiro.SecurityUtils;
+import org.apache.shiro.authc.AuthenticationToken;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 
@@ -25,6 +28,14 @@ public class BaseController {
     @Value("${refreshTokenExpireTime}")
     protected String refreshTokenExpireTime;
 
+
+    protected static Subject getSubject() {
+        return SecurityUtils.getSubject();
+    }
+
+    protected void login(AuthenticationToken token) {
+        getSubject().login(token);
+    }
     /**
      * 获取当前请求
      */

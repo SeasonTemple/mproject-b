@@ -1,3 +1,6 @@
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.ShearCaptcha;
+import cn.hutool.captcha.generator.MathGenerator;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.NumberUtil;
@@ -8,6 +11,7 @@ import cn.hutool.crypto.symmetric.SymmetricAlgorithm;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import cn.hutool.log.StaticLog;
+import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.dao.mapper.MpUserMapper;
 import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
@@ -41,16 +45,15 @@ public class TestWebApplication {
 //    @Value("${refreshTokenExpireTime}")
 //    private static String refreshTokenExpireTime;
 
-//    @Test
-//    public void test() {
-//        MpUser mpUser = new MpUser();
-//        mpUser.setUserName("q12232");
-//        MpUser loginUser = new LambdaQueryChainWrapper<>(mpUserMapper)
-//                .select(MpUser::getUserId, MpUser::getUserName, MpUser::getPassWord, MpUser::getSalt)
-//                .ge(MpUser::getUserName, mpUser.getUserName())
-//                .one();
-//        log.info("结果为：{}", loginUser);
-//    }
+    @Test
+    public void test() {
+        ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 45, 4, 4);
+        // 自定义验证码内容为四则运算方式
+        captcha.setGenerator(new MathGenerator());
+        // 重新生成code
+        captcha.createCode();
+        captcha.write("d:/image/shear.png");
+    }
 
    /* @Test
     public void test() {

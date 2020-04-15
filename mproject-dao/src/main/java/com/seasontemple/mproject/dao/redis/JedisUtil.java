@@ -18,7 +18,7 @@ import java.util.Set;
  * @create: 2020/04/01 01:19:29
  */
 @Component
-public class JedisUtil {
+public class JedisUtil implements AutoCloseable {
     /**
      * 静态注入JedisPool连接池
      * 本来是正常注入JedisUtil，可以在Controller和Service层使用，但是重写Shiro的CustomCache无法注入JedisUtil
@@ -232,5 +232,10 @@ public class JedisUtil {
         } catch (Exception e) {
             throw new CustomException("获取Redis键过期剩余时间ttl方法异常:key=" + key + " cause=" + e.getMessage());
         }
+    }
+
+    @Override
+    public void close() {
+        closePool();
     }
 }

@@ -1,5 +1,7 @@
 package com.seasontemple.mproject.dao.dto;
 
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -40,6 +42,7 @@ public class OperationAuthority {
     * 权限操作映射ID
     */    
     @ApiModelProperty("权限操作映射ID")
+    @TableId(type = IdType.AUTO)
     private Integer oId;
 
 }

@@ -9,6 +9,7 @@ import org.apache.shiro.cache.Cache;
 import org.apache.shiro.cache.CacheException;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.stereotype.Component;
 
 import java.io.IOException;
 import java.util.*;
@@ -19,6 +20,7 @@ import java.util.*;
  * @description: 自定义shiro缓存类
  * @create: 2020/04/02 23:06:38
  */
+@Component
 public class CustomCache<K, V> implements Cache<K, V> {
 
     @Autowired

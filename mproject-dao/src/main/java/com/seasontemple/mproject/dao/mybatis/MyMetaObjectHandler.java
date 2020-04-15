@@ -21,6 +21,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
 
     /**
      * 进行插入操作时：自动填充
+     *
      * @param metaObject
      */
     @Override
@@ -38,6 +39,9 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
         }
         if (metaObject.hasSetter("status")) {
             setFieldValByName("status", 1, metaObject);
+        }
+        if (metaObject.hasSetter("profileId")) {
+            setFieldValByName("profileId", "0", metaObject);
         }
 
     }

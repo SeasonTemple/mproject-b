@@ -99,12 +99,13 @@ public class NormalConstant {
     /**
      * JWT-account:
      */
-    public static final String ACCOUNT = "username";
+    public static final String ACCOUNT = "userName";
 
     /**
      * JWT-currentTimeMillis:
      */
-    public static final String CURRENT_TIME_MILLIS = "currentTimeMillis";
+//    public static final String CURRENT_TIME_MILLIS = "currentTimeMillis";
+    public static final String CURRENT_TIME_MILLIS = "iat";
 
     /**
      * PASSWORD_MAX_LEN

@@ -80,6 +80,7 @@ public interface TokenUtil {
 
     /**
      * 获得Token中的信息无需secret解密也能获得
+     *
      * @param token
      * @param claim
      * @return token中Claim的信息，以字符串形式返回
