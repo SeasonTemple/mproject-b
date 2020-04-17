@@ -3,6 +3,7 @@ package com.seasontemple.mproject.web.shiro.config;
 import com.seasontemple.mproject.web.shiro.cache.CustomCacheManager;
 import com.seasontemple.mproject.web.shiro.jwt.JwtDefaultSubjectFactory;
 import com.seasontemple.mproject.web.shiro.jwt.JwtFilter;
+import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.shiro.authc.credential.HashedCredentialsMatcher;
 import org.apache.shiro.mgt.DefaultSessionStorageEvaluator;
 import org.apache.shiro.mgt.DefaultSubjectDAO;
@@ -48,25 +49,29 @@ public class ShiroConfig {
     @Bean
     public Realm realm() {
         ShiroRealm shiroRealm = new ShiroRealm();
-//        shiroRealm.setCredentialsMatcher(hashedCredentialsMatcher());
+//        shiroRealm.setCredentialsMatcher(customCredentialsMatcher());
+        /* 允许认证缓存 */
+//        shiroRealm.setAuthenticationCachingEnabled(true);
+//        shiroRealm.setAuthenticationCacheName("authenticationCache");
+        /* 允许授权缓存 */
+        shiroRealm.setAuthorizationCachingEnabled(true);
+//        shiroRealm.setAuthorizationCacheName("authorizationCache");
         shiroRealm.setCachingEnabled(true);
-        shiroRealm.setAuthorizationCachingEnabled(true);
-        shiroRealm.setAuthorizationCachingEnabled(true);
-//        shiroRealm.setCacheManager(new CustomCacheManager());
+        shiroRealm.setCacheManager(new CustomCacheManager());
         return shiroRealm;
     }
 
-    /*@Bean(name = "credentialsMatcher")
-    public HashedCredentialsMatcher hashedCredentialsMatcher() {
-        HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
+    @Bean(name = "credentialsMatcher")
+    public CustomCredentialsMatcher customCredentialsMatcher() {
+        /* HashedCredentialsMatcher hashedCredentialsMatcher = new HashedCredentialsMatcher();
         // 散列算法:这里使用MD5算法;
-        hashedCredentialsMatcher.setHashAlgorithmName("hs256");
+        hashedCredentialsMatcher.setHashAlgorithmName("md5");
         // 散列的次数，比如散列两次，相当于 md5(md5(""));
-        hashedCredentialsMatcher.setHashIterations(1);
+        hashedCredentialsMatcher.setHashIterations(2);
         // storedCredentialsHexEncoded默认是true，此时用的是密码加密用的是Hex编码；false时用Base64编码
-        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);
-        return hashedCredentialsMatcher;
-    }*/
+        hashedCredentialsMatcher.setStoredCredentialsHexEncoded(true);*/
+        return new CustomCredentialsMatcher();
+    }
 
     @Bean("securityManager")
     public DefaultWebSecurityManager securityManager() {
@@ -81,10 +86,8 @@ public class ShiroConfig {
         //禁止Subject的getSession方法
         securityManager.setSubjectFactory(subjectFactory());
         //指定使用自定义Cache缓存
-        securityManager.setCacheManager(customCacheManager());
-//        securityManager.getAuthorizer();
         securityManager.setRealm(realm());
-//        securityManager.set
+        securityManager.setCacheManager(customCacheManager());
         return securityManager;
     }
 
@@ -96,7 +99,7 @@ public class ShiroConfig {
     @Bean("shiroFilter")
     public ShiroFilterFactoryBean shiroFilterFactoryBean() {
         ShiroFilterFactoryBean shiroFilter = new ShiroFilterFactoryBean();
-//        shiroFilter.setLoginUrl("/");
+        shiroFilter.setLoginUrl("/login");
         shiroFilter.setUnauthorizedUrl("/unauthorized");
         /**
          * 添加jwt过滤器，并在下面注册
@@ -129,9 +132,10 @@ public class ShiroConfig {
         filterRuleMap.put("/druid/**", "anon");
 //        filterRuleMap.put("/swagger/**", "anon");
         filterRuleMap.put("/login", "anon");
-        filterRuleMap.put("//getVCode", "anon");
-        filterRuleMap.put("/online", "anon");
-        filterRuleMap.put("/**", "jwt");
+        filterRuleMap.put("/getVCode", "anon");
+        filterRuleMap.put("/online", "jwt[[USER:QUERY][CUSTOM:QUERY][ADMIN:QUERY]]");
+//        filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");
+        filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");
         shiroFilter.setFilterChainDefinitionMap(filterRuleMap);
 
         return shiroFilter;
@@ -150,6 +154,7 @@ public class ShiroConfig {
     public DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator() {
         DefaultAdvisorAutoProxyCreator defaultAdvisorAutoProxyCreator = new DefaultAdvisorAutoProxyCreator();
         defaultAdvisorAutoProxyCreator.setProxyTargetClass(true);
+        defaultAdvisorAutoProxyCreator.setUsePrefix(true);
         return defaultAdvisorAutoProxyCreator;
     }
 
@@ -158,11 +163,16 @@ public class ShiroConfig {
         return new LifecycleBeanPostProcessor();
     }
 
-    @Bean
-    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor(
-            DefaultWebSecurityManager securityManager) {
+    /*@Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
         AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
-        advisor.setSecurityManager(securityManager);
+        advisor.setSecurityManager(securityManager());
+        return advisor;
+    }*/
+    @Bean
+    public AuthorizationAttributeSourceAdvisor authorizationAttributeSourceAdvisor() {
+        AuthorizationAttributeSourceAdvisor advisor = new AuthorizationAttributeSourceAdvisor();
+        advisor.setSecurityManager(securityManager());
         return advisor;
     }
 

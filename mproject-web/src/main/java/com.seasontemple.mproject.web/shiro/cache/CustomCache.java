@@ -35,11 +35,10 @@ public class CustomCache<K, V> implements Cache<K, V> {
      * 缓存的key名称获取为shiro:cache:account
      * @param key
      * @return java.lang.String
-     * @author dolyw.com
-     * @date 2018/9/4 18:33
      */
     private String getKey(Object key) {
         return NormalConstant.PREFIX_SHIRO_CACHE + tokenUtil.getClaim(key.toString(), NormalConstant.ACCOUNT);
+//        return NormalConstant.PREFIX_SHIRO_CACHE + StrUtil.toString(key);
     }
 
     /**

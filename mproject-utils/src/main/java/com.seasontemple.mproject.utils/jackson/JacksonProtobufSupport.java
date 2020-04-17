@@ -40,6 +40,7 @@ public class JacksonProtobufSupport {
                     .timeZone("GMT+8")
                     .defaultViewInclusion(true)
                     .serializationInclusion(JsonInclude.Include.NON_NULL)
+                    .autoDetectGettersSetters(true)
                     .modulesToInstall(ProtobufModule.class);
         };
     }

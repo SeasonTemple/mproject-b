@@ -46,7 +46,7 @@ public class LoginServiceImpl implements LoginService {
 //        UserRole logUser = userRoleMapper.selectOne(queryWrapper.eq(UserRole::getUserName, username));
 //        log.warn("{}", logUser);
         return Optional.ofNullable(new LambdaQueryChainWrapper<>(userRoleMapper)
-                .select(UserRole::getId, UserRole::getUserName, UserRole::getPassWord, UserRole::getRoleId, UserRole::getSalt)
+                .select(UserRole::getUserName, UserRole::getPassWord, UserRole::getRoleId, UserRole::getSalt,UserRole::getAccountStatus,UserRole::getRoleState)
                 .eq(UserRole::getUserName, username)
                 .one()) .orElse(new UserRole());
     }

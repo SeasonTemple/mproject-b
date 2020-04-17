@@ -11,11 +11,11 @@ import com.auth0.jwt.JWT;
 import com.auth0.jwt.JWTVerifier;
 import com.auth0.jwt.algorithms.Algorithm;
 import com.auth0.jwt.exceptions.JWTDecodeException;
+import com.auth0.jwt.exceptions.TokenExpiredException;
 import com.auth0.jwt.interfaces.Claim;
 import com.auth0.jwt.interfaces.DecodedJWT;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.exception.CustomException;
-import com.sun.xml.internal.bind.v2.runtime.output.Encoded;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.JwtBuilder;
 import io.jsonwebtoken.Jwts;
@@ -23,9 +23,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
-import java.util.Arrays;
 import java.util.Date;
-import java.util.HashMap;
 import java.util.Map;
 
 
@@ -98,7 +96,11 @@ public class TokenUtilImpl implements TokenUtil {
             throw new RuntimeException("不支持该算法");
         }
         JWTVerifier verifier = JWT.require(algorithm).build();
-        verifier.verify(jwtToken);
+        try {
+            verifier.verify(jwtToken);
+        } catch (TokenExpiredException e) {
+            throw new CustomException("您的令牌已过期，请重新登录！！");
+        }
         return true;
     }
 

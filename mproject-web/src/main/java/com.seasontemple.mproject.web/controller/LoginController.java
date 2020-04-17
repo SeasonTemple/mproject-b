@@ -1,10 +1,8 @@
 package com.seasontemple.mproject.web.controller;
 
 import cn.hutool.core.bean.BeanUtil;
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
-import cn.hutool.core.util.NumberUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
@@ -17,7 +15,6 @@ import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.service.service.LoginService;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.custom.ResponseBean;
-import com.seasontemple.mproject.utils.custom.ResultCode;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
 import com.seasontemple.mproject.utils.token.TokenUtilImpl;
@@ -27,20 +24,11 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authc.AuthenticationToken;
-import org.apache.shiro.authc.UsernamePasswordToken;
-import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresPermissions;
-import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.mgt.SecurityManager;
 import org.apache.shiro.subject.Subject;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import java.time.LocalDateTime;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -62,20 +50,17 @@ public class LoginController extends BaseController {
         this.loginService = loginService;
     }
 
-//    @Autowired
-//    private TokenUtil tokenUtil;
-//    @PostMapping("/login")
-    @PostMapping(value = "/login",produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/login", produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "用户登录", notes = "使用用户名、密码进行登录")
     @ResponseBody
-    public ResponseBean login(LoginDto userDto) throws CustomException{
+    public ResponseBean login(LoginDto userDto) throws CustomException {
         log.info("LoginDto：{}", userDto);
-        if (BeanUtil.isEmpty(userDto) ) {
+        if (BeanUtil.isEmpty(userDto)) {
             response.setStatus(HttpServletResponse.SC_NOT_FOUND);
             return ResponseBean.builder().msg("登录失败！该账户不存在。").build().success();
         }
         UserRole logUser = loginService.checkLogin(userDto.getUserName());
-        if (StrUtil.isEmpty(logUser.getPassWord()) ) {
+        if (StrUtil.isEmpty(logUser.getPassWord())) {
             response.setStatus(HttpServletResponse.SC_OK);
             return ResponseBean.builder().msg("登录失败！该账户不存在。").build().failed();
         }
@@ -85,6 +70,10 @@ public class LoginController extends BaseController {
         if (!userDto.getPassWord().equals(deCryptPwd)) {
             response.setStatus(HttpServletResponse.SC_OK);
             return ResponseBean.builder().msg("登录失败！该账户不存在。").build().failed();
+        }
+        if (logUser.getRoleState().equals(0) || logUser.getAccountStatus().equals(0)) {
+            response.setStatus(HttpServletResponse.SC_OK);
+            return ResponseBean.builder().msg("登录失败！该账户已被禁止使用或拥有角色权限失效。").build().failed();
         }
         // 清除可能存在的shiro权限信息缓存
         if (JedisUtil.exists(NormalConstant.PREFIX_SHIRO_CACHE + logUser.getUserName())) {
@@ -107,11 +96,12 @@ public class LoginController extends BaseController {
             getSubject().login(logToken);
         } catch (Exception e) {
             e.printStackTrace();
+            throw new CustomException("登录失败！获取用户角色或权限失败！");
         }
         response.setHeader("Authorization", jwtToken);
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
         response.setStatus(HttpServletResponse.SC_OK);
-        return ResponseBean.builder().msg("登录成功！").data(claim).build().success();
+        return ResponseBean.builder().msg("登录成功！").data(MapUtil.builder("userName", logUser.getUserName()).build()).build().success();
     }
 
     @PostMapping("/register")
@@ -142,31 +132,7 @@ public class LoginController extends BaseController {
     //@ApiImplicitParam(paramType = "header", dataType = "String", name = "Access-Control-Expose-Headers", value = "Authorization", defaultValue = "Authorization", required = true)
 
 
-    //    @RequiresRoles("[USER]")
-//    @RequiresRoles(value = {"[USER:QUERY],[ADMIN:QUERY]"},logical = Logical.OR)
-//    @RequiresPermissions(logical = Logical.OR, value = {"[USER:QUERY],[ADMIN:QUERY]"})
-    @GetMapping("/online")
-    @ResponseBody
-    @ApiOperation(value = "当前用户获取", notes = "当前用户获取")
-    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = "Authorization", value = "token标记", required = true)})
-    public ResponseBean online() {
-        try {
-            Subject subject = SecurityUtils.getSubject();
-            if (BeanUtil.isNotEmpty(subject)) {
-//                subject.isAuthenticated();
-                String token = (String) subject.getPrincipal();
-                if (StrUtil.isNotBlank(token)) {
-                    String account = TokenUtilImpl.build(null).getClaim(token, NormalConstant.ACCOUNT);
-                    log.warn(account);
-                    return ResponseBean.builder().msg("当前用户获取成功！").data(account).build().success();
-                }
-            }
-        } catch (Exception e) {
-            e.printStackTrace();
-        }
-        return ResponseBean.builder().msg("当前无用户在线！").build().success();
-    }
-
+    //    @RequiresRoles(value = {"[USER:QUERY],[ADMIN:QUERY]"},logical = Logical.OR)
     @GetMapping("/logout")
     @ApiOperation(value = "用户退出", notes = "用户退出接口")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = "Authorization", value = "token标记", required = true)})
@@ -188,5 +154,29 @@ public class LoginController extends BaseController {
             throw new CustomException("系统异常！");
         }
         return ResponseBean.builder().msg("退出成功！即将返回登录界面......").build().success();
+    }
+
+//    @RequiresRoles(value = {"[USER]", "[CUSTOM]", "[ADMIN]"}, logical = Logical.OR)
+    @RequiresPermissions("[USER:QUERY][CUSTOM:QUERY][ADMIN:QUERY]")
+    @GetMapping("/online")
+    @ResponseBody
+    @ApiOperation(value = "当前用户获取", notes = "当前用户获取")
+    @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = "Authorization", value = "token标记", required = true)})
+    public ResponseBean online() {
+        try {
+            if (BeanUtil.isNotEmpty(getSubject())) {
+                getSubject().isAuthenticated();
+                log.warn("账户已登录！");
+                String token = (String) getSubject().getPrincipal();
+                if (StrUtil.isNotBlank(token)) {
+                    String account = TokenUtilImpl.build(null).getClaim(token, NormalConstant.ACCOUNT);
+//                    getSubject().checkRole(account);
+                    return ResponseBean.builder().msg("当前用户获取成功！").data(account).build().success();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return ResponseBean.builder().msg("当前无用户在线！").build().success();
     }
 }

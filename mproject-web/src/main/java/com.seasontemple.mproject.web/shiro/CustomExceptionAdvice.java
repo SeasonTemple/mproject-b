@@ -39,7 +39,7 @@ public class CustomExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(ShiroException.class)
     public ResponseBean handle401(ShiroException e) {
-        return ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问(Unauthorized):" + e.getMessage()).build();
+        return ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问: 请先登录！" + e.getMessage()).build();
     }
 
     /**
@@ -52,7 +52,7 @@ public class CustomExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthorizedException.class)
     public ResponseBean handle401(UnauthorizedException e) {
-        return ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问(Unauthorized):当前Subject没有此请求所需权限(" + e.getMessage() + ")").build();
+        return ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问:当前用户没有此请求所需权限(" + e.getMessage() + ")").build();
     }
 
     /**
@@ -65,7 +65,7 @@ public class CustomExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(UnauthenticatedException.class)
     public ResponseBean handle401(UnauthenticatedException e) {
-        return ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问(Unauthorized):当前Subject是匿名Subject，请先登录(This subject is anonymous.)").build();
+        return ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问:当前用户是匿名用户，请先登录！").build();
     }
 
     /**
@@ -76,7 +76,7 @@ public class CustomExceptionAdvice {
     @ResponseStatus(HttpStatus.UNAUTHORIZED)
     @ExceptionHandler(CustomUnauthorizedException.class)
     public ResponseBean handle401(CustomUnauthorizedException e) {
-        return ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问(Unauthorized):" + e.getMessage()).build();
+        return ResponseBean.builder().code(HttpStatus.UNAUTHORIZED.value()).msg("无权访问:" + e.getMessage()).build();
     }
 
     /**

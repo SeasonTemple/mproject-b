@@ -1,9 +1,13 @@
 package com.seasontemple.mproject.dao.redis;
 
 import cn.hutool.core.util.ArrayUtil;
+import cn.hutool.log.StaticLog;
+import com.fasterxml.jackson.core.JsonGenerator;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
+import com.seasontemple.mproject.utils.jackson.JacksonProtobufSupport;
+import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import redis.clients.jedis.Jedis;
@@ -36,8 +40,6 @@ public class JedisUtil implements AutoCloseable {
      * 获取Jedis实例
      * @param
      * @return redis.clients.jedis.Jedis
-     * @author dolyw.com
-     * @date 2018/9/4 15:47
      */
     public static synchronized Jedis getJedis() {
         try {
@@ -53,10 +55,9 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 释放Jedis资源
+     *
      * @param
      * @return void
-     * @author dolyw.com
-     * @date 2018/9/5 9:16
      */
     public static void closePool() {
         try {
@@ -68,16 +69,15 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 获取redis键值-object
+     *
      * @param key
      * @return java.lang.Object
-     * @author dolyw.com
-     * @date 2018/9/4 15:47
      */
     public static Object getObject(String key) {
         try (Jedis jedis = jedisPool.getResource()) {
             byte[] bytes = jedis.get(key.getBytes());
             if (ArrayUtil.isNotEmpty(bytes)) {
-                return om.writeValueAsString(bytes);
+                return om.readValue(bytes, SimpleAuthorizationInfo.class);
             }
         } catch (Exception e) {
             throw new CustomException("获取Redis键值getObject方法异常:key=" + key + " cause=" + e.getMessage());
@@ -87,6 +87,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 设置redis键值-object
+     *
      * @param key
      * @param value
      * @return java.lang.String
@@ -101,6 +102,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 设置redis键值-object-expiration
+     *
      * @param key
      * @param value
      * @param expiration
@@ -121,6 +123,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 获取redis键值-Json
+     *
      * @param key
      * @return java.lang.Object
      */
@@ -134,6 +137,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 设置redis键值-Json
+     *
      * @param key
      * @param value
      * @return java.lang.String
@@ -148,6 +152,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 设置redis键值-Json-expiretime
+     *
      * @param key
      * @param value
      * @param expiration
@@ -168,6 +173,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 删除key
+     *
      * @param key
      * @return java.lang.Long
      */
@@ -181,6 +187,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * key是否存在
+     *
      * @param key
      * @return java.lang.Boolean
      */
@@ -194,6 +201,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 模糊查询获取key集合(keys的速度非常快，但在一个大的数据库中使用它仍然可能造成性能问题，生产不推荐使用)
+     *
      * @param key
      * @return java.util.Set<java.lang.String>
      */
@@ -207,6 +215,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 模糊查询获取key集合(keys的速度非常快，但在一个大的数据库中使用它仍然可能造成性能问题，生产不推荐使用)
+     *
      * @param key
      * @return java.util.Set<java.lang.String>
      */
@@ -220,6 +229,7 @@ public class JedisUtil implements AutoCloseable {
 
     /**
      * 获取Redis键过期剩余时间
+     *
      * @param key
      * @return result
      */

@@ -2,6 +2,8 @@ package com.seasontemple.test;
 
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 import org.springframework.test.context.web.WebAppConfiguration;
 
@@ -13,7 +15,7 @@ import org.springframework.test.context.web.WebAppConfiguration;
  * @create: 2020/03/22 18:36:59
  */
 @RunWith(SpringRunner.class)
-//@SpringBootTest(classes = WebApplication.class)
+@SpringBootTest(classes = TestApplication.class)
 @WebAppConfiguration("src/main/resource")
 public class TestApplication {
 
@@ -30,9 +32,4 @@ public class TestApplication {
 //        System.out.println(initializr.get());
 //    }
 
-//    @Test
-//    public void ccc() {
-//        CustomIdGenerator t = new CustomIdGenerator();
-//        t.nextUUID(this);
-//    }
 }

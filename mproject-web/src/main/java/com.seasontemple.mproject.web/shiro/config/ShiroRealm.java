@@ -1,9 +1,11 @@
 package com.seasontemple.mproject.web.shiro.config;
 
 import cn.hutool.core.comparator.CompareUtil;
+import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import cn.hutool.setting.SettingUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
@@ -29,13 +31,13 @@ import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
+import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
+import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author Season Temple
@@ -68,6 +70,11 @@ public class ShiroRealm extends AuthorizingRealm {
         return token instanceof JwtToken;
     }
 
+    /*@Override
+    protected AuthorizationInfo getAuthorizationInfo(PrincipalCollection principals) {
+        return super.getAuthorizationInfo(principals);
+    }*/
+
     /**
      * @Description: 只有当需要检测用户权限的时候才会调用此方法
      */
@@ -78,23 +85,20 @@ public class ShiroRealm extends AuthorizingRealm {
         String account = tokenUtil.getClaim(principals.toString(), NormalConstant.ACCOUNT);
         log.info("用户名为：{}", account);
         LambdaQueryWrapper<UserRole> userRoleWrapper = Wrappers.lambdaQuery();
-        userRoleWrapper.eq(UserRole::getUserName, account);
-        UserRole result = userRoleMapper.selectOne(userRoleWrapper);
-
+        UserRole result = userRoleMapper.selectOne(userRoleWrapper.eq(UserRole::getUserName, account));
         if (!StrUtil.isNotEmpty(result.getRoleName())) {
             throw new AuthorizationException("账户不存在！");
         }
-        simpleAuthorizationInfo.addRole(result.getRoleName());
         List<OperationAuthority> permissionList = new LambdaQueryChainWrapper<>(operationAuthorityMapper)
-                .eq(OperationAuthority::getPermission, result.getRoleName())
+                .like(OperationAuthority::getPermission, result.getRoleName())
                 .list();
-        permissionList.forEach(p -> {
-            if (StrUtil.isNotEmpty(p.getAuthName())) {
-                log.info("该账户具有的权限有：{}", p);
-                simpleAuthorizationInfo.addStringPermission(p.getPermission());
-            }
-        });
-
+        Set<String> permissions = permissionList.stream().map(OperationAuthority::getPermission).collect(Collectors.toSet());
+//        Set<String> permissions = permissionList.stream().map(OperationAuthority::getPermission).map(String::toLowerCase).collect(Collectors.toSet());
+        Set<String> roles = new HashSet<>();
+        roles.add(result.getRoleName());
+        simpleAuthorizationInfo.setRoles(roles);
+        simpleAuthorizationInfo.setStringPermissions(permissions);
+//        JedisUtil.setObject(NormalConstant.PREFIX_SHIRO_CACHE + result.getUserName(), permissions);
         return simpleAuthorizationInfo;
     }
 
@@ -113,12 +117,16 @@ public class ShiroRealm extends AuthorizingRealm {
         //下面是验证这个user是否是真实存在的
         String username = tokenUtil.getClaim(jwt, NormalConstant.ACCOUNT);//判断数据库中username是否存在
         UserRole logUser = Optional.ofNullable(new LambdaQueryChainWrapper<>(userRoleMapper)
-                .select(UserRole::getId, UserRole::getUserName, UserRole::getPassWord, UserRole::getRoleId)
+                .select(UserRole::getPassWord, UserRole::getSalt, UserRole::getRoleName, UserRole::getToken)
                 .eq(UserRole::getUserName, username)
                 .last("limit 1").one()).orElseThrow(() -> new CustomException("该用户不存在"));
-        /*if (StrUtil.isEmpty(logUser.getPassWord())) {
-            throw new CustomException("该用户不存在！");
-        }*/
+/*
+        List<OperationAuthority> permissionList = new LambdaQueryChainWrapper<>(operationAuthorityMapper)
+                .like(OperationAuthority::getPermission, logUser.getRoleName())
+                .list();
+        Set<String> permissions = permissionList.stream().map(OperationAuthority::getPermission).collect(Collectors.toSet());
+*/
+
         TokenUtil tokenTool = TokenUtilImpl.build(username);
         // 开始认证，要AccessToken认证通过，且Redis中存在RefreshToken，且两个Token时间戳一致
         if (tokenTool.verify(jwt) && JedisUtil.exists(NormalConstant.PREFIX_SHIRO_REFRESH_TOKEN + username)) {
@@ -127,7 +135,8 @@ public class ShiroRealm extends AuthorizingRealm {
             // 获取AccessToken时间戳，与RefreshToken的时间戳对比
             String nowTimeMillis = tokenTool.getClaim(jwt, NormalConstant.CURRENT_TIME_MILLIS);
             if (CompareUtil.compare(nowTimeMillis, StrUtil.toString(currentTimeMillisRedis)) < 0) {
-                return new SimpleAuthenticationInfo(jwt, jwt, "shiroRealm");
+                return new SimpleAuthenticationInfo(jwt, jwt , new MyByteSource(logUser.getSalt()), getName());
+//                return new SimpleAuthenticationInfo(jwt, jwt, "shiroRealm");
             } else {
                 throw new AuthenticationException("Token已过期(Token expired or incorrect.)");
             }

@@ -12,6 +12,7 @@ import com.seasontemple.mproject.utils.custom.ResponseBean;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
 import io.jsonwebtoken.Claims;
+import org.apache.shiro.subject.Subject;
 import org.apache.shiro.web.filter.authc.BasicHttpAuthenticationFilter;
 import org.apache.shiro.web.util.WebUtils;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -74,8 +75,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * 但是这样做有一个缺点，就是不能够对GET,POST等请求进行分别过滤鉴权(因为我们重写了官方的方法)，但实际上对应用影响不大
      */
     @Override
-    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object o) {
-//        StaticLog.warn(" {} 方法被调用.", "isAccessAllowed");
+    protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
+        log.warn(" {} 就这？.", mappedValue);
         // 判断用户是否想要登入
         if (this.isLoginAttempt(request, response)) {
             try {
@@ -122,32 +123,13 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      */
     @Override
     protected boolean onAccessDenied(ServletRequest request, ServletResponse response) {
-//        StaticLog.warn(" {} 方法被调用.", "onAccessDenied");
-        //这个地方和前端约定，要求前端将jwtToken放在请求的Header部分
-        //所以以后发起请求的时候就需要在Header中放一个Authorization，值就是对应的Token
-       /* HttpServletRequest request = (HttpServletRequest) servletRequest;
-        String jwt = request.getHeader("Authorization");
-        StaticLog.warn("该请求的 Header 中 {}", !StrUtil.isNotEmpty(jwt) ? "没有token存在！登录异常！" : "的 token 为：" + jwt);
-        JwtToken jwtToken = new JwtToken(jwt);
-
-        try {
-            // 委托 realm 进行登录认证
-            //所以这个地方最终还是调用JwtRealm进行的认证
-            getSubject(servletRequest, servletResponse).login(jwtToken);
-            //也就是subject.login(token)
-        } catch (Exception e) {
-            e.printStackTrace();
-            onLoginFail(servletResponse);
-            //调用下面的方法向客户端返回错误信息
-            return false;
-        }*/
         //执行方法中没有抛出异常就表示登录成功
         this.sendChallenge(request, response);
         return false;
     }
 
     /**
-     * 检测Header里面是否包含Authorization字段，有就进行Token登录认证授权
+     * 检测Header里面是否包含Authorization字段，没有就进行Token登录认证授权
      */
     @Override
     protected boolean isLoginAttempt(ServletRequest request, ServletResponse response) {
@@ -164,6 +146,10 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
         this.getSubject(request, response).login(token);
         // 如果没有抛出异常则代表登入成功，返回true
         return true;
+    }
+
+    public String getUserRole() {
+        return null;
     }
 
 
@@ -203,18 +189,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
                 // 获取当前最新时间戳
                 long nowMillis = System.currentTimeMillis();
                 String currentTimeMillis = String.valueOf(nowMillis);
-                // 读取配置文件，获取refreshTokenExpireTime属性
-//                PropertiesUtil.readProperties("config.properties");
-//                String refreshTokenExpireTime = PropertiesUtil.getProperty("refreshTokenExpireTime");
                 // 设置RefreshToken中的时间戳为当前最新时间戳，且刷新过期时间重新为30分钟过期(配置文件可配置refreshTokenExpireTime属性)
                 JedisUtil.setObject(NormalConstant.PREFIX_SHIRO_REFRESH_TOKEN + account, currentTimeMillis, Integer.parseInt(refreshTokenExpireTime));
-                // 刷新AccessToken，设置时间戳为当前最新时间戳
-//                token = tokenUtil.generate(account, currentTimeMillis);
-                /*Map<String, Object> claim = new HashMap<>();
-                claims.forEach((s, o) -> {
-                    if (!s.equals("expiration")) claim.put(s, o);
-                });
-                BeanUtil.*/
                 token = tokenUtil.generate(claims, NormalConstant.ttlMillis);
                 // 将新刷新的AccessToken再次进行Shiro的登录
                 JwtToken jwtToken = new JwtToken(token);

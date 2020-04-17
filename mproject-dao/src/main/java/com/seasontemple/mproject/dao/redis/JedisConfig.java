@@ -2,10 +2,19 @@ package com.seasontemple.mproject.dao.redis;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.StaticLog;
+import com.fasterxml.jackson.annotation.JsonAutoDetect;
+import com.fasterxml.jackson.annotation.JsonInclude;
+import com.fasterxml.jackson.annotation.PropertyAccessor;
+import com.fasterxml.jackson.core.JsonGenerator;
+import com.fasterxml.jackson.databind.*;
+import com.hubspot.jackson.datatype.protobuf.ProtobufModule;
+import com.seasontemple.mproject.utils.jackson.JacksonProtobufSupport;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
+import org.springframework.boot.autoconfigure.jackson.Jackson2ObjectMapperBuilderCustomizer;
 import org.springframework.boot.context.properties.ConfigurationProperties;
 import org.springframework.cache.annotation.EnableCaching;
 import org.springframework.context.annotation.Bean;
@@ -13,6 +22,7 @@ import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.PropertySource;
 import redis.clients.jedis.JedisPool;
 import redis.clients.jedis.JedisPoolConfig;
+
 
 
 /**
@@ -69,6 +79,7 @@ public class JedisConfig {
             jedisPoolConfig.setTimeBetweenEvictionRunsMillis(30000);
             //是否在从池中取出连接前进行检验,如果检验失败,则从池中去除连接并尝试取出另一个
             jedisPoolConfig.setTestOnBorrow(true);
+
             //在空闲时检查有效性, 默认false
             jedisPoolConfig.setTestWhileIdle(true);
             JedisPool jedisPool = new JedisPool(jedisPoolConfig, host, port, timeout, password);
@@ -84,8 +95,44 @@ public class JedisConfig {
     /**
      * shiro redis缓存使用的模板
      * 实例化 RedisTemplate 对象
+     *
      * @return
      */
+   /* @Bean
+    public Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer() {
+        Jackson2JsonRedisSerializer<Object> serializer = new Jackson2JsonRedisSerializer<>(Object.class);
+//
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.setVisibility(PropertyAccessor.ALL, JsonAutoDetect.Visibility.ANY);
+        objectMapper.enable(DeserializationFeature.FAIL_ON_UNKNOWN_PROPERTIES);
+        objectMapper.enable(JsonGenerator.Feature.IGNORE_UNKNOWN);
+        objectMapper.deactivateDefaultTyping();
+        serializer.setObjectMapper(objectMapper);
+
+        return serializer;
+    }*/
+
+    /**
+     * RedisTemplate
+     */
+    /*@Bean("shiroRedisTemplate")
+    public RedisTemplate<String, Object> redisTemplate(JedisConnectionFactory factory, Jackson2JsonRedisSerializer<Object> jackson2JsonRedisSerializer) {
+        RedisTemplate<String, Object> redisTemplate = new RedisTemplate<>();
+        redisTemplate.setConnectionFactory(factory);
+
+        //字符串方式序列化KEY
+        StringRedisSerializer stringRedisSerializer = new StringRedisSerializer();
+        redisTemplate.setKeySerializer(stringRedisSerializer);
+        redisTemplate.setHashKeySerializer(stringRedisSerializer);
+
+        //JSON方式序列化VALUE
+        redisTemplate.setValueSerializer(jackson2JsonRedisSerializer);
+        redisTemplate.setHashValueSerializer(jackson2JsonRedisSerializer);
+
+        redisTemplate.afterPropertiesSet();
+
+        return redisTemplate;
+    }*/
 /*    @Bean("shiroRedisTemplate")
     public RedisTemplate shiroRedisTemplate(RedisConnectionFactory redisConnectionFactory) {
 
