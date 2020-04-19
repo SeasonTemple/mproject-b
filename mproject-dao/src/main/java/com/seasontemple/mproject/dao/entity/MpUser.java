@@ -6,10 +6,14 @@ import java.util.Date;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
 import com.baomidou.mybatisplus.annotation.*;
+import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.hibernate.validator.constraints.Length;
 import org.springframework.data.annotation.Id;
+
+import javax.validation.constraints.NotBlank;
 
 
 /**
@@ -24,7 +28,6 @@ import org.springframework.data.annotation.Id;
 @Accessors(chain = true)
 public class MpUser {
 
-    private static final Log log = LogFactory.get();
     private static final long serialVersionUID = 516005918734603946L;
 
     /**
@@ -37,11 +40,15 @@ public class MpUser {
      * 用户名
      */
     @ApiModelProperty("用户名")
+    @NotBlank(message = "用户名不能为空", groups = {UserLoginValidatedGroup.class})
+    @Length(min = 4, max = 20, message = "用户名应介于4到20个字符，其中1个汉字记为2字符", groups = {UserLoginValidatedGroup.class})
     private String userName;
     /**
      * 加密密码
      */
     @ApiModelProperty("加密密码")
+    @NotBlank(message = "密码不能为空", groups = {UserLoginValidatedGroup.class})
+    @Length(min = 8, max = 20, message = "密码应介于8到20个字符，其中1个汉字记为2字符", groups = {UserLoginValidatedGroup.class})
     private String passWord;
     /**
      * 加密盐

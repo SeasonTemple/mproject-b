@@ -108,9 +108,9 @@ public class ShiroConfig {
          */
         Map<String, Filter> filterMap = new HashMap<>(16);
         //这个地方其实另外两个filter可以不设置，默认就是
-        filterMap.put("anon", new AnonymousFilter());
+//        filterMap.put("anon", new AnonymousFilter());
         filterMap.put("jwt", jwtFilterBean());
-        filterMap.put("logout", new LogoutFilter());
+//        filterMap.put("logout", new LogoutFilter());
         shiroFilter.setFilters(filterMap);
         shiroFilter.setSecurityManager(securityManager());
         // 拦截器
@@ -124,7 +124,6 @@ public class ShiroConfig {
         filterRuleMap.put("/doc.html", "anon");
 
         // 公开接口
-//        filterRuleMap.put("/logout", "logout");
 //        filterRuleMap.put("/login/roleCheck", "authc");
         filterRuleMap.put("/css/**", "anon");
         filterRuleMap.put("/js/**", "anon");
@@ -132,7 +131,10 @@ public class ShiroConfig {
         filterRuleMap.put("/druid/**", "anon");
 //        filterRuleMap.put("/swagger/**", "anon");
         filterRuleMap.put("/login", "anon");
+        filterRuleMap.put("/uLogin", "anon");
         filterRuleMap.put("/getVCode", "anon");
+        filterRuleMap.put("/sso", "anon");
+        filterRuleMap.put("/logout", "logout");
         filterRuleMap.put("/online", "jwt[[USER:QUERY][CUSTOM:QUERY][ADMIN:QUERY]]");
 //        filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");
         filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");

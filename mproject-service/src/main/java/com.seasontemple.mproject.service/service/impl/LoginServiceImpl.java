@@ -48,7 +48,7 @@ public class LoginServiceImpl implements LoginService {
         return Optional.ofNullable(new LambdaQueryChainWrapper<>(userRoleMapper)
                 .select(UserRole::getUserName, UserRole::getPassWord, UserRole::getRoleId, UserRole::getSalt,UserRole::getAccountStatus,UserRole::getRoleState)
                 .eq(UserRole::getUserName, username)
-                .one()) .orElse(new UserRole());
+                .one()).orElse(new UserRole());
     }
 
     @Override

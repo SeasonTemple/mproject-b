@@ -18,9 +18,9 @@ import lombok.experimental.Accessors;
 public class MpRoute {
     private static final long serialVersionUID = -73295926238462817L;
     /**
-    * 鐠侯垳鏁盜D
+    * 路由ID
     */    
-    @ApiModelProperty("鐠侯垳鏁盜D")
+    @ApiModelProperty("路由ID")
     private Integer id;
     /**
     * 路由名称

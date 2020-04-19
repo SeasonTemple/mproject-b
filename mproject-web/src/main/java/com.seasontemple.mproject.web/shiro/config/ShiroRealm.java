@@ -1,39 +1,29 @@
 package com.seasontemple.mproject.web.shiro.config;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.comparator.CompareUtil;
-import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import cn.hutool.setting.SettingUtil;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.seasontemple.mproject.dao.dto.OperationAuthority;
+import com.seasontemple.mproject.dao.dto.RoleAuth;
 import com.seasontemple.mproject.dao.dto.UserRole;
-import com.seasontemple.mproject.dao.entity.MpAuthority;
-import com.seasontemple.mproject.dao.entity.MpOperation;
-import com.seasontemple.mproject.dao.entity.MpRole;
-import com.seasontemple.mproject.dao.mapper.MpAuthorityMapper;
-import com.seasontemple.mproject.dao.mapper.MpOperationMapper;
-import com.seasontemple.mproject.dao.mapper.OperationAuthorityMapper;
-import com.seasontemple.mproject.dao.mapper.UserRoleMapper;
+import com.seasontemple.mproject.dao.mapper.*;
 import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
 import com.seasontemple.mproject.utils.token.TokenUtilImpl;
 import com.seasontemple.mproject.web.shiro.jwt.JwtToken;
-import io.jsonwebtoken.Claims;
 import org.apache.shiro.authc.*;
 import org.apache.shiro.authz.AuthorizationException;
 import org.apache.shiro.authz.AuthorizationInfo;
 import org.apache.shiro.authz.SimpleAuthorizationInfo;
 import org.apache.shiro.realm.AuthorizingRealm;
 import org.apache.shiro.subject.PrincipalCollection;
-import org.apache.shiro.util.ByteSource;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
@@ -58,6 +48,9 @@ public class ShiroRealm extends AuthorizingRealm {
 
     @Autowired
     private OperationAuthorityMapper operationAuthorityMapper;
+
+    @Autowired
+    private RoleAuthMapper roleAuthMapper;
 
     /*
      * 多重写一个support
@@ -89,16 +82,17 @@ public class ShiroRealm extends AuthorizingRealm {
         if (!StrUtil.isNotEmpty(result.getRoleName())) {
             throw new AuthorizationException("账户不存在！");
         }
-        List<OperationAuthority> permissionList = new LambdaQueryChainWrapper<>(operationAuthorityMapper)
-                .like(OperationAuthority::getPermission, result.getRoleName())
-                .list();
-        Set<String> permissions = permissionList.stream().map(OperationAuthority::getPermission).collect(Collectors.toSet());
+//        List<OperationAuthority> permissionList = new LambdaQueryChainWrapper<>(operationAuthorityMapper)
+//                .like(OperationAuthority::getPermission, result.getRoleName())
+//                .list();
+//        Set<String> permissions = permissionList.stream().map(OperationAuthority::getPermission).collect(Collectors.toSet());
 //        Set<String> permissions = permissionList.stream().map(OperationAuthority::getPermission).map(String::toLowerCase).collect(Collectors.toSet());
+        List<RoleAuth> roleAuthList = new LambdaQueryChainWrapper<>(roleAuthMapper).select(RoleAuth::getAuth,RoleAuth::getPermission).eq(RoleAuth::getName, result.getRoleName()).list();
+        Set<String> permissions = roleAuthList.stream().map(RoleAuth::getPermission).collect(Collectors.toSet());
         Set<String> roles = new HashSet<>();
         roles.add(result.getRoleName());
         simpleAuthorizationInfo.setRoles(roles);
         simpleAuthorizationInfo.setStringPermissions(permissions);
-//        JedisUtil.setObject(NormalConstant.PREFIX_SHIRO_CACHE + result.getUserName(), permissions);
         return simpleAuthorizationInfo;
     }
 

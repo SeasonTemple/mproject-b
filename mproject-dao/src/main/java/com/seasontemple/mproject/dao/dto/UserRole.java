@@ -29,6 +29,7 @@ public class UserRole {
     * 用户名
     */    
     @ApiModelProperty("用户名")
+
     private String userName;
     /**
     * 加密密码
@@ -71,4 +72,12 @@ public class UserRole {
     @ApiModelProperty("角色有效时间")
     private Integer roleLimit;
 
+    /**
+     * 获取主键值
+     *
+     * @return 主键值
+     */
+    protected Serializable pkVal() {
+        return this.id;
+    }
 }
