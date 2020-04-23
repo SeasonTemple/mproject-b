@@ -107,7 +107,11 @@ public class LoginController extends BaseController {
 //        if (!StrUtil.isNotEmpty(mpUser.getPassWord())) {
 //            return ResponseBean.builder().msg("密码不能为空！").build().failed();
 //        }
-        log.warn("{}",mpUser);
+        log.warn("{}", mpUser);
+        UserRole isExist = loginService.checkLogin(mpUser.getUserName());
+        if (!StrUtil.isEmpty(isExist.getPassWord())) {
+            return ResponseBean.builder().msg("该账户已存在！请重新输入！").build().success();
+        }
         Map<String, Object> claim = BeanUtil.beanToMap(mpUser, false, true);
 //        claim.remove("profileId");SecurityUtils.getSubject().isPermitted
         claim.remove("passWord");
@@ -120,11 +124,15 @@ public class LoginController extends BaseController {
         log.warn("Token长度：{}", jwtToken.length());
         mpUser.setToken(jwtToken);
         if (loginService.register(mpUser) > 0) {
-//            response.setHeader("Authorization", jwtToken);
-//            response.setHeader("Access-Control-Expose-Headers", "Authorization");
-            return ResponseBean.builder().msg("注册成功！").data(MapUtil.builder("userName", mpUser.getUserName()).put("token", jwtToken).build()).build().success();
+            UserRole logUser = loginService.checkLogin(mpUser.getUserName());
+            loginService.refresh();
+            if (StrUtil.isEmpty(logUser.getPassWord())) {
+//                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
+                return ResponseBean.builder().msg("注册失败！请重新输入或前往注册。").build().failed();
+            }
+            return ResponseBean.builder().msg("注册成功！").data(MapUtil.builder("userName", logUser.getUserName()).put("passWord", logUser.getPassWord()).put("token", jwtToken).build()).build().success();
         } else {
-            return ResponseBean.builder().msg("该账户已存在！请重新输入！").build().success();
+            return ResponseBean.builder().msg("该账户已存在！请重新输入！").build().failed();
         }
 
     }
@@ -132,7 +140,9 @@ public class LoginController extends BaseController {
     @GetMapping("/sso")
     @ResponseBody
     public ResponseBean ssoLogin() {
-        if (!getSubject().isAuthenticated()){
+        if (!getSubject().isAuthenticated()) {
+            getSubject().logout();
+            response.setHeader("Authorization", null);
             return ResponseBean.builder().msg("自动登录失败！请重新登录！").build().failed();
         }
         String userName = TokenUtilImpl.build(null).getClaim(getSubject().getPrincipal().toString(), NormalConstant.ACCOUNT);
@@ -140,6 +150,13 @@ public class LoginController extends BaseController {
         JedisUtil.setJson(NormalConstant.PREFIX_SHIRO_REFRESH_TOKEN + userName, StrUtil.toString(currentTimeMillis),
                 Integer.parseInt(refreshTokenExpireTime));
 //        log.warn("{}",getSubject().getPrincipal().toString());
+        try {
+            JwtToken logToken = new JwtToken(getSubject().getPrincipal().toString());
+            getSubject().login(logToken);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException("登录失败！获取用户角色或权限失败！");
+        }
         response.setHeader("Authorization", getSubject().getPrincipal().toString());
         response.setHeader("Access-Control-Expose-Headers", "Authorization");
         return ResponseBean.builder().msg("自动登录成功！").data(MapUtil.builder("userName", userName).build()).build().success();
@@ -175,8 +192,8 @@ public class LoginController extends BaseController {
 
     @GetMapping("/uLogin")
     @ResponseBody
-    public ResponseBean loginByCode(@RequestParam(value = "username") String username){
-        log.warn("{}",username);
+    public ResponseBean loginByCode(@RequestParam(value = "username") String username) {
+        log.warn("{}", username);
         UserRole logUser = loginService.checkLogin(username);
         if (StrUtil.isEmpty(logUser.getPassWord())) {
             response.setStatus(HttpServletResponse.SC_OK);
@@ -204,10 +221,14 @@ public class LoginController extends BaseController {
         return ResponseBean.builder().msg("登录成功！").data(MapUtil.builder("userName", logUser.getUserName()).build()).build().success();
     }
 
+    private Map getResultData(String var, Object value) {
+        return MapUtil.builder(var,value).build();
+    }
+
 
     //    @RequiresRoles(value = {"[USER]", "[CUSTOM]", "[ADMIN]"}, logical = Logical.OR)
-    @RequiresPermissions("[QUERY]")
-    @GetMapping("/online")
+//    @RequiresPermissions("[QUERY]")
+    @GetMapping(value = "/online")
     @ResponseBody
     @ApiOperation(value = "当前用户获取", notes = "当前用户获取")
     @ApiImplicitParams({@ApiImplicitParam(paramType = "header", dataType = "String", name = "Authorization", value = "token标记", required = true)})
@@ -216,22 +237,24 @@ public class LoginController extends BaseController {
             if (BeanUtil.isNotEmpty(getSubject())) {
                 getSubject().isAuthenticated();
                 log.warn("账户已登录！");
-                String token = (String) getSubject().getPrincipal();
+                String token = getSubject().getPrincipals().toString();
                 if (StrUtil.isNotBlank(token)) {
                     String account = TokenUtilImpl.build(null).getClaim(token, NormalConstant.ACCOUNT);
 //                    getSubject().checkRole(account);
-                    return ResponseBean.builder().msg("当前用户获取成功！").data(account).build().success();
+                    log.warn("{}", account);
+                    return ResponseBean.builder().msg("当前用户获取成功！").data(getResultData("userName",account)).build().success();
                 }
             }
         } catch (Exception e) {
             e.printStackTrace();
+            throw new CustomException("该账号没有登录，请先登录");
         }
         return ResponseBean.builder().msg("当前无用户在线！").build().success();
     }
 
-    private String generateToken(UserRole logUser){
+    private String generateToken(UserRole logUser) {
         // 清除可能存在的shiro权限信息缓存
-        if (JedisUtil.exists(NormalConstant.PREFIX_SHIRO_CACHE + logUser.getUserName())) {
+            if (JedisUtil.exists(NormalConstant.PREFIX_SHIRO_CACHE + logUser.getUserName())) {
             JedisUtil.delKey(NormalConstant.PREFIX_SHIRO_CACHE + logUser.getUserName());
         }
         // 设置RefreshToken，时间戳为当前时间戳，直接设置即可(不用先删后设，会覆盖已有的RefreshToken)
@@ -245,5 +268,32 @@ public class LoginController extends BaseController {
         claim.put("roleId", logUser.getRoleId());
         claim.put("iat", currentTimeMillis);
         return tokenUtil.generate(claim, NormalConstant.ttlMillis);
+    }
+
+    @PostMapping("/forget")
+    @ResponseBody
+    public ResponseBean forgetPassword(){
+        return null;
+    }
+
+    @GetMapping("/userRole")
+    @ResponseBody
+    public ResponseBean userRole() {
+        try {
+            if (BeanUtil.isNotEmpty(getSubject())) {
+                getSubject().isAuthenticated();
+                log.warn("账户已登录！");
+                String token = getSubject().getPrincipals().toString();
+                if (StrUtil.isNotBlank(token)) {
+                    String account = TokenUtilImpl.build(null).getClaim(token, NormalConstant.ACCOUNT);
+                    log.warn("{}", account);
+                    return ResponseBean.builder().msg("当前用户获取成功！").data(loginService.getRole(account)).build().success();
+                }
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new CustomException("该账号没有登录，请先登录");
+        }
+        return ResponseBean.builder().msg("当前无用户在线！").build().success();
     }
 }

@@ -101,7 +101,7 @@ public class ShiroRealm extends AuthorizingRealm {
     @Override
     protected AuthenticationInfo doGetAuthenticationInfo(AuthenticationToken token) throws AuthenticationException {
         String jwt = StrUtil.toString(token.getPrincipal()).trim();
-//        log.warn("{}", jwt);
+        log.warn("{}", jwt);
         if (StrUtil.isEmpty(jwt)) {
             log.error("jwtToken 不允许为空");
 //            throw new NullPointerException("jwtToken 不允许为空");
@@ -111,7 +111,7 @@ public class ShiroRealm extends AuthorizingRealm {
         //下面是验证这个user是否是真实存在的
         String username = tokenUtil.getClaim(jwt, NormalConstant.ACCOUNT);//判断数据库中username是否存在
         UserRole logUser = Optional.ofNullable(new LambdaQueryChainWrapper<>(userRoleMapper)
-                .select(UserRole::getPassWord, UserRole::getSalt, UserRole::getRoleName, UserRole::getToken)
+                .select(UserRole::getUserName,UserRole::getPassWord, UserRole::getSalt, UserRole::getRoleName, UserRole::getToken)
                 .eq(UserRole::getUserName, username)
                 .last("limit 1").one()).orElseThrow(() -> new CustomException("该用户不存在"));
 /*
@@ -129,7 +129,7 @@ public class ShiroRealm extends AuthorizingRealm {
             // 获取AccessToken时间戳，与RefreshToken的时间戳对比
             String nowTimeMillis = tokenTool.getClaim(jwt, NormalConstant.CURRENT_TIME_MILLIS);
             if (CompareUtil.compare(nowTimeMillis, StrUtil.toString(currentTimeMillisRedis)) < 0) {
-                return new SimpleAuthenticationInfo(jwt, jwt , new MyByteSource(logUser.getSalt()), getName());
+                    return new SimpleAuthenticationInfo(jwt, jwt , new MyByteSource(logUser.getSalt()), getName());
 //                return new SimpleAuthenticationInfo(jwt, jwt, "shiroRealm");
             } else {
                 throw new AuthenticationException("Token已过期(Token expired or incorrect.)");

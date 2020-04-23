@@ -135,7 +135,7 @@ public class ShiroConfig {
         filterRuleMap.put("/getVCode", "anon");
         filterRuleMap.put("/sso", "anon");
         filterRuleMap.put("/logout", "logout");
-        filterRuleMap.put("/online", "jwt[[USER:QUERY][CUSTOM:QUERY][ADMIN:QUERY]]");
+        filterRuleMap.put("/userRole", "jwt[[QUERY]]");
 //        filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");
         filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");
         shiroFilter.setFilterChainDefinitionMap(filterRuleMap);

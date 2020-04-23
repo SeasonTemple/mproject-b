@@ -2,6 +2,7 @@ package com.seasontemple.mproject.utils.token;
 
 import cn.hutool.core.convert.Convert;
 import cn.hutool.core.lang.Console;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.IdUtil;
 import cn.hutool.core.util.StrUtil;
@@ -23,6 +24,7 @@ import io.jsonwebtoken.SignatureAlgorithm;
 import org.apache.tomcat.util.codec.binary.Base64;
 import org.springframework.stereotype.Component;
 
+import java.time.LocalDateTime;
 import java.util.Date;
 import java.util.Map;
 
@@ -69,7 +71,7 @@ public class TokenUtilImpl implements TokenUtil {
                 // 荷载部分的非标准字段/附加字段，一般写在标准的字段之前。
                 .setClaims(claims)
                 // JWT ID（jti）：荷载部分的标准字段之一，JWT 的唯一性标识，虽不强求，但尽量确保其唯一性。
-                .setId(IdUtil.objectId())
+                .setId(StrUtil.toString(nowMillis)+ claims.get("userName"))
                 // 签发时间（iat）：荷载部分的标准字段之一，代表这个 JWT 的生成时间。
                 .setIssuedAt(now)
                 .setIssuer(claims.get("userName").toString())

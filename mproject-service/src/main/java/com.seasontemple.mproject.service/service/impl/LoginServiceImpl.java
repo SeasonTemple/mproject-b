@@ -62,7 +62,19 @@ public class LoginServiceImpl implements LoginService {
 //        mpUser.setLastLogin(new Date());
 //        mpUser.setRoleId(1);
 //        mpUser.setStatus(0);
-        return mpUserMapper.insert(mpUser);
+        return Optional.of(mpUserMapper.insert(mpUser)).orElseThrow(()->new CustomException("账户已存在！请重新输入。"));
+    }
+
+    @Override
+    public int refresh() {
+        return mpUserMapper.selectCount(null);
+    }
+
+    @Override
+    public String getRole(String userName) {
+        String val = new LambdaQueryChainWrapper<>(userRoleMapper).select(UserRole::getRoleName).eq(UserRole::getUserName, userName).one().getRoleName();
+        log.warn("{}",val);
+        return val;
     }
 
 }

@@ -24,5 +24,17 @@ public interface LoginService {
      * @return: boolean
      */
     int register(MpUser mpUser);
+    /**
+     * @description: 刷新数据
+     * @param: null
+     * @return: int
+     */
+    int refresh();
+    /**
+     * @description: 获取用户角色
+     * @param: [username]
+     * @return: java.lang.String
+     */
+    String getRole(String username);
 
 }
