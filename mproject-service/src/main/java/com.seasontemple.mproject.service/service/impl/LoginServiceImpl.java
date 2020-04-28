@@ -26,7 +26,7 @@ import java.util.Optional;
  * @create: 2020/04/05 01:28:24
  */
 @Service
-@Transactional
+//@Transactional
 public class LoginServiceImpl implements LoginService {
 
     private static Log log = LogFactory.get(LoginServiceImpl.class);
