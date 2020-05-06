@@ -1,5 +1,8 @@
 package com.seasontemple.mproject.web.controller;
 
+import cn.hutool.captcha.CaptchaUtil;
+import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -16,6 +19,7 @@ import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.service.service.LoginService;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.custom.ResponseBean;
+import com.seasontemple.mproject.utils.email.EmailSender;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
 import com.seasontemple.mproject.utils.token.TokenUtilImpl;
@@ -222,7 +226,7 @@ public class LoginController extends BaseController {
     }
 
     private Map getResultData(String var, Object value) {
-        return MapUtil.builder(var,value).build();
+        return MapUtil.builder(var, value).build();
     }
 
 
@@ -242,7 +246,7 @@ public class LoginController extends BaseController {
                     String account = TokenUtilImpl.build(null).getClaim(token, NormalConstant.ACCOUNT);
 //                    getSubject().checkRole(account);
                     log.warn("{}", account);
-                    return ResponseBean.builder().msg("当前用户获取成功！").data(getResultData("userName",account)).build().success();
+                    return ResponseBean.builder().msg("当前用户获取成功！").data(getResultData("userName", account)).build().success();
                 }
             }
         } catch (Exception e) {
@@ -254,7 +258,7 @@ public class LoginController extends BaseController {
 
     private String generateToken(UserRole logUser) {
         // 清除可能存在的shiro权限信息缓存
-            if (JedisUtil.exists(NormalConstant.PREFIX_SHIRO_CACHE + logUser.getUserName())) {
+        if (JedisUtil.exists(NormalConstant.PREFIX_SHIRO_CACHE + logUser.getUserName())) {
             JedisUtil.delKey(NormalConstant.PREFIX_SHIRO_CACHE + logUser.getUserName());
         }
         // 设置RefreshToken，时间戳为当前时间戳，直接设置即可(不用先删后设，会覆盖已有的RefreshToken)
@@ -270,10 +274,25 @@ public class LoginController extends BaseController {
         return tokenUtil.generate(claim, NormalConstant.ttlMillis);
     }
 
-    @PostMapping("/forget")
+    @PostMapping(value = "/forget", produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "账户找回", notes = "使用用户名 + 邮箱验证")
     @ResponseBody
-    public ResponseBean forgetPassword(){
-        return null;
+    public ResponseBean findOut(@Validated(value = {UserLoginValidatedGroup.class}) LoginDto userDto, BindingResult bindingResult) throws CustomException {
+        log.warn("账户找回：{}", userDto);
+        return ResponseBean.builder().msg("测试成功！").build().success();
+    }
+
+    @GetMapping("/getSms")
+    @ApiOperation(value = "获取邮箱验证码", notes = "通过邮箱获取验证码")
+    @ResponseBody
+    public ResponseBean sendCodeByEmail(@RequestParam(value = "email") String email) {
+        log.warn("{}", email);
+        RandomGenerator randomGenerator = new RandomGenerator("0123456789", 6);
+        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
+        lineCaptcha.setGenerator(randomGenerator);
+        lineCaptcha.createCode();
+        EmailSender.send(email,"账号找回", "验证码为："+lineCaptcha.getCode()+"。");
+        return ResponseBean.builder().msg("邮件发送成功").data(lineCaptcha.getCode()).build().success();
     }
 
     @GetMapping("/userRole")

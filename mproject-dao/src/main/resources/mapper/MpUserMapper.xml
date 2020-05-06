@@ -12,7 +12,7 @@
 		<result property="createTime" column="create_time" jdbcType="OTHER"/>
 		<result property="lastLogin" column="last_login" jdbcType="OTHER"/>
 		<result property="status" column="status" jdbcType="INTEGER"/>
-		<result property="profileId" column="profile_id" jdbcType="VARCHAR"/>
+		<result property="profileId" column="profile_id" jdbcType="INTEGER"/>
 	</resultMap>
 
 	<!--查询单个-->

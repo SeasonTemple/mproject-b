@@ -38,6 +38,7 @@
 		<jackson-datatype-protobuf.version>0.9.11-jackson2.9</jackson-datatype-protobuf.version>
 		<java-jwt.version>3.10.0</java-jwt.version>
 		<jjwt.verison>0.9.1</jjwt.verison>
+		<javax.mail.version>1.4.7</javax.mail.version>
 	</properties>
 
 	<dependencyManagement>

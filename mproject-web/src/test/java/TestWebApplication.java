@@ -15,6 +15,7 @@ import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.dao.mapper.MpUserMapper;
 import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
+import com.seasontemple.mproject.utils.email.EmailSender;
 import com.seasontemple.mproject.web.WebApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -47,12 +48,12 @@ public class TestWebApplication {
 
     @Test
     public void test() {
-        ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 45, 4, 4);
-        // 自定义验证码内容为四则运算方式
-        captcha.setGenerator(new MathGenerator());
-        // 重新生成code
-        captcha.createCode();
-        captcha.write("d:/image/shear.png");
+//        ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(200, 45, 4, 4);
+//        // 自定义验证码内容为四则运算方式
+//        captcha.setGenerator(new MathGenerator());
+//        // 重新生成code
+//        captcha.createCode();
+//        captcha.write("d:/image/shear.png");
     }
 
    /* @Test

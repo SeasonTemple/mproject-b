@@ -92,7 +92,7 @@ public class MpUser {
      * 用户详情ID
      */
     @ApiModelProperty("用户详情ID")
-    private String profileId;
+    private Integer profileId;
 
     /**
      * 获取主键值

@@ -124,19 +124,16 @@ public class ShiroConfig {
         filterRuleMap.put("/doc.html", "anon");
 
         // 公开接口
-//        filterRuleMap.put("/login/roleCheck", "authc");
         filterRuleMap.put("/css/**", "anon");
         filterRuleMap.put("/js/**", "anon");
         filterRuleMap.put("/img/**", "anon");
         filterRuleMap.put("/druid/**", "anon");
-//        filterRuleMap.put("/swagger/**", "anon");
         filterRuleMap.put("/login", "anon");
         filterRuleMap.put("/uLogin", "anon");
         filterRuleMap.put("/getVCode", "anon");
         filterRuleMap.put("/sso", "anon");
         filterRuleMap.put("/logout", "logout");
         filterRuleMap.put("/userRole", "jwt[[QUERY]]");
-//        filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");
         filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");
         shiroFilter.setFilterChainDefinitionMap(filterRuleMap);
 
