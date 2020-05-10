@@ -2,6 +2,7 @@ package com.seasontemple.mproject.web.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
 import cn.hutool.captcha.LineCaptcha;
+import cn.hutool.captcha.ShearCaptcha;
 import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
@@ -12,6 +13,7 @@ import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.log.Log;
 import cn.hutool.log.StaticLog;
 import com.seasontemple.mproject.dao.dto.LoginDto;
+import com.seasontemple.mproject.dao.dto.PassFindDto;
 import com.seasontemple.mproject.dao.dto.UserRole;
 import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
@@ -117,7 +119,7 @@ public class LoginController extends BaseController {
             return ResponseBean.builder().msg("该账户已存在！请重新输入！").build().success();
         }
         Map<String, Object> claim = BeanUtil.beanToMap(mpUser, false, true);
-//        claim.remove("profileId");SecurityUtils.getSubject().isPermitted
+        log.warn("{}", claim);
         claim.remove("passWord");
         claim.put("roleId", 1);
         Long currentTimeMillis = System.currentTimeMillis();
@@ -134,6 +136,7 @@ public class LoginController extends BaseController {
 //                response.setStatus(HttpServletResponse.SC_NOT_FOUND);
                 return ResponseBean.builder().msg("注册失败！请重新输入或前往注册。").build().failed();
             }
+            log.error("注册成功：{}", logUser);
             return ResponseBean.builder().msg("注册成功！").data(MapUtil.builder("userName", logUser.getUserName()).put("passWord", logUser.getPassWord()).put("token", jwtToken).build()).build().success();
         } else {
             return ResponseBean.builder().msg("该账户已存在！请重新输入！").build().failed();
@@ -277,9 +280,16 @@ public class LoginController extends BaseController {
     @PostMapping(value = "/forget", produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "账户找回", notes = "使用用户名 + 邮箱验证")
     @ResponseBody
-    public ResponseBean findOut(@Validated(value = {UserLoginValidatedGroup.class}) LoginDto userDto, BindingResult bindingResult) throws CustomException {
+    public ResponseBean findOut(@Validated(value = {UserLoginValidatedGroup.class}) PassFindDto userDto, BindingResult bindingResult) throws CustomException {
         log.warn("账户找回：{}", userDto);
-        return ResponseBean.builder().msg("测试成功！").build().success();
+        UserRole logUser = loginService.checkLogin(userDto.getUserName());
+        if(BeanUtil.isEmpty(logUser)){
+            return ResponseBean.builder().msg("该账户不存在！请重新输入").build().failed();
+        }else {
+            AES aes = SecureUtil.aes(logUser.getSalt());
+            String deCryptPwd = aes.decryptStr(logUser.getPassWord(), CharsetUtil.CHARSET_UTF_8);
+            return ResponseBean.builder().msg("找回成功！").data(getResultData("passWord",deCryptPwd)).build().success();
+        }
     }
 
     @GetMapping("/getSms")
@@ -287,12 +297,9 @@ public class LoginController extends BaseController {
     @ResponseBody
     public ResponseBean sendCodeByEmail(@RequestParam(value = "email") String email) {
         log.warn("{}", email);
-        RandomGenerator randomGenerator = new RandomGenerator("0123456789", 6);
-        LineCaptcha lineCaptcha = CaptchaUtil.createLineCaptcha(200, 100);
-        lineCaptcha.setGenerator(randomGenerator);
-        lineCaptcha.createCode();
-        EmailSender.send(email,"账号找回", "验证码为："+lineCaptcha.getCode()+"。");
-        return ResponseBean.builder().msg("邮件发送成功").data(lineCaptcha.getCode()).build().success();
+        ShearCaptcha captcha = CaptchaUtil.createShearCaptcha(100, 38, 8, 3);
+        EmailSender.send(email,"账号找回", "您的验证码为："+captcha.getCode()+"，有效时间为30s。");
+        return ResponseBean.builder().msg("邮件发送成功").data(captcha.getCode()).build().success();
     }
 
     @GetMapping("/userRole")

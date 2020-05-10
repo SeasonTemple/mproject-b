@@ -1,0 +1,12 @@
+host = smtp.qq.com
+port = 465
+from = fnc1997@foxmail.com
+user = 512743454
+pass = ghrqhrucpprrcbda
+starttlsEnable = true
+sslEnable = true
+socketFactoryClass = javax.net.ssl.SSLSocketFactory
+socketFactoryFallback = false
+socketFactoryFallback = true
+socketFactoryPort = 465
+auth=true

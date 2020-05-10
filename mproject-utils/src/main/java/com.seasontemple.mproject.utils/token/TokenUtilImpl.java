@@ -67,6 +67,7 @@ public class TokenUtilImpl implements TokenUtil {
     public String generate(Map<String, Object> claims, long ttl) {
         long nowMillis = (long) claims.remove("iat");
         Date now = new Date(nowMillis);
+        int roleId = Convert.toInt(claims.remove("roleId"));
         JwtBuilder builder = Jwts.builder()
                 // 荷载部分的非标准字段/附加字段，一般写在标准的字段之前。
                 .setClaims(claims)
@@ -76,7 +77,7 @@ public class TokenUtilImpl implements TokenUtil {
                 .setIssuedAt(now)
                 .setIssuer(claims.get("userName").toString())
                 // 签发人（iss）：荷载部分的标准字段之一，代表这个 JWT 的所有者。通常是 username 这样具有用户代表性的内容。
-                .setSubject(getIss(Convert.toInt(claims.get("roleId"))) + "-" + claims.get("userName"))
+                .setSubject(getIss(roleId) + "-" + claims.get("userName"))
                 // 设置生成签名的算法和秘钥
                 .signWith(signatureAlgorithm, EncodedSecretKey);
 //        if (ttl >= 0) {

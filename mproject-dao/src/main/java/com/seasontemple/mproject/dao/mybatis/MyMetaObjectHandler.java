@@ -41,7 +41,7 @@ public class MyMetaObjectHandler implements MetaObjectHandler {
             setFieldValByName("status", 1, metaObject);
         }
         if (metaObject.hasSetter("profileId")) {
-            setFieldValByName("profileId", "0", metaObject);
+            setFieldValByName("profileId", 0, metaObject);
         }
 
     }

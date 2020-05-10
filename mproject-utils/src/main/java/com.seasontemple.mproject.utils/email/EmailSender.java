@@ -15,6 +15,7 @@ public class EmailSender {
         try {
             MailUtil.send(to, subject, content, false);
         } catch (MailException e) {
+            e.printStackTrace();
             throw new CustomException("邮件发送失败：" + e.getMessage());
         }
     }
