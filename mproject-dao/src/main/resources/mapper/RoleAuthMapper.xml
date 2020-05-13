@@ -1,0 +1,94 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.seasontemple.mproject.dao.mapper.RoleAuthMapper">
+
+    <resultMap type="com.seasontemple.mproject.dao.dto.RoleAuth" id="RoleAuthMap">
+        <result property="id" column="id" jdbcType="INTEGER"/>
+        <result property="name" column="name" jdbcType="VARCHAR"/>
+        <result property="state" column="state" jdbcType="INTEGER"/>
+        <result property="limitTime" column="limit_time" jdbcType="INTEGER"/>
+        <result property="auth" column="auth" jdbcType="VARCHAR"/>
+        <result property="permission" column="permission" jdbcType="VARCHAR"/>
+    </resultMap>
+
+    <!--查询单个-->
+    <select id="selectById" resultMap="RoleAuthMap">
+        select
+          id, name, state, limit_time, auth, permission
+        from mproject.role_auth
+        where id = #{id}
+    </select>
+
+    <!--查询指定行数据-->
+    <select id="queryAllByLimit" resultMap="RoleAuthMap">
+        select
+          id, name, state, limit_time, auth, permission
+        from mproject.role_auth
+        limit #{offset}, #{limit}
+    </select>
+
+    <!--通过实体作为筛选条件查询-->
+    <select id="queryAll" resultMap="RoleAuthMap">
+        select
+          id, name, state, limit_time, auth, permission
+        from mproject.role_auth
+        <where>
+            <if test="id != null">
+                and id = #{id}
+            </if>
+            <if test="name != null and name != ''">
+                and name = #{name}
+            </if>
+            <if test="state != null">
+                and state = #{state}
+            </if>
+            <if test="limitTime != null">
+                and limit_time = #{limitTime}
+            </if>
+            <if test="auth != null and auth != ''">
+                and auth = #{auth}
+            </if>
+            <if test="permission != null and permission != ''">
+                and permission = #{permission}
+            </if>
+        </where>
+    </select>
+
+    <!--新增所有列-->
+    <insert id="insert" keyProperty="" useGeneratedKeys="true">
+        insert into mproject.role_auth(id, name, state, limit_time, auth, permission)
+        values (#{id}, #{name}, #{state}, #{limitTime}, #{auth}, #{permission})
+    </insert>
+
+    <!--通过主键修改数据-->
+    <update id="update">
+        update mproject.role_auth
+        <set>
+            <if test="id != null">
+                id = #{id},
+            </if>
+            <if test="name != null and name != ''">
+                name = #{name},
+            </if>
+            <if test="state != null">
+                state = #{state},
+            </if>
+            <if test="limitTime != null">
+                limit_time = #{limitTime},
+            </if>
+            <if test="auth != null and auth != ''">
+                auth = #{auth},
+            </if>
+            <if test="permission != null and permission != ''">
+                permission = #{permission},
+            </if>
+        </set>
+        where  id= #{id}
+    </update>
+
+    <!--通过主键删除-->
+    <delete id="deleteById">
+        delete from mproject.role_auth where id = #{id}
+    </delete>
+
+</mapper>

@@ -77,7 +77,7 @@
     </insert>
 
     <!--通过主键修改数据-->
-    <update id="update">
+    <update id="updateById">
         update mproject.user_role
         <set>
             <if test="id != null and id != ''">

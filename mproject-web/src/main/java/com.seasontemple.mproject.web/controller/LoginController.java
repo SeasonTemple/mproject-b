@@ -1,9 +1,7 @@
 package com.seasontemple.mproject.web.controller;
 
 import cn.hutool.captcha.CaptchaUtil;
-import cn.hutool.captcha.LineCaptcha;
 import cn.hutool.captcha.ShearCaptcha;
-import cn.hutool.captcha.generator.RandomGenerator;
 import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.core.util.CharsetUtil;
@@ -11,12 +9,13 @@ import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
 import cn.hutool.log.Log;
-import cn.hutool.log.StaticLog;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.seasontemple.mproject.dao.dto.LoginDto;
 import com.seasontemple.mproject.dao.dto.PassFindDto;
 import com.seasontemple.mproject.dao.dto.UserRole;
 import com.seasontemple.mproject.dao.entity.MpUser;
 import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
+import com.seasontemple.mproject.dao.mapper.MpUserMapper;
 import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.service.service.LoginService;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
@@ -31,16 +30,12 @@ import io.swagger.annotations.ApiImplicitParam;
 import io.swagger.annotations.ApiImplicitParams;
 import io.swagger.annotations.ApiOperation;
 import org.apache.shiro.SecurityUtils;
-import org.apache.shiro.authz.annotation.RequiresPermissions;
 import org.apache.shiro.subject.Subject;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import javax.servlet.http.HttpServletResponse;
-import javax.validation.Valid;
-import javax.validation.constraints.NotBlank;
-import javax.validation.constraints.NotNull;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -56,9 +51,12 @@ public class LoginController extends BaseController {
 
     private static final Log log = Log.get();
 
+    private final MpUserMapper mpUserMapper;
+
     private final LoginService loginService;
 
-    public LoginController(LoginService loginService) {
+    public LoginController(MpUserMapper mpUserMapper, LoginService loginService) {
+        this.mpUserMapper = mpUserMapper;
         this.loginService = loginService;
     }
 
@@ -72,7 +70,9 @@ public class LoginController extends BaseController {
             return ResponseBean.builder().msg("登录失败！提交数据非法。").build().success();
         }
         UserRole logUser = loginService.checkLogin(userDto.getUserName());
-        if (StrUtil.isEmpty(logUser.getPassWord())) {
+        boolean isUpdate = updateLoginTime(userDto.getUserName());
+        log.warn("{}", isUpdate);
+        if (StrUtil.isEmpty(logUser.getPassWord()) || !isUpdate) {
             response.setStatus(HttpServletResponse.SC_OK);
             return ResponseBean.builder().msg("登录失败！该账户不存在，请重新输入或前往注册。").build().failed();
         }
@@ -230,6 +230,12 @@ public class LoginController extends BaseController {
 
     private Map getResultData(String var, Object value) {
         return MapUtil.builder(var, value).build();
+    }
+
+    private boolean updateLoginTime(String userName){
+        MpUser user = new MpUser();
+        user.setUserName(userName);
+        return new LambdaUpdateChainWrapper<>(mpUserMapper).eq(MpUser::getUserName, userName).update(user);
     }
 
 
