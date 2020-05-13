@@ -7,7 +7,6 @@ import com.seasontemple.mproject.dao.entity.MpUser;
  * @author Season Temple
  * @program: mproject
  * @description: 登录业务层接口
- * @create: 2020/04/05 01:05:03
  */
 public interface LoginService {
 

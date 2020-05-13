@@ -1,8 +1,7 @@
 package com.seasontemple.mproject.dao.entity;
 
-import java.time.LocalDateTime;
-import java.io.Serializable;
 import java.util.Date;
+import java.io.Serializable;
 
 import com.baomidou.mybatisplus.annotation.FieldFill;
 import com.baomidou.mybatisplus.annotation.IdType;
@@ -13,7 +12,6 @@ import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
 import org.hibernate.validator.constraints.Length;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.validation.constraints.NotBlank;
 
@@ -21,14 +19,13 @@ import javax.validation.constraints.NotBlank;
  * 用户表(MpUser)表实体类
  *
  * @author SeasonTemple
- * @since 2020-05-12 20:58:03
  */
 @SuppressWarnings("serial")
 @Data
 @ApiModel("用户表")
 @Accessors(chain = true)
 public class MpUser {
-    private static final long serialVersionUID = -72909022654325750L;
+    private static final long serialVersionUID = -60079897420890210L;
     /**
     * 用户ID
     */    
@@ -67,7 +64,7 @@ public class MpUser {
     private Integer roleId;
     /**
     * 账号创建时间
-    */    
+    */
     @ApiModelProperty("账号创建时间")
 //    @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
@@ -76,7 +73,7 @@ public class MpUser {
     /**
     * 上次登录
     */    
-    @ApiModelProperty("上次登录")
+    @ApiModelProperty("上次登录时间")
 //    @DateTimeFormat(pattern = "yyyy/MM/dd HH:mm:ss")
 //    @JsonFormat(pattern = "yyyy/MM/dd HH:mm:ss")
     @TableField(value = "last_login", fill = FieldFill.INSERT_UPDATE)
@@ -88,11 +85,10 @@ public class MpUser {
     @TableField(fill = FieldFill.INSERT)
     private Integer status;
     /**
-    * 详情ID
+    * 用户详情ID
     */    
-    @ApiModelProperty("详情ID")
+    @ApiModelProperty("用户详情ID")
     private Integer profileId;
-
     /**
      * 获取主键值
      *

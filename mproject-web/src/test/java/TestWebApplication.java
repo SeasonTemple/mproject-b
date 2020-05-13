@@ -6,7 +6,9 @@ import com.baomidou.mybatisplus.core.conditions.update.UpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
+import com.seasontemple.mproject.dao.entity.MpProfile;
 import com.seasontemple.mproject.dao.entity.MpUser;
+import com.seasontemple.mproject.dao.mapper.MpProfileMapper;
 import com.seasontemple.mproject.dao.mapper.MpUserMapper;
 import com.seasontemple.mproject.web.WebApplication;
 import org.junit.Test;
@@ -37,11 +39,15 @@ public class TestWebApplication {
     @Autowired
     private MpUserMapper mpUserMapper;
 
+    @Autowired
+    private MpProfileMapper mpProfileMapper;
+
 //    @Value("${refreshTokenExpireTime}")
 //    private static String refreshTokenExpireTime;
 
-//    @Test
+    @Test
     public void test() {
+        new LambdaQueryChainWrapper<>(mpUserMapper).select();
 //        MpUser user = new MpUser();
 //        user.setUserName("toString2");
 //        boolean update = new LambdaUpdateChainWrapper<>(mpUserMapper).eq(MpUser::getUserName, user.getUserName()).set(MpUser::getUserName, "toString2").set(true,MpUser::getLastLogin, null).update();

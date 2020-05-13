@@ -32,7 +32,7 @@
     </select>
 
 	<!--通过实体作为筛选条件查询-->
-	<select id="queryAll" resultMap="MpUserMap">
+	<select id="selectList" resultMap="MpUserMap">
 		select
 		id, user_name, pass_word, salt, token, role_id, create_time, last_login, status, profile_id
 		from mproject.mp_user

@@ -1,8 +1,6 @@
 package com.seasontemple.mproject.dao.entity;
 
 import java.io.Serializable;
-import java.util.Date;
-
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -11,14 +9,14 @@ import lombok.experimental.Accessors;
  * 用户详情表(MpProfile)表实体类
  *
  * @author SeasonTemple
- * @since 2020-04-09 22:47:32
+ * @since 2020-05-14 00:07:07
  */
 @SuppressWarnings("serial")
 @Data
 @ApiModel("用户详情表")
 @Accessors(chain = true)
 public class MpProfile {
-    private static final long serialVersionUID = -80820747837326327L;
+    private static final long serialVersionUID = 297697347530647112L;
     /**
     * 用户详情ID
     */    
@@ -35,9 +33,9 @@ public class MpProfile {
     @ApiModelProperty("手机号码")
     private String phone;
     /**
-    * 鎬у埆
+    * 性别
     */    
-    @ApiModelProperty("鎬у埆")
+    @ApiModelProperty("性别")
     private Integer sex;
     /**
     * 职位
@@ -75,16 +73,25 @@ public class MpProfile {
     @ApiModelProperty("薪水")
     private Double salary;
     /**
-    * 工号
+    * 当月出勤日期集
     */    
-    @ApiModelProperty("工号")
-    private String employeeNumber;
+    @ApiModelProperty("当月出勤日期集")
+    private String attendance;
     /**
-    * 入职时间
+    * 年龄
     */    
-    @ApiModelProperty("入职时间")
-    private Date entryDate;
-
+    @ApiModelProperty("年龄")
+    private Integer age;
+    /**
+    * 邮箱地址
+    */    
+    @ApiModelProperty("邮箱地址")
+    private String email;
+    /**
+    * 籍贯
+    */    
+    @ApiModelProperty("籍贯")
+    private String from;
     /**
      * 获取主键值
      *
