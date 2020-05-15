@@ -91,7 +91,7 @@ public class MpProfile {
     * 籍贯
     */    
     @ApiModelProperty("籍贯")
-    private String from;
+    private String origin;
     /**
      * 获取主键值
      *

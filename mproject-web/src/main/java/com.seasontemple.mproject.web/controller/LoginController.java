@@ -42,8 +42,7 @@ import java.util.Map;
 /**
  * @author Season Temple
  * @program: mproject
- * @description: Shiro test controller
- * @create: 2020/03/30 21:34:18
+ * @description: 登录接口控制层
  */
 @Api(value = "登录接口", tags = "登录接口控制层")
 @RestController

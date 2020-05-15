@@ -7,9 +7,7 @@ import lombok.experimental.Accessors;
 
 /**
  * 权限表(MpAuthority)表实体类
- *
  * @author SeasonTemple
- * @since 2020-04-09 22:47:32
  */
 @SuppressWarnings("serial")
 @Data
