@@ -22,7 +22,7 @@ import org.springframework.web.bind.annotation.RestController;
  */
 @Api(value = "主页接口", tags = "主页接口控制层")
 @RestController
-public class HomeController {
+public class HomeController extends BaseController{
 
     @Autowired
     private HomeService homeService;

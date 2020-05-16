@@ -1,5 +1,6 @@
 package com.seasontemple.mproject.web.controller;
 
+import cn.hutool.log.Log;
 import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authc.AuthenticationToken;
 import org.apache.shiro.subject.Subject;
@@ -19,6 +20,8 @@ import java.net.UnknownHostException;
  */
 public class BaseController {
 
+    protected static final Log log = Log.get();
+
     @Autowired
     protected HttpServletRequest request;
 
@@ -36,6 +39,7 @@ public class BaseController {
     protected void login(AuthenticationToken token) {
         getSubject().login(token);
     }
+
     /**
      * 获取当前请求
      */

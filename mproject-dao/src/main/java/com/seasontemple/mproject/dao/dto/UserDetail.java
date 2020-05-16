@@ -143,5 +143,11 @@ public class UserDetail {
      */
     @ApiModelProperty("路由地址")
     private String avatarUrl;
+    /**
+     * 加密盐
+     */
+    @ApiModelProperty("加密盐")
+    private byte[] salt;
+
 
 }

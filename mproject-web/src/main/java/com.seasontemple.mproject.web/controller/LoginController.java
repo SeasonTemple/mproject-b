@@ -20,6 +20,7 @@ import com.seasontemple.mproject.dao.redis.JedisUtil;
 import com.seasontemple.mproject.service.service.LoginService;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.custom.ResponseBean;
+import com.seasontemple.mproject.utils.custom.ResultCode;
 import com.seasontemple.mproject.utils.email.EmailSender;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import com.seasontemple.mproject.utils.token.TokenUtil;
@@ -47,8 +48,6 @@ import java.util.Map;
 @Api(value = "登录接口", tags = "登录接口控制层")
 @RestController
 public class LoginController extends BaseController {
-
-    private static final Log log = Log.get();
 
     private final MpUserMapper mpUserMapper;
 
@@ -115,7 +114,7 @@ public class LoginController extends BaseController {
         log.warn("{}", mpUser);
         UserRole isExist = loginService.checkLogin(mpUser.getUserName());
         if (!StrUtil.isEmpty(isExist.getPassWord())) {
-            return ResponseBean.builder().msg("该账户已存在！请重新输入！").build().success();
+            return ResponseBean.builder().msg("该账户已存在！请重新输入！").build().failed();
         }
         Map<String, Object> claim = BeanUtil.beanToMap(mpUser, false, true);
         log.warn("{}", claim);

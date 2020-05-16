@@ -22,6 +22,7 @@
         <result property="email" column="email" jdbcType="VARCHAR"/>
         <result property="origin" column="origin" jdbcType="VARCHAR"/>
         <result property="avatarUrl" column="avatar_url" jdbcType="VARCHAR"/>
+        <result property="salt" column="salt" jdbcType="OTHER"/>
     </resultMap>
 
     <!--查询单个-->

@@ -10,7 +10,7 @@ import com.seasontemple.mproject.dao.dto.UserDetail;
  */
 public interface HomeService {
 
-    UserDetail initUserDetail(String useName);
+    UserDetail initUserDetail(String userName);
 
     EchartsDto initChart(String id);
 }
