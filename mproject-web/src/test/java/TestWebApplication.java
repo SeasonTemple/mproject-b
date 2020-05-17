@@ -1,26 +1,10 @@
-import cn.hutool.core.lang.Console;
-import cn.hutool.core.map.MapUtil;
-import cn.hutool.core.util.IdUtil;
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
-import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
-import com.seasontemple.mproject.dao.dto.UserDetail;
-import com.seasontemple.mproject.dao.dto.UserRole;
-import com.seasontemple.mproject.dao.entity.MpDepartment;
-import com.seasontemple.mproject.dao.entity.MpProject;
-import com.seasontemple.mproject.dao.mapper.*;
-import com.seasontemple.mproject.service.service.ProfileService;
 import com.seasontemple.mproject.web.WebApplication;
-import com.seasontemple.mproject.web.controller.ProfileController;
-import org.apache.ibatis.annotations.Param;
 import org.junit.Test;
 import org.junit.runner.RunWith;
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
-
-import java.sql.Timestamp;
-import java.util.List;
 
 
 /**

@@ -31,7 +31,6 @@ import java.util.Base64;
  * @author Season Temple
  * @program: mproject
  * @description: 各类辅助接口集
- * @create: 2020/04/14 20:48:52
  */
 @RestController
 public class ToolController extends BaseController implements AutoCloseable{
