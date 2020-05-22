@@ -36,7 +36,7 @@ public class MpDepartment {
      * 部长ID
      */
     @ApiModelProperty("部长ID")
-    private String ministerId;
+    private String leader;
 
     /**
      * 获取主键值

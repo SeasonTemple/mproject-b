@@ -74,6 +74,8 @@ public class JwtFilter extends BasicHttpAuthenticationFilter {
      * 如果有些资源只有登入用户才能访问，我们只需要在方法上面加上 @RequiresAuthentication 注解即可
      * 但是这样做有一个缺点，就是不能够对GET,POST等请求进行分别过滤鉴权(因为我们重写了官方的方法)，但实际上对应用影响不大
      */
+
+
     @Override
     protected boolean isAccessAllowed(ServletRequest request, ServletResponse response, Object mappedValue) {
         log.warn(" {} 就这？.", mappedValue);

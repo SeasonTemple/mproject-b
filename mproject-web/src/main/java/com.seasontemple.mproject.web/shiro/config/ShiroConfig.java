@@ -128,10 +128,10 @@ public class ShiroConfig {
         filterRuleMap.put("/js/**", "anon");
         filterRuleMap.put("/img/**", "anon");
         filterRuleMap.put("/druid/**", "anon");
-        filterRuleMap.put("/login", "anon");
         filterRuleMap.put("/uLogin", "anon");
         filterRuleMap.put("/getVCode", "anon");
         filterRuleMap.put("/sso", "anon");
+        filterRuleMap.put("/login", "anon");
         filterRuleMap.put("/logout", "logout");
         filterRuleMap.put("/userRole", "jwt[[QUERY]]");
         filterRuleMap.put("/**", "jwt[USER,CUSTOM,ADMIN]");

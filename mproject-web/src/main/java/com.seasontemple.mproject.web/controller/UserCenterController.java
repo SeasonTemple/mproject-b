@@ -1,5 +1,6 @@
 package com.seasontemple.mproject.web.controller;
 
+import cn.hutool.core.util.StrUtil;
 import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.dto.UserRole;
 import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
@@ -8,8 +9,11 @@ import com.seasontemple.mproject.utils.custom.ResponseBean;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
+import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
+import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
+import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
@@ -44,7 +48,14 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "职能选项初始化", notes = "用户职能选项初始化获取接口")
     @ResponseBody
     public ResponseBean belongTo() throws CustomException {
-        return ResponseBean.builder().msg("获取部门、组信息成功！").data(userCenterService.getBelongTo()).build().success();
+//        Subject subject = SecurityUtils.getSubject();
+//        String token = (String) subject.getPrincipal();
+//        if(!StrUtil.isEmpty(token)){
+            log.warn("belongTo: 登录验证成功！");
+            return ResponseBean.builder().msg("获取部门、组信息成功！").data(userCenterService.getBelongTo()).build().success();
+//        }else {
+//            return ResponseBean.builder().msg("权限不足：获取部门、组信息失败！").build().success();
+//        }
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
