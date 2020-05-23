@@ -54,6 +54,8 @@ public class MpInformation {
     @ApiModelProperty("发布者ID")
     private String publisher;
 
+    @ApiModelProperty("接收者用户名")
+    private String receiver;
     /**
      * 获取主键值
      *

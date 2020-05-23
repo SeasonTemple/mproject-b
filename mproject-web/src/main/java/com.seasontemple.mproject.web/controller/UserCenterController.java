@@ -1,25 +1,20 @@
 package com.seasontemple.mproject.web.controller;
 
-import cn.hutool.core.util.StrUtil;
 import com.seasontemple.mproject.dao.dto.UserDetail;
-import com.seasontemple.mproject.dao.dto.UserRole;
 import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
 import com.seasontemple.mproject.service.service.UserCenterService;
 import com.seasontemple.mproject.utils.custom.ResponseBean;
 import com.seasontemple.mproject.utils.exception.CustomException;
 import io.swagger.annotations.Api;
 import io.swagger.annotations.ApiOperation;
-import org.apache.shiro.SecurityUtils;
 import org.apache.shiro.authz.annotation.Logical;
-import org.apache.shiro.authz.annotation.RequiresAuthentication;
 import org.apache.shiro.authz.annotation.RequiresRoles;
-import org.apache.shiro.subject.Subject;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+
+import javax.validation.constraints.NotBlank;
 
 /**
  * @author Season Temple
@@ -99,11 +94,12 @@ public class UserCenterController extends BaseController {
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/initInfo")
+    @GetMapping(value = "/initInfo")
     @ApiOperation(value = "系统消息初始化", notes = "系统消息初始化接口")
     @ResponseBody
-    public ResponseBean initInfo() throws CustomException {
-        return ResponseBean.builder().msg("系统消息初始化成功！").build().success();
+    public ResponseBean initInfo(@RequestParam @NotBlank String userName) throws CustomException {
+        log.warn("initInfo: {}", userName);
+        return ResponseBean.builder().msg("系统消息初始化成功！").data(userCenterService.getInformation(userName)).build().success();
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
@@ -114,13 +110,13 @@ public class UserCenterController extends BaseController {
         return ResponseBean.builder().msg("事务申请提交成功！").build().success();
     }
 
-    @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/initAttendance")
-    @ApiOperation(value = "签到信息初始化", notes = "签到信息初始化接口")
-    @ResponseBody
-    public ResponseBean initAttendance() throws CustomException {
-        return ResponseBean.builder().msg("签到信息初始化成功！").build().success();
-    }
+//    @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
+//    @PostMapping(value = "/initAttendance")
+//    @ApiOperation(value = "签到信息初始化", notes = "签到信息初始化接口")
+//    @ResponseBody
+//    public ResponseBean initAttendance() throws CustomException {
+//        return ResponseBean.builder().msg("签到信息初始化成功！").build().success();
+//    }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
     @PostMapping(value = "/markAttendance")

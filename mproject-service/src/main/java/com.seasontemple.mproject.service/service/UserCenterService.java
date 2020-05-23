@@ -9,5 +9,12 @@ import java.util.Map;
  */
 public interface UserCenterService {
 
+    /**
+     * @description: 获取员工所属部门、组信息
+     * @return: java.util.Map
+     * @author: Season Temple
+     */
     Map getBelongTo();
+
+    Map getInformation(String userName);
 }

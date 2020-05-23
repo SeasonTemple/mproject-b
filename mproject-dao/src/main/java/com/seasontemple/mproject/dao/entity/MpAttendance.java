@@ -10,14 +10,14 @@ import lombok.experimental.Accessors;
  * 签到日期表(MpAttendance)表实体类
  *
  * @author SeasonTemple
- * @since 2020-05-22 18:07:01
+ * @since 2020-05-23 16:04:10
  */
 @SuppressWarnings("serial")
 @Data
 @ApiModel("签到日期表")
 @Accessors(chain = true)
 public class MpAttendance {
-    private static final long serialVersionUID = -46515199314306712L;
+    private static final long serialVersionUID = -81489034464274625L;
     /**
     * 签到日期表ID
     */    
@@ -43,6 +43,11 @@ public class MpAttendance {
     */    
     @ApiModelProperty("本日第二次签到时间")
     private Date second;
+    /**
+    * 签到用户
+    */    
+    @ApiModelProperty("签到用户")
+    private String userId;
 
     /**
      * 获取主键值

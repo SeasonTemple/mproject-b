@@ -2,8 +2,11 @@ package com.seasontemple.mproject.dao.dto;
 
 import java.util.Date;
 import java.io.Serializable;
+import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.TableField;
 import com.baomidou.mybatisplus.annotation.TableId;
+import com.seasontemple.mproject.dao.entity.MpAttendance;
 import com.seasontemple.mproject.dao.group.UserDetailValidatedGroup;
 import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
 import io.swagger.annotations.*;
@@ -118,7 +121,8 @@ public class UserDetail {
      * 当月出勤日期集
      */
     @ApiModelProperty("当月出勤日期集")
-    private String attendance;
+    @TableField(exist = false)
+    private List<MpAttendance> attendance;
     /**
      * 年龄
      */

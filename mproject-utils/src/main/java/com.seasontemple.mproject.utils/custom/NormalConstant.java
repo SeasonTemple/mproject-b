@@ -111,5 +111,9 @@ public class NormalConstant {
      * PASSWORD_MAX_LEN
      */
     public static final Integer PASSWORD_MAX_LEN = 20;
+    /**
+     * ALL_USERS
+     */
+    public static final String ALL_USERS = "全体员工";
 
 }

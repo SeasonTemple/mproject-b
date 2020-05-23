@@ -1,6 +1,9 @@
 package com.seasontemple.mproject.dao.entity;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -72,11 +75,6 @@ public class MpProfile {
     */    
     @ApiModelProperty("薪水")
     private Double salary;
-    /**
-    * 当月出勤日期集
-    */    
-    @ApiModelProperty("当月出勤日期集")
-    private String attendance;
     /**
     * 年龄
     */    

@@ -36,7 +36,7 @@ public class JacksonProtobufSupport {
                     SerializationFeature.WRITE_DATES_AS_TIMESTAMPS
             );
             jacksonObjectMapperBuilder.propertyNamingStrategy(PropertyNamingStrategy.LOWER_CAMEL_CASE)
-                    .dateFormat(new SimpleDateFormat("yyyy/MM/dd HH:mm:ss"))
+                    .dateFormat(new SimpleDateFormat("yyyy-MM-dd HH:mm:ss"))
                     .timeZone("GMT+8")
                     .defaultViewInclusion(true)
                     .serializationInclusion(JsonInclude.Include.NON_NULL)
