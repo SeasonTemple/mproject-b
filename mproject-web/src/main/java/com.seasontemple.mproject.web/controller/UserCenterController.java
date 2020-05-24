@@ -1,6 +1,8 @@
 package com.seasontemple.mproject.web.controller;
 
 import com.seasontemple.mproject.dao.dto.UserDetail;
+import com.seasontemple.mproject.dao.entity.MpAttendance;
+import com.seasontemple.mproject.dao.group.UserCenterValidateGroup;
 import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
 import com.seasontemple.mproject.service.service.UserCenterService;
 import com.seasontemple.mproject.utils.custom.ResponseBean;
@@ -33,7 +35,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/modifyDetail", produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "用户详细信息初始化", notes = "用户详细信息初始化获取接口")
     @ResponseBody
-    public ResponseBean modifyDetail(@Validated(value = {UserLoginValidatedGroup.class}) UserDetail userDetail, BindingResult bindingResult) throws CustomException {
+    public ResponseBean modifyDetail(@Validated(value = {UserCenterValidateGroup.class}) UserDetail userDetail, BindingResult bindingResult) throws CustomException {
         log.warn("modifyDetail: {}", userDetail);
         return ResponseBean.builder().msg("数据提交成功！").build().success();
     }
@@ -46,8 +48,8 @@ public class UserCenterController extends BaseController {
 //        Subject subject = SecurityUtils.getSubject();
 //        String token = (String) subject.getPrincipal();
 //        if(!StrUtil.isEmpty(token)){
-            log.warn("belongTo: 登录验证成功！");
-            return ResponseBean.builder().msg("获取部门、组信息成功！").data(userCenterService.getBelongTo()).build().success();
+        log.warn("belongTo: 登录验证成功！");
+        return ResponseBean.builder().msg("获取部门、组信息成功！").data(userCenterService.getBelongTo()).build().success();
 //        }else {
 //            return ResponseBean.builder().msg("权限不足：获取部门、组信息失败！").build().success();
 //        }
@@ -97,7 +99,7 @@ public class UserCenterController extends BaseController {
     @GetMapping(value = "/initInfo")
     @ApiOperation(value = "系统消息初始化", notes = "系统消息初始化接口")
     @ResponseBody
-    public ResponseBean initInfo(@RequestParam @NotBlank String userName) throws CustomException {
+    public ResponseBean initInfo(@RequestParam @NotBlank(message = "用户名不能为空!") String userName) throws CustomException {
         log.warn("initInfo: {}", userName);
         return ResponseBean.builder().msg("系统消息初始化成功！").data(userCenterService.getInformation(userName)).build().success();
     }
@@ -110,19 +112,20 @@ public class UserCenterController extends BaseController {
         return ResponseBean.builder().msg("事务申请提交成功！").build().success();
     }
 
-//    @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-//    @PostMapping(value = "/initAttendance")
-//    @ApiOperation(value = "签到信息初始化", notes = "签到信息初始化接口")
-//    @ResponseBody
-//    public ResponseBean initAttendance() throws CustomException {
-//        return ResponseBean.builder().msg("签到信息初始化成功！").build().success();
-//    }
+    @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
+    @GetMapping(value = "/initAttendance")
+    @ApiOperation(value = "签到信息初始化", notes = "签到信息初始化接口")
+    @ResponseBody
+    public ResponseBean initAttendance(@RequestParam @NotBlank String userId) throws CustomException {
+        return ResponseBean.builder().msg("签到信息初始化成功！").data(userCenterService.initAttendance(userId)).build().success();
+    }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/markAttendance")
+    @PostMapping(value = "/markAttendance", produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "打卡签到", notes = "打卡签到接口")
     @ResponseBody
-    public ResponseBean markAttendance() throws CustomException {
-        return ResponseBean.builder().msg("打卡成功！").build().success();
+    public ResponseBean markAttendance(@NotBlank(message = "签到信息不能为空！", groups = {UserCenterValidateGroup.class}) MpAttendance mpAttendance, BindingResult bindingResult) throws CustomException {
+        log.warn("markAttendance：{}", mpAttendance);
+        return ResponseBean.builder().msg(userCenterService.markAttendance(mpAttendance)).build().success();
     }
 }
