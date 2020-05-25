@@ -56,12 +56,14 @@ public class UserDetail {
      * 入职、账号创建时间
      */
     @ApiModelProperty("入职、账号创建时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotBlank(message = "入职时间不能为空", groups = {UserDetailValidatedGroup.class})
     private Date createTime;
     /**
      * 最后一次登录时间
      */
     @ApiModelProperty("最后一次登录时间")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     @NotBlank(message = "最后一次登录时间不能为空", groups = {UserDetailValidatedGroup.class})
     private Date lastLogin;
     /**
