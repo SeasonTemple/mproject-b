@@ -1,7 +1,10 @@
 package com.seasontemple.mproject.service.service;
 
 import com.seasontemple.mproject.dao.entity.MpAttendance;
+import com.seasontemple.mproject.dao.entity.MpReport;
+import com.seasontemple.mproject.dao.entity.MpRequest;
 
+import java.util.List;
 import java.util.Map;
 
 /**
@@ -37,8 +40,56 @@ public interface UserCenterService {
     /**
      * @description: 签到考勤信息记录
      * @param: [mpAttendance]
-     * @return: int
+     * @return: java.lang.String
      * @author: Season Temple
      */
     String markAttendance(MpAttendance mpAttendance);
+
+    /**
+     * @description: 项目组信息初始化
+     * @param: [groupId]
+     * @return: java.util.Map
+     * @author: Season Temple
+     */
+    Map initProjects(String groupId);
+
+    /**
+     * @description: 工作日志初始化
+     * @param: [userName]
+     * @return: java.util.Map
+     * @author: Season Temple
+     */
+    Map initReports(String userName);
+
+    /**
+     * @description: 工作日志提交
+     * @param: [mpReport]
+     * @return: java.lang.String
+     * @author: Season Temple
+     */
+    String submitReport(MpReport mpReport);
+
+    /**
+     * @description: 工作日志上传
+     * @param: [mpReports]
+     * @return: java.lang.String
+     * @author: Season Temple
+     */
+    String uploadReport(List<MpReport> mpReports);
+
+    /**
+     * @description: 工作日志下载
+     * @param: []
+     * @return: java.lang.String
+     * @author: Season Temple
+     */
+    String downloadReport();
+
+    /**
+     * @description: 事务申请提交
+     * @param: [mpRequest]
+     * @return: java.lang.String
+     * @author: Season Temple
+     */
+    String submitRequest(MpRequest mpRequest);
 }

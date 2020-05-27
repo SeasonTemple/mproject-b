@@ -1,6 +1,10 @@
 package com.seasontemple.mproject.dao.entity;
 
 import java.io.Serializable;
+import java.util.List;
+
+import com.baomidou.mybatisplus.annotation.TableField;
+import com.seasontemple.mproject.dao.dto.UserDetail;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -13,7 +17,7 @@ import lombok.experimental.Accessors;
  */
 @SuppressWarnings("serial")
 @Data
-@ApiModel("项目组表")
+@ApiModel("项目表")
 @Accessors(chain = true)
 public class MpProject {
     private static final long serialVersionUID = 997276712216174563L;
@@ -45,8 +49,12 @@ public class MpProject {
     /**
     * 该组所属部门
     */    
-    @ApiModelProperty("该组所属部门")
-    private Integer depId;
+    @ApiModelProperty("该组所属项目组")
+    private Integer groupId;
+
+    @ApiModelProperty("该组成员")
+    @TableField(exist = false)
+    private List<UserDetail> members;
 
     /**
      * 获取主键值

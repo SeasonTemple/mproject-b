@@ -13,7 +13,7 @@ import lombok.experimental.Accessors;
  */
 @SuppressWarnings("serial")
 @Data
-@ApiModel("$tableInfo.comment")
+@ApiModel("项目组表")
 @Accessors(chain = true)
 public class MpGroup {
     private static final long serialVersionUID = -75759834504314594L;
@@ -30,7 +30,7 @@ public class MpGroup {
     /**
     * 组长ID
     */    
-    @ApiModelProperty("组长ID")
+    @ApiModelProperty("组长用户名")
     private String leader;
     /**
     * 所属部门ID

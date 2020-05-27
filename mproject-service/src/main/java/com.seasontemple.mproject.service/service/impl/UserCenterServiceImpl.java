@@ -1,23 +1,18 @@
 package com.seasontemple.mproject.service.service.impl;
 
-import cn.hutool.core.date.DateUnit;
 import cn.hutool.core.map.MapUtil;
-import cn.hutool.log.StaticLog;
+import cn.hutool.http.HtmlUtil;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.entity.*;
 import com.seasontemple.mproject.dao.mapper.*;
 import com.seasontemple.mproject.service.service.UserCenterService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
-import java.time.Instant;
-import java.time.LocalDate;
-import java.time.ZoneId;
-import java.time.ZonedDateTime;
-import java.util.Date;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import static com.seasontemple.mproject.utils.custom.NormalConstant.ALL_USERS;
 
@@ -28,6 +23,7 @@ import static com.seasontemple.mproject.utils.custom.NormalConstant.ALL_USERS;
  * @create: 2020/05/16 23:23:25
  */
 @Service
+@Transactional
 public class UserCenterServiceImpl implements UserCenterService {
 
     @Autowired
@@ -37,16 +33,25 @@ public class UserCenterServiceImpl implements UserCenterService {
     private MpProjectMapper mpProjectMapper;
 
     @Autowired
+    private MpGroupMapper mpGroupMapper;
+
+    @Autowired
     private MpInformationMapper mpInformationMapper;
 
     @Autowired
     private MpAttendanceMapper mpAttendanceMapper;
 
+    @Autowired
+    private UserDetailMapper userDetailMapper;
+
+    @Autowired
+    private MpReportMapper mpReportMapper;
+
     @Override
     public Map getBelongTo() {
         List<MpDepartment> departmentList = new LambdaQueryChainWrapper<>(mpDepartmentMapper).list();
-        List<MpProject> projectList = new LambdaQueryChainWrapper<>(mpProjectMapper).list();
-        return MapUtil.builder().put("departments", departmentList).put("projects", projectList).build();
+        List<MpGroup> groups = new LambdaQueryChainWrapper<>(mpGroupMapper).list();
+        return MapUtil.builder().put("departments", departmentList).put("groups", groups).build();
     }
 
     @Override
@@ -70,5 +75,41 @@ public class UserCenterServiceImpl implements UserCenterService {
     @Override
     public String markAttendance(MpAttendance mpAttendance) {
         return mpAttendanceMapper.insert(mpAttendance) == 1 ? "签到信息同步成功！" : "签到信息同步失败！";
+    }
+
+    @Override
+    public Map initProjects(String groupId) {
+        List<MpProject> projectList = new LambdaQueryChainWrapper<>(mpProjectMapper).eq(MpProject::getGroupId, groupId).list();
+        List<UserDetail> members = new LambdaQueryChainWrapper<>(userDetailMapper).select(UserDetail::getId, UserDetail::getRealName, UserDetail::getPosition).eq(UserDetail::getGroupId, groupId).list();
+        projectList.forEach(p -> p.setMembers(members));
+        return MapUtil.builder().put("projects", projectList).build();
+    }
+
+    @Override
+    public Map initReports(String userName) {
+        List<MpReport> reports = new LambdaQueryChainWrapper<>(mpReportMapper).eq(MpReport::getOwner, userName).orderByAsc(MpReport::getPublish).list();
+        reports.forEach(r -> r.setContent(HtmlUtil.unescape(r.getContent())));
+        return MapUtil.builder().put("reports", reports).build();
+    }
+
+    @Override
+    public String submitReport(MpReport mpReport) {
+        mpReport.setContent(HtmlUtil.escape(mpReport.getContent()));
+        return mpReportMapper.insert(mpReport) == 1 ? "日志提交成功！" : "日志提交失败！";
+    }
+
+    @Override
+    public String uploadReport(List<MpReport> mpReports) {
+        return null;
+    }
+
+    @Override
+    public String downloadReport() {
+        return null;
+    }
+
+    @Override
+    public String submitRequest(MpRequest mpRequest) {
+        return null;
     }
 }

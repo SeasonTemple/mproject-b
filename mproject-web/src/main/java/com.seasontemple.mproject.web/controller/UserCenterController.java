@@ -2,6 +2,8 @@ package com.seasontemple.mproject.web.controller;
 
 import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.entity.MpAttendance;
+import com.seasontemple.mproject.dao.entity.MpProject;
+import com.seasontemple.mproject.dao.entity.MpReport;
 import com.seasontemple.mproject.dao.group.UserCenterValidateGroup;
 import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
 import com.seasontemple.mproject.service.service.UserCenterService;
@@ -56,42 +58,52 @@ public class UserCenterController extends BaseController {
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/submitReport")
-    @ApiOperation(value = "提交工作报告", notes = "提交工作报告接口")
+    @PostMapping(value = "/initReport")
+    @ApiOperation(value = "初始化工作日志", notes = "初始化工作日志接口")
     @ResponseBody
-    public ResponseBean submitReport() throws CustomException {
-        return ResponseBean.builder().msg("提交工作报告成功！").build().success();
+    public ResponseBean initReport(@RequestParam String userName) throws CustomException {
+        return ResponseBean.builder().msg("初始化工作日志成功！").data(userCenterService.initReports(userName)).build().success();
+    }
+
+    @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
+    @PostMapping(value = "/submitReport", produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "提交工作日志", notes = "提交工作日志接口")
+    @ResponseBody
+    public ResponseBean submitReport(MpReport report) throws CustomException {
+        return ResponseBean.builder().msg(userCenterService.submitReport(report)).build().success();
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
     @PostMapping(value = "/uploadReport")
-    @ApiOperation(value = "上传工作报告", notes = "上传工作报告接口")
+    @ApiOperation(value = "上传工作日志", notes = "上传工作日志接口")
     @ResponseBody
     public ResponseBean uploadReport() throws CustomException {
-        return ResponseBean.builder().msg("上传工作报告成功！").build().success();
+        return ResponseBean.builder().msg("上传工作日志成功！").build().success();
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
     @PostMapping(value = "/downloadReport")
-    @ApiOperation(value = "下载工作报告", notes = "下载工作报告接口")
+    @ApiOperation(value = "下载工作日志", notes = "下载工作日志接口")
     @ResponseBody
     public ResponseBean downloadReport() throws CustomException {
-        return ResponseBean.builder().msg("下载工作报告成功！").build().success();
+        return ResponseBean.builder().msg("下载工作日志成功！").build().success();
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/initProjects")
+    @PostMapping(value = "/initProjects", produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "项目信息初始化", notes = "项目信息初始化接口")
     @ResponseBody
-    public ResponseBean initProjects() throws CustomException {
-        return ResponseBean.builder().msg("项目信息初始化成功！").build().success();
+    public ResponseBean initProjects(@RequestParam String groupId) throws CustomException {
+        log.warn("initProjects: {}", groupId);
+        return ResponseBean.builder().msg("项目信息初始化成功！").data(userCenterService.initProjects(groupId)).build().success();
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/modifyProjects")
+    @PostMapping(value = "/modifyProjects", produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "项目信息修改", notes = "项目信息修改接口")
     @ResponseBody
-    public ResponseBean modifyProjects() throws CustomException {
+    public ResponseBean modifyProjects(@NotBlank MpProject mpProject) throws CustomException {
+        log.warn("modifyProjects: {}", mpProject);
         return ResponseBean.builder().msg("项目信息修改成功！").build().success();
     }
 
