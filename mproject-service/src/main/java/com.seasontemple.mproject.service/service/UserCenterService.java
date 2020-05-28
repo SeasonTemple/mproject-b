@@ -4,6 +4,7 @@ import com.seasontemple.mproject.dao.entity.MpAttendance;
 import com.seasontemple.mproject.dao.entity.MpReport;
 import com.seasontemple.mproject.dao.entity.MpRequest;
 
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -71,11 +72,11 @@ public interface UserCenterService {
 
     /**
      * @description: 工作日志上传
-     * @param: [mpReports]
-     * @return: java.lang.String
+     * @param: [file]
+     * @return: java.util.Map
      * @author: Season Temple
      */
-    String uploadReport(List<MpReport> mpReports);
+    Map uploadReport(File file);
 
     /**
      * @description: 工作日志下载
@@ -83,13 +84,19 @@ public interface UserCenterService {
      * @return: java.lang.String
      * @author: Season Temple
      */
-    String downloadReport();
+    List<MpReport> downloadReport(String reports);
 
+    /**
+     * @description: 审核人初始化
+     * @return: java.util.Map
+     * @author: Season Temple
+     */
+    Map initAuditors();
     /**
      * @description: 事务申请提交
      * @param: [mpRequest]
      * @return: java.lang.String
      * @author: Season Temple
      */
-    String submitRequest(MpRequest mpRequest);
+    String submitRequest(MpRequest request);
 }

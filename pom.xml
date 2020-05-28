@@ -39,6 +39,7 @@
 		<java-jwt.version>3.10.0</java-jwt.version>
 		<jjwt.verison>0.9.1</jjwt.verison>
 		<javax.mail.version>1.4.7</javax.mail.version>
+		<poi-ooxml.version>4.1.2</poi-ooxml.version>
 	</properties>
 
 	<dependencyManagement>

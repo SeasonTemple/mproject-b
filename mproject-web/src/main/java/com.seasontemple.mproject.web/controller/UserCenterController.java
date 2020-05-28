@@ -1,9 +1,14 @@
 package com.seasontemple.mproject.web.controller;
 
+import cn.hutool.core.io.IoUtil;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
+import com.seasontemple.mproject.dao.dto.DownloadReportDto;
 import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.entity.MpAttendance;
 import com.seasontemple.mproject.dao.entity.MpProject;
 import com.seasontemple.mproject.dao.entity.MpReport;
+import com.seasontemple.mproject.dao.entity.MpRequest;
 import com.seasontemple.mproject.dao.group.UserCenterValidateGroup;
 import com.seasontemple.mproject.dao.group.UserLoginValidatedGroup;
 import com.seasontemple.mproject.service.service.UserCenterService;
@@ -17,8 +22,15 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 
+import javax.servlet.ServletOutputStream;
+import javax.servlet.http.HttpServletResponse;
 import javax.validation.constraints.NotBlank;
+import java.io.*;
+import java.net.URLEncoder;
+import java.util.List;
+import java.util.Map;
 
 /**
  * @author Season Temple
@@ -61,7 +73,7 @@ public class UserCenterController extends BaseController {
     @PostMapping(value = "/initReport")
     @ApiOperation(value = "初始化工作日志", notes = "初始化工作日志接口")
     @ResponseBody
-    public ResponseBean initReport(@RequestParam String userName) throws CustomException {
+    public ResponseBean initReport(String userName) throws CustomException {
         return ResponseBean.builder().msg("初始化工作日志成功！").data(userCenterService.initReports(userName)).build().success();
     }
 
@@ -74,19 +86,50 @@ public class UserCenterController extends BaseController {
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/uploadReport")
+    @PostMapping(value = "/uploadReport", produces = {"application/x-www-form-urlencoded;charset=UTF-8","application/json;charset=UTF-8"})
     @ApiOperation(value = "上传工作日志", notes = "上传工作日志接口")
     @ResponseBody
-    public ResponseBean uploadReport() throws CustomException {
+    public ResponseBean uploadReport(@RequestParam("file") String file) throws CustomException {
+        log.warn("uploadReport: {}", file);
+//        userCenterService.uploadReport(file);
         return ResponseBean.builder().msg("上传工作日志成功！").build().success();
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/downloadReport")
+    @PostMapping(value = "/downloadReport", produces = {"application/x-www-form-urlencoded;charset=UTF-8","application/json;charset=UTF-8"})
     @ApiOperation(value = "下载工作日志", notes = "下载工作日志接口")
     @ResponseBody
-    public ResponseBean downloadReport() throws CustomException {
-        return ResponseBean.builder().msg("下载工作日志成功！").build().success();
+    public ResponseBean downloadReport(@RequestParam String reports) throws CustomException {
+        log.warn("downloadReport: {}", reports);
+        ExcelWriter writer = ExcelUtil.getWriter();
+//        writer.addHeaderAlias("id", "日志ID");
+        writer.addHeaderAlias("title", "日志标题");
+        writer.addHeaderAlias("content", "日志内容");
+        writer.addHeaderAlias("publish", "发布时间");
+        writer.addHeaderAlias("owner", "发布者");
+        writer.merge(4, "工作日志一览");
+        writer.write(userCenterService.downloadReport(reports), true);
+        response.setContentType("application/vnd.ms-excel;charset=utf-8");
+        String fileName = "工作报表.xls";
+        try {
+            response.setHeader("Content-Disposition", "attachment;filename="+  URLEncoder.encode(fileName, "UTF-8"));//设置文件名
+        } catch (UnsupportedEncodingException e) {
+            throw new CustomException("文件名称有误！");
+        }
+        response.setHeader("Pragma", "no-cache");
+        response.setHeader("Cache-Control", "no-cache");
+        response.setDateHeader("Expires", 0);
+        response.setStatus(HttpServletResponse.SC_OK);
+        try (OutputStream out = response.getOutputStream()) {
+            BufferedOutputStream bufferedOutPut = new BufferedOutputStream(out);
+//            bufferedOutPut.flush();
+            writer.flush(bufferedOutPut, true);
+            writer.close();
+            IoUtil.close(out);
+        } catch (IOException e) {
+            throw new CustomException("生成文件失败！");
+        }
+        return null;
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
@@ -117,11 +160,21 @@ public class UserCenterController extends BaseController {
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/submitRequest")
+    @GetMapping(value = "/initAuditors")
     @ApiOperation(value = "事务申请提交", notes = "事务申请提交接口")
     @ResponseBody
-    public ResponseBean submitRequest() throws CustomException {
-        return ResponseBean.builder().msg("事务申请提交成功！").build().success();
+    public ResponseBean initAuditors() throws CustomException {
+        return ResponseBean.builder().msg("初始化审核人信息成功！").data(userCenterService.initAuditors()).build().success();
+    }
+
+
+    @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
+    @PostMapping(value = "/submitRequest", produces = "application/json;charset=UTF-8")
+    @ApiOperation(value = "事务申请提交", notes = "事务申请提交接口")
+    @ResponseBody
+    public ResponseBean submitRequest(MpRequest request) throws CustomException {
+        log.warn("submitRequest: {}", request);
+        return ResponseBean.builder().msg(userCenterService.submitRequest(request)).build().success();
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)

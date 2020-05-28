@@ -1,16 +1,30 @@
 package com.seasontemple.mproject.service.service.impl;
 
+import cn.hutool.core.io.FileUtil;
+import cn.hutool.core.io.IoUtil;
 import cn.hutool.core.map.MapUtil;
 import cn.hutool.http.HtmlUtil;
+import cn.hutool.json.JSONArray;
+import cn.hutool.json.JSONUtil;
+import cn.hutool.log.StaticLog;
+import cn.hutool.poi.excel.ExcelReader;
+import cn.hutool.poi.excel.ExcelUtil;
+import cn.hutool.poi.excel.ExcelWriter;
+import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.entity.*;
 import com.seasontemple.mproject.dao.mapper.*;
 import com.seasontemple.mproject.service.service.UserCenterService;
+import com.seasontemple.mproject.utils.custom.NormalConstant;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import javax.servlet.ServletOutputStream;
+import java.io.File;
 import java.util.List;
 import java.util.Map;
 
@@ -46,6 +60,12 @@ public class UserCenterServiceImpl implements UserCenterService {
 
     @Autowired
     private MpReportMapper mpReportMapper;
+
+    @Autowired
+    private MpRequestMapper mpRequestMapper;
+
+    @Autowired
+    private MpUserMapper mpUserMapper;
 
     @Override
     public Map getBelongTo() {
@@ -99,17 +119,27 @@ public class UserCenterServiceImpl implements UserCenterService {
     }
 
     @Override
-    public String uploadReport(List<MpReport> mpReports) {
+    public Map uploadReport(File file) {
+        ExcelReader reader = ExcelUtil.getReader(FileUtil.touch(file));
+        List<Map<String, Object>> readAll = reader.readAll();
+        StaticLog.warn("uploadReport：{}", readAll);
         return null;
     }
 
     @Override
-    public String downloadReport() {
-        return null;
+    public List<MpReport> downloadReport(String reports) {
+        return JSONUtil.parseArray(reports).toList(MpReport.class);
     }
 
     @Override
-    public String submitRequest(MpRequest mpRequest) {
-        return null;
+    public Map initAuditors() {
+        List<MpUser> auditors = mpUserMapper.selectByRole(NormalConstant.ROLE_ID);
+        StaticLog.warn("initAuditors：{}", auditors);
+        return MapUtil.builder().put("auditors", auditors).build();
+    }
+
+    @Override
+    public String submitRequest(MpRequest request) {
+        return mpRequestMapper.insert(request) == 1 ? "申请提交成功！" : "申请提交失败！";
     }
 }

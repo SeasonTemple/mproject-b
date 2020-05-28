@@ -1,8 +1,10 @@
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import com.seasontemple.mproject.dao.mapper.MpUserMapper;
 import com.seasontemple.mproject.web.WebApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
 
@@ -22,12 +24,15 @@ public class TestWebApplication {
 //    @Autowired
 //    private MpDepartmentMapper mpDepartmentMapper;
 
+//    @Autowired
+//    private MpUserMapper mpUserMapper;
 
 //    @Autowired
 //    private ProfileService profileService;
 
     @Test
     public void test() {
+//        log.warn("{}",mpUserMapper.selectByRole(2));
 //        List<MpDepartment> departmentList = new LambdaQueryChainWrapper<>(mpDepartmentMapper).list();
 //        List<MpProject> projectList = new LambdaQueryChainWrapper<>(mpProjectMapper).list();
 //        log.warn("{}", MapUtil.builder().put("departments", departmentList).put("projects", projectList).build());

@@ -116,4 +116,9 @@ public class NormalConstant {
      */
     public static final String ALL_USERS = "全体员工";
 
+    /**
+     * ROLE_ID
+     */
+    public static final Integer ROLE_ID = 2;
+
 }

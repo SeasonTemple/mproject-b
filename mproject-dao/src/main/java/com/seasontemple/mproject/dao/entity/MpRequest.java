@@ -5,9 +5,12 @@ import java.util.Date;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
+import org.springframework.format.annotation.DateTimeFormat;
 
 /**
  * 申请表(MpRequest)表实体类
@@ -27,6 +30,7 @@ public class MpRequest {
      * 申请ID
      */
     @ApiModelProperty("申请ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
      * 申请人
@@ -46,17 +50,20 @@ public class MpRequest {
     /**
      * 其他类型补充
      */
-    @ApiModelProperty("其他类型补充")
-    private String other;
+    @ApiModelProperty("申请日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    private Date requestTime;
     /**
      * 请假开始日期
      */
     @ApiModelProperty("请假开始日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date startTime;
     /**
      * 请假结束日期
      */
     @ApiModelProperty("请假结束日期")
+    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
     private Date endTime;
     /**
      * 申请理由
