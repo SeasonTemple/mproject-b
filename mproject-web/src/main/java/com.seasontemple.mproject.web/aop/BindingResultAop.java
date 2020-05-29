@@ -47,12 +47,12 @@ public class BindingResultAop {
         }
         if(bindingResult != null){
             if(bindingResult.hasErrors()){//检查是否存在校验错误
-                String errorInfo = "";
+                StringBuilder errorInfo = new StringBuilder();
                 List<FieldError> errors = bindingResult.getFieldErrors();//获取字段参数不合法的错误集合
                 for(FieldError error : errors){
-                    errorInfo = errorInfo + "[" + error.getField() + " " + error.getDefaultMessage() + "]";
+                    errorInfo.append("[").append(error.getField()).append(" ").append(error.getDefaultMessage()).append("]");
                 }
-                return ResponseBean.builder().code(ResultCode.ERROR).msg(errorInfo).build().success(); //返回异常错误
+                return ResponseBean.builder().code(ResultCode.ERROR).msg(errorInfo.toString()).build().success(); //返回异常错误
             }
         }
         return joinPoint.proceed();//执行目标方法

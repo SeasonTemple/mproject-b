@@ -48,8 +48,8 @@ public class MpProfile {
     /**
     * 用户头像路由ID
     */    
-    @ApiModelProperty("用户头像路由ID")
-    private Integer avatarId;
+    @ApiModelProperty("用户头像路由")
+    private String avatarUrl;
     /**
     * 身份证号码
     */    

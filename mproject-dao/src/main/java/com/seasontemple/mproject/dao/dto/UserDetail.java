@@ -56,7 +56,7 @@ public class UserDetail {
      * 入职、账号创建时间
      */
     @ApiModelProperty("入职、账号创建时间")
-    @DateTimeFormat(pattern = "yyyy-MM-dd HH:mm:ss")
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @NotBlank(message = "入职时间不能为空", groups = {UserDetailValidatedGroup.class})
     private Date createTime;
     /**
@@ -154,6 +154,14 @@ public class UserDetail {
      */
     @ApiModelProperty("加密盐")
     private byte[] salt;
-
-
+    /**
+     * 账户状态
+     */
+    @ApiModelProperty("账户状态")
+    private Integer status;
+    /**
+     * 角色ID
+     */
+    @ApiModelProperty("角色ID")
+    private Integer roleId;
 }

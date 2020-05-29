@@ -1,6 +1,8 @@
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.seasontemple.mproject.dao.mapper.MpUserMapper;
+import com.seasontemple.mproject.dao.mapper.UserDetailMapper;
 import com.seasontemple.mproject.web.WebApplication;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -28,11 +30,12 @@ public class TestWebApplication {
 //    private MpUserMapper mpUserMapper;
 
 //    @Autowired
-//    private ProfileService profileService;
+//    private UserDetailMapper userDetailMapper;
 
     @Test
     public void test() {
-//        log.warn("{}",mpUserMapper.selectByRole(2));
+
+//        log.warn("{}",new LambdaQueryChainWrapper<>(userDetailMapper).list().size());
 //        List<MpDepartment> departmentList = new LambdaQueryChainWrapper<>(mpDepartmentMapper).list();
 //        List<MpProject> projectList = new LambdaQueryChainWrapper<>(mpProjectMapper).list();
 //        log.warn("{}", MapUtil.builder().put("departments", departmentList).put("projects", projectList).build());
