@@ -7,17 +7,16 @@ import cn.hutool.core.util.CharsetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.crypto.symmetric.AES;
+import cn.hutool.json.JSONUtil;
 import cn.hutool.log.StaticLog;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.dto.UserRole;
-import com.seasontemple.mproject.dao.entity.MpDepartment;
-import com.seasontemple.mproject.dao.entity.MpGroup;
-import com.seasontemple.mproject.dao.entity.MpProfile;
-import com.seasontemple.mproject.dao.entity.MpUser;
+import com.seasontemple.mproject.dao.entity.*;
 import com.seasontemple.mproject.dao.mapper.*;
 import com.seasontemple.mproject.service.service.HrService;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
@@ -27,6 +26,7 @@ import com.seasontemple.mproject.utils.token.TokenUtilImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import springfox.documentation.spring.web.json.Json;
 
 import java.util.HashMap;
 import java.util.List;
@@ -84,9 +84,9 @@ public class HrServiceImpl implements HrService {
         MpUser mpUser = parseMpUser(userDetail);
         MpProfile profile = parseMpProfile(userDetail);
         LambdaQueryWrapper<MpUser> lambdaQueryWrapper = Wrappers.lambdaQuery();
-        lambdaQueryWrapper.select(MpUser::getId).equals(mpUser);
-        List<MpUser> result = mpUserMapper.selectList(lambdaQueryWrapper);
-        if (result.size() == 0 && !BeanUtil.isEmpty(profile)) {
+        lambdaQueryWrapper.eq(MpUser::getId, mpUser.getId());
+        MpUser result = mpUserMapper.selectOne(lambdaQueryWrapper);
+        if (!BeanUtil.isEmpty(result) && !BeanUtil.isEmpty(profile)) {
             int k = mpProfileMapper.insert(profile);
             if (k > 0) {
                 mpUser.setProfileId(profile.getId());
@@ -111,11 +111,11 @@ public class HrServiceImpl implements HrService {
         MpUser mpUser = parseMpUser(userDetail);
         MpProfile profile = parseMpProfile(userDetail);
         if (!BeanUtil.isEmpty(mpUser) && !BeanUtil.isEmpty(profile)) {
-            int i = mpUserMapper.updateById(mpUser);
+            int i = new LambdaUpdateChainWrapper<>(mpUserMapper).eq(MpUser::getId, mpUser.getId()).update(mpUser) ? 1 : 0;
             LambdaUpdateWrapper<MpProfile> wrapper = Wrappers.lambdaUpdate();
             wrapper.eq(MpProfile::getIdNumber, profile.getIdNumber());
             int k = mpProfileMapper.update(profile, wrapper);
-            return i + k > 1 ? "更新成功！" : "更新失败！";
+            return i + k >= 1 ? "更新成功！" : "更新失败！";
         } else if (!BeanUtil.isEmpty(mpUser)) {
             return mpUserMapper.updateById(mpUser) > 0 ? "更新成功！" : "更新失败！";
         } else {
@@ -146,8 +146,31 @@ public class HrServiceImpl implements HrService {
     }
 
     @Override
-    public String modifyDuty(Object t) {
-        return null;
+    public String addDuty(int type, String dutyDto) {
+        if (type == 1) {
+            MpDepartment department = JSONUtil.toBean(dutyDto, MpDepartment.class);
+            return mpDepartmentMapper.insert(department) > 0 ? "部门信息添加成功！" : "部门信息添加失败！";
+        } else if (type == 2) {
+            MpGroup group = JSONUtil.toBean(dutyDto, MpGroup.class);
+            return mpGroupMapper.insert(group) > 0 ? "组信息添加成功！" : "组信息添加失败！";
+        } else {
+            MpProject project = JSONUtil.toBean(dutyDto, MpProject.class);
+            return mpProjectMapper.insert(project) > 0 ? "项目信息添加成功！" : "项目添加失败！";
+        }
+    }
+
+    @Override
+    public String modifyDuty(int type, String dutyDto) {
+        if (type == 1) {
+            MpDepartment department = JSONUtil.toBean(dutyDto, MpDepartment.class);
+            return mpDepartmentMapper.updateById(department) > 0 ? "部门信息更新成功！" : "部门信息更新失败！";
+        } else if (type == 2) {
+            MpGroup group = JSONUtil.toBean(dutyDto, MpGroup.class);
+            return mpGroupMapper.updateById(group) > 0 ? "组信息更新成功！" : "组信息更新失败！";
+        } else {
+            MpProject project = JSONUtil.toBean(dutyDto, MpProject.class);
+            return mpProjectMapper.updateById(project) > 0 ? "项目信息更新成功！" : "项目更新失败！";
+        }
     }
 
     @Override
@@ -156,7 +179,7 @@ public class HrServiceImpl implements HrService {
     }
 
     @Override
-    public Map InitRequest() {
+    public Map initRequest() {
         return MapUtil.builder("requests", new LambdaQueryChainWrapper<>(mpRequestMapper).list()).build();
     }
 

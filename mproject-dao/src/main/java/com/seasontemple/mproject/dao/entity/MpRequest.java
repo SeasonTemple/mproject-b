@@ -70,6 +70,11 @@ public class MpRequest {
      */
     @ApiModelProperty("申请理由")
     private String reason;
+    /**
+     * 申请状态
+     */
+    @ApiModelProperty("申请状态")
+    private Integer status;
 
     /**
      * 获取主键值

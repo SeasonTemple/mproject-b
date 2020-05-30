@@ -38,14 +38,14 @@ public class MpUser {
      */
     @ApiModelProperty("用户名")
     @NotBlank(message = "用户名不能为空", groups = {UserLoginValidatedGroup.class})
-    @Length(min = 4, max = 20, message = "用户名应介于4到20个字符，其中1个汉字记为2字符", groups = {UserLoginValidatedGroup.class})
+    @Length(min = 4, max = 20, message = "用户名应介于4到20个字符", groups = {UserLoginValidatedGroup.class})
     private String userName;
     /**
      * 加密密码
      */
     @ApiModelProperty("加密密码")
     @NotBlank(message = "密码不能为空", groups = {UserLoginValidatedGroup.class})
-    @Length(min = 8, max = 20, message = "密码应介于8到20个字符，其中1个汉字记为2字符", groups = {UserLoginValidatedGroup.class})
+    @Length(min = 8, max = 20, message = "密码应介于8到20个字符", groups = {UserLoginValidatedGroup.class})
     private String passWord;
     /**
      * 加密盐

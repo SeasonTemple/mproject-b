@@ -26,11 +26,13 @@ public interface HrService {
 
     Map initDuty();
 
-    String modifyDuty(Object t);
+    String addDuty(int type, String dutyDto);
+
+    String modifyDuty(int type, String dutyDto);
 
     String deleteDuty(Integer id);
 
-    Map InitRequest();
+    Map initRequest();
 
     String handleRequest(int[] ids);
 

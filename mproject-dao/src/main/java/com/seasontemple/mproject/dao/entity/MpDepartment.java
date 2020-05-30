@@ -4,6 +4,8 @@ import java.io.Serializable;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -26,6 +28,7 @@ public class MpDepartment {
      * 部门ID
      */
     @ApiModelProperty("部门ID")
+    @TableId(value = "id" , type = IdType.AUTO)
     private Integer id;
     /**
      * 部门名称

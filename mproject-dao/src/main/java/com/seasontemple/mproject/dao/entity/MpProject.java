@@ -3,7 +3,9 @@ package com.seasontemple.mproject.dao.entity;
 import java.io.Serializable;
 import java.util.List;
 
+import com.baomidou.mybatisplus.annotation.IdType;
 import com.baomidou.mybatisplus.annotation.TableField;
+import com.baomidou.mybatisplus.annotation.TableId;
 import com.seasontemple.mproject.dao.dto.UserDetail;
 import io.swagger.annotations.*;
 import lombok.Data;
@@ -22,33 +24,34 @@ import lombok.experimental.Accessors;
 public class MpProject {
     private static final long serialVersionUID = 997276712216174563L;
     /**
-    * 项目组ID
-    */    
+     * 项目组ID
+     */
     @ApiModelProperty("项目组ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
-    * 项目组名称
-    */    
+     * 项目组名称
+     */
     @ApiModelProperty("项目组名称")
     private String projectName;
     /**
-    * 项目内容描述
-    */    
+     * 项目内容描述
+     */
     @ApiModelProperty("项目内容描述")
     private String description;
     /**
-    * 项目进度
-    */    
+     * 项目进度
+     */
     @ApiModelProperty("项目进度")
     private Integer schedule;
     /**
-    * 项目组负责人ID
-    */    
+     * 项目组负责人ID
+     */
     @ApiModelProperty("项目组负责人ID")
     private String leader;
     /**
-    * 该组所属部门
-    */    
+     * 该组所属部门
+     */
     @ApiModelProperty("该组所属项目组")
     private Integer groupId;
 
@@ -64,4 +67,4 @@ public class MpProject {
     protected Serializable pkVal() {
         return this.id;
     }
-    }
+}

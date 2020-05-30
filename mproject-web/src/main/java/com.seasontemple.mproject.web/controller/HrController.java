@@ -1,10 +1,15 @@
 package com.seasontemple.mproject.web.controller;
 
+import cn.hutool.core.bean.BeanUtil;
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.convert.Convert;
+import cn.hutool.core.util.ClassUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.json.JSON;
 import cn.hutool.json.JSONUtil;
+import com.seasontemple.mproject.dao.dto.DutyDto;
 import com.seasontemple.mproject.dao.dto.UserDetail;
+import com.seasontemple.mproject.dao.entity.MpDepartment;
 import com.seasontemple.mproject.dao.group.UserCenterValidateGroup;
 import com.seasontemple.mproject.service.service.HrService;
 import com.seasontemple.mproject.utils.custom.ResponseBean;
@@ -79,12 +84,21 @@ public class HrController extends BaseController {
     }
 
     @RequiresRoles(value = {"CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/modifyDuty", produces = "application/json;charset=UTF-8")
-    @ApiOperation(value = "职能信息新增、修改", notes = "职能信息新增、修改API")
+    @PostMapping(value = "/addDuty", produces = {"application/json;charset=UTF-8", "application/x-www-form-urlencoded;charset=UTF-8"})
+    @ApiOperation(value = "职能信息新增", notes = "职能信息新增API")
     @ResponseBody
-    public ResponseBean modifyDuty() throws CustomException {
-        log.warn("modifyDuty: {}", "");
-        return ResponseBean.builder().msg("职能信息新增、修改成功！").build().success();
+    public ResponseBean addDuty(@RequestParam int type, @RequestParam String dutyDto) throws CustomException {
+        log.warn("addDuty: {}/{}", type, dutyDto);
+        return ResponseBean.builder().msg(hrService.addDuty(type, dutyDto)).build().success();
+    }
+
+    @RequiresRoles(value = {"CUSTOM", "ADMIN"}, logical = Logical.OR)
+    @PostMapping(value = "/modifyDuty", produces = {"application/json;charset=UTF-8", "application/x-www-form-urlencoded;charset=UTF-8"})
+    @ApiOperation(value = "职能信息修改", notes = "职能信息修改API")
+    @ResponseBody
+    public ResponseBean modifyDuty(@RequestParam int type, @RequestParam String dutyDto) throws CustomException {
+        log.warn("modifyDuty: {}{}", type, dutyDto);
+        return ResponseBean.builder().msg(hrService.modifyDuty(type, dutyDto)).build().success();
     }
 
     @RequiresRoles(value = {"CUSTOM", "ADMIN"}, logical = Logical.OR)
@@ -96,11 +110,11 @@ public class HrController extends BaseController {
     }
 
     @RequiresRoles(value = {"CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/InitRequest", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/initRequest", produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "申请信息初始化", notes = "申请信息初始化API")
     @ResponseBody
-    public ResponseBean InitRequest() throws CustomException {
-        return ResponseBean.builder().msg("申请信息初始化成功！").build().success();
+    public ResponseBean initRequest() throws CustomException {
+        return ResponseBean.builder().msg("申请信息初始化成功！").data(hrService.initRequest()).build().success();
     }
 
     @RequiresRoles(value = {"CUSTOM", "ADMIN"}, logical = Logical.OR)
@@ -116,7 +130,7 @@ public class HrController extends BaseController {
     @ApiOperation(value = "薪资信息初始化", notes = "薪资信息初始化API")
     @ResponseBody
     public ResponseBean initSalary() throws CustomException {
-        return ResponseBean.builder().msg("薪资信息初始化成功！").build().success();
+        return ResponseBean.builder().msg("薪资信息初始化成功！").data(hrService.initSalary()).build().success();
     }
 
     @RequiresRoles(value = {"CUSTOM", "ADMIN"}, logical = Logical.OR)
