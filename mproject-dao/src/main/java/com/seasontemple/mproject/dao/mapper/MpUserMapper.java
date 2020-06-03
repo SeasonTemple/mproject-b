@@ -26,4 +26,9 @@ public interface MpUserMapper extends BaseMapper<MpUser> {
 //    UserDetail getUserDetail(@Param("userName") String userName);
     @Select("select id, user_name from mproject.mp_user where role_id = #{role_id}")
     List<MpUser> selectByRole(@Param("role_id") Integer roleId);
+
+    @Select("select * from mproject.mp_user")
+    List<MpUser> selectAll();
+
+
 }

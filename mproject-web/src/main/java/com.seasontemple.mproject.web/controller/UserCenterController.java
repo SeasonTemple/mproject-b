@@ -1,6 +1,8 @@
 package com.seasontemple.mproject.web.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import cn.hutool.core.io.IoUtil;
+import cn.hutool.core.map.MapUtil;
 import cn.hutool.poi.excel.ExcelUtil;
 import cn.hutool.poi.excel.ExcelWriter;
 import com.seasontemple.mproject.dao.dto.DownloadReportDto;
@@ -74,7 +76,12 @@ public class UserCenterController extends BaseController {
     @ApiOperation(value = "初始化工作日志", notes = "初始化工作日志接口")
     @ResponseBody
     public ResponseBean initReport(String userName) throws CustomException {
-        return ResponseBean.builder().msg("初始化工作日志成功！").data(userCenterService.initReports(userName)).build().success();
+        Map res = userCenterService.initReports(userName);
+        if(CollUtil.isEmpty(res)){
+            return ResponseBean.builder().msg("无数据！").build().failed();
+        }else{
+            return ResponseBean.builder().msg("初始化工作日志成功！").data(res).build().success();
+        }
     }
 
     @RequiresRoles(value = {"USER", "CUSTOM", "ADMIN"}, logical = Logical.OR)
@@ -102,7 +109,6 @@ public class UserCenterController extends BaseController {
     public ResponseBean downloadReport(@RequestParam String reports) throws CustomException {
         log.warn("downloadReport: {}", reports);
         ExcelWriter writer = ExcelUtil.getWriter();
-//        writer.addHeaderAlias("id", "日志ID");
         writer.addHeaderAlias("title", "日志标题");
         writer.addHeaderAlias("content", "日志内容");
         writer.addHeaderAlias("publish", "发布时间");
@@ -122,7 +128,6 @@ public class UserCenterController extends BaseController {
         response.setStatus(HttpServletResponse.SC_OK);
         try (OutputStream out = response.getOutputStream()) {
             BufferedOutputStream bufferedOutPut = new BufferedOutputStream(out);
-//            bufferedOutPut.flush();
             writer.flush(bufferedOutPut, true);
             writer.close();
             IoUtil.close(out);

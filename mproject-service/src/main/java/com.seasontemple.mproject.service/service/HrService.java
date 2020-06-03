@@ -1,6 +1,8 @@
 package com.seasontemple.mproject.service.service;
 
 import com.seasontemple.mproject.dao.dto.UserDetail;
+import com.seasontemple.mproject.dao.entity.MpProfile;
+import com.seasontemple.mproject.dao.entity.MpRequest;
 import com.seasontemple.mproject.dao.entity.MpUser;
 
 import java.util.Map;
@@ -34,9 +36,9 @@ public interface HrService {
 
     Map initRequest();
 
-    String handleRequest(int[] ids);
+    String handleRequest(String requests);
 
     Map initSalary();
 
-    String modifySalary(Integer id);
+    String modifySalary(MpProfile profile);
 }

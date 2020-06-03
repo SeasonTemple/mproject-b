@@ -1,6 +1,9 @@
 package com.seasontemple.mproject.dao.entity;
 
 import java.io.Serializable;
+
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -19,6 +22,7 @@ public class MpAuthority {
     * 权限ID
     */    
     @ApiModelProperty("权限ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
     * 权限名称

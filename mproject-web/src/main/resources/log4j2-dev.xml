@@ -2,7 +2,8 @@
 <Configuration>
 	<properties>
 		<property name="LOG_HOME">./logs</property>
-		<property name="LOG_PATTERN">%clr{[ %d{yyyy-MM-dd HH:mm:ss.SSS} ]}{faint} [%clr{%5p} ] %clr{[ PID: ${sys:PID} ]}{magenta} %clr{---}{faint} %clr{[ %t ]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx </property>
+<!--		<property name="LOG_PATTERN">%clr{[ %d{yyyy-MM-dd HH:mm:ss.SSS} ]}{faint} [%clr{%5p} ] %clr{[ PID: ${sys:PID} ]}{magenta} %clr{-&#45;&#45;}{faint} %clr{[ %t ]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx </property>-->
+		<property name="LOG_PATTERN">%clr{[ %d{yyyy-MM-dd HH:mm:ss} ]}{faint} [%clr{%5p} ] %clr{[ PID: ${sys:PID} ]}{magenta} %clr{---}{faint} %clr{[ %t ]}{faint} %clr{%-40.40c{1.}}{cyan} %clr{:}{faint} %m%n%xwEx </property>
 	</properties>
 	<Appenders>
 		<!--*********************控制台日志***********************-->
@@ -15,78 +16,78 @@
 		</Console>
 		<!--*********************文件日志***********************-->
 		<!--debug级别日志-->
-		<RollingFile name="debugFileAppender"
+	<!--	<RollingFile name="debugFileAppender"
 		             fileName="${LOG_HOME}/debug.log"
 		             filePattern="${LOG_HOME}/$${date:yyyy-MM}/debug-%d{yyyy-MM-dd}-%i.log.gz">
 			<Filters>
-				<!--过滤掉info及更高级别日志-->
+				&lt;!&ndash;过滤掉info及更高级别日志&ndash;&gt;
 				<ThresholdFilter level="info" onMatch="DENY" onMismatch="NEUTRAL"/>
 			</Filters>
-			<!--设置日志格式-->
+			&lt;!&ndash;设置日志格式&ndash;&gt;
 			<PatternLayout>
 				<pattern>%d %p %C{1.} [%t] %m%n</pattern>
 			</PatternLayout>
 			<Policies>
-				<!-- 设置日志文件切分参数 -->
-				<!--<OnStartupTriggeringPolicy/>-->
+				&lt;!&ndash; 设置日志文件切分参数 &ndash;&gt;
+				&lt;!&ndash;<OnStartupTriggeringPolicy/>&ndash;&gt;
 				<SizeBasedTriggeringPolicy size="10 MB"/>
 				<TimeBasedTriggeringPolicy/>
 			</Policies>
 		</RollingFile>
-		<!--info级别日志-->
+		&lt;!&ndash;info级别日志&ndash;&gt;
 		<RollingFile name="infoFileAppender"
 		             fileName="${LOG_HOME}/info.log"
 		             filePattern="${LOG_HOME}/$${date:yyyy-MM}/info-%d{yyyy-MM-dd}-%i.log.gz">
 			<Filters>
-				<!--过滤掉warn及更高级别日志-->
+				&lt;!&ndash;过滤掉warn及更高级别日志&ndash;&gt;
 				<ThresholdFilter level="warn" onMatch="DENY" onMismatch="NEUTRAL"/>
 			</Filters>
-			<!--设置日志格式-->
+			&lt;!&ndash;设置日志格式&ndash;&gt;
 			<PatternLayout>
 				<pattern>%d %p %C{1.} [%t] %m%n</pattern>
 			</PatternLayout>
 			<Policies>
-				<!-- 设置日志文件切分参数 -->
-				<!--<OnStartupTriggeringPolicy/>-->
+				&lt;!&ndash; 设置日志文件切分参数 &ndash;&gt;
+				&lt;!&ndash;<OnStartupTriggeringPolicy/>&ndash;&gt;
 				<SizeBasedTriggeringPolicy size="10 MB"/>
 				<TimeBasedTriggeringPolicy/>
 			</Policies>
 		</RollingFile>
-		<!--warn级别日志-->
+		&lt;!&ndash;warn级别日志&ndash;&gt;
 		<RollingFile name="warnFileAppender"
 		             fileName="${LOG_HOME}/warn.log"
 		             filePattern="${LOG_HOME}/$${date:yyyy-MM}/warn-%d{yyyy-MM-dd}-%i.log.gz">
 			<Filters>
-				<!--过滤掉error及更高级别日志-->
+				&lt;!&ndash;过滤掉error及更高级别日志&ndash;&gt;
 				<ThresholdFilter level="error" onMatch="DENY" onMismatch="NEUTRAL"/>
 			</Filters>
-			<!--设置日志格式-->
+			&lt;!&ndash;设置日志格式&ndash;&gt;
 			<PatternLayout>
 				<pattern>%d %p %C{1.} [%t] %m%n</pattern>
 			</PatternLayout>
 			<Policies>
-				<!-- 设置日志文件切分参数 -->
-				<!--<OnStartupTriggeringPolicy/>-->
+				&lt;!&ndash; 设置日志文件切分参数 &ndash;&gt;
+				&lt;!&ndash;<OnStartupTriggeringPolicy/>&ndash;&gt;
 				<SizeBasedTriggeringPolicy size="10 MB"/>
 				<TimeBasedTriggeringPolicy/>
 			</Policies>
 		</RollingFile>
-		<!--error及更高级别日志-->
+		&lt;!&ndash;error及更高级别日志&ndash;&gt;
 		<RollingFile name="errorFileAppender"
 		             fileName="${LOG_HOME}/error.log"
 		             filePattern="${LOG_HOME}/$${date:yyyy-MM}/error-%d{yyyy-MM-dd}-%i.log.gz">
-			<!--设置日志格式-->
+			&lt;!&ndash;设置日志格式&ndash;&gt;
 			<PatternLayout>
 				<pattern>%d %p %C{1.} [%t] %m%n</pattern>
 			</PatternLayout>
 			<Policies>
-				<!-- 设置日志文件切分参数 -->
-				<!--<OnStartupTriggeringPolicy/>-->
+				&lt;!&ndash; 设置日志文件切分参数 &ndash;&gt;
+				&lt;!&ndash;<OnStartupTriggeringPolicy/>&ndash;&gt;
 				<SizeBasedTriggeringPolicy size="10 MB"/>
 				<TimeBasedTriggeringPolicy/>
 			</Policies>
 		</RollingFile>
-		<!--json格式error级别日志-->
+		&lt;!&ndash;json格式error级别日志&ndash;&gt;
 		<RollingFile name="errorJsonAppender"
 		             fileName="${LOG_HOME}/error-json.log"
 		             filePattern="${LOG_HOME}/error-json-%d{yyyy-MM-dd}-%i.log.gz">
@@ -95,17 +96,17 @@
 				<SizeBasedTriggeringPolicy size="10 MB"/>
 				<TimeBasedTriggeringPolicy interval="1" modulate="true"/>
 			</Policies>
-		</RollingFile>
+		</RollingFile>-->
 	</Appenders>
 	<Loggers>
 		<!-- 根日志设置 -->
 		<Root level="debug">
 			<AppenderRef ref="consoleAppender" level="info"/>
-			<AppenderRef ref="debugFileAppender" level="debug"/>
-			<AppenderRef ref="infoFileAppender" level="info"/>
-			<AppenderRef ref="warnFileAppender" level="warn"/>
-			<AppenderRef ref="errorFileAppender" level="error"/>
-			<AppenderRef ref="errorJsonAppender" level="error"/>
+<!--			<AppenderRef ref="debugFileAppender" level="debug"/>-->
+<!--			<AppenderRef ref="infoFileAppender" level="info"/>-->
+<!--			<AppenderRef ref="warnFileAppender" level="warn"/>-->
+<!--			<AppenderRef ref="errorFileAppender" level="error"/>-->
+<!--			<AppenderRef ref="errorJsonAppender" level="error"/>-->
 		</Root>
 		<!--spring日志-->
 		<Logger name="org.springframework" level="info"/>

@@ -35,8 +35,8 @@ public class MpMenu {
     /**
     * 菜单路由ID
     */    
-    @ApiModelProperty("菜单路由ID")
-    private Integer routeId;
+    @ApiModelProperty("菜单路由名")
+    private String url;
     /**
     * 父级菜单ID
     */    
@@ -45,8 +45,8 @@ public class MpMenu {
     /**
     * 菜单图标
     */    
-    @ApiModelProperty("菜单图标")
-    private String menuIcon;
+    @ApiModelProperty("菜单状态")
+    private String status;
 
     /**
      * 获取主键值

@@ -14,7 +14,7 @@ public interface SystemService {
 
     Map initRoles();
 
-    String modifyRole(String id);
+    String modifyRole(MpRole mpRole);
 
     String addRole(MpRole role);
 
@@ -22,7 +22,7 @@ public interface SystemService {
 
     Map initInfo();
 
-    String modifyInfo(String id);
+    String modifyInfo(MpInformation information);
 
     String addInfo(MpInformation info);
 

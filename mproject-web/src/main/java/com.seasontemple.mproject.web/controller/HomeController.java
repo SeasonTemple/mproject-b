@@ -38,7 +38,7 @@ public class HomeController extends BaseController{
     @ApiOperation(value = "用户信息可视化数据", notes = "用户信息可视化数据调用接口")
     @ResponseBody
     public ResponseBean initEcharts(@Validated(value = {UserLoginValidatedGroup.class}) UserDetail userDetail, BindingResult bindingResult) throws CustomException {
-
-        return null;
+        log.warn("initEcharts: {}", userDetail);
+        return ResponseBean.builder().msg("用户信息可视化数据获取成功！").data(homeService.initChart(userDetail)).build().success();
     }
 }

@@ -5,6 +5,8 @@ import java.util.Date;
 
 import cn.hutool.log.Log;
 import cn.hutool.log.LogFactory;
+import com.baomidou.mybatisplus.annotation.IdType;
+import com.baomidou.mybatisplus.annotation.TableId;
 import io.swagger.annotations.*;
 import lombok.Data;
 import lombok.experimental.Accessors;
@@ -27,6 +29,7 @@ public class MpInformation {
      * 系统消息ID
      */
     @ApiModelProperty("系统消息ID")
+    @TableId(value = "id", type = IdType.AUTO)
     private Integer id;
     /**
      * 消息标题

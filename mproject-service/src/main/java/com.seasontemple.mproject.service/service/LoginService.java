@@ -1,5 +1,6 @@
 package com.seasontemple.mproject.service.service;
 
+import com.seasontemple.mproject.dao.dto.AuthDto;
 import com.seasontemple.mproject.dao.dto.UserRole;
 import com.seasontemple.mproject.dao.entity.MpUser;
 
@@ -34,6 +35,6 @@ public interface LoginService {
      * @param: [username]
      * @return: java.lang.String
      */
-    String getRole(String username);
+    AuthDto getRole(String username);
 
 }

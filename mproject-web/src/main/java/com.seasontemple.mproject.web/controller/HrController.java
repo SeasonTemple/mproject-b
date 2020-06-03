@@ -10,6 +10,9 @@ import cn.hutool.json.JSONUtil;
 import com.seasontemple.mproject.dao.dto.DutyDto;
 import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.entity.MpDepartment;
+import com.seasontemple.mproject.dao.entity.MpProfile;
+import com.seasontemple.mproject.dao.entity.MpReport;
+import com.seasontemple.mproject.dao.entity.MpRequest;
 import com.seasontemple.mproject.dao.group.UserCenterValidateGroup;
 import com.seasontemple.mproject.service.service.HrService;
 import com.seasontemple.mproject.utils.custom.ResponseBean;
@@ -21,6 +24,7 @@ import org.apache.poi.ss.formula.functions.T;
 import org.apache.shiro.authz.annotation.Logical;
 import org.apache.shiro.authz.annotation.RequiresRoles;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.util.StringUtils;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -118,11 +122,12 @@ public class HrController extends BaseController {
     }
 
     @RequiresRoles(value = {"CUSTOM", "ADMIN"}, logical = Logical.OR)
-    @PostMapping(value = "/handleRequest", produces = "application/json;charset=UTF-8")
+    @PostMapping(value = "/handleRequest", produces = {"application/x-www-form-urlencoded;charset=UTF-8", "application/json;charset=UTF-8"})
     @ApiOperation(value = "申请信息审核", notes = "申请信息审核API")
     @ResponseBody
-    public ResponseBean handleRequest() throws CustomException {
-        return ResponseBean.builder().msg("申请信息审核成功！").build().success();
+    public ResponseBean handleRequest(@RequestParam String requests) throws CustomException {
+        log.warn("handleRequest: {}", requests);
+        return ResponseBean.builder().msg(hrService.handleRequest(requests)).build().success();
     }
 
     @RequiresRoles(value = {"CUSTOM", "ADMIN"}, logical = Logical.OR)
@@ -137,7 +142,7 @@ public class HrController extends BaseController {
     @PostMapping(value = "/modifySalary", produces = "application/json;charset=UTF-8")
     @ApiOperation(value = "薪资信息调整", notes = "薪资信息调整API")
     @ResponseBody
-    public ResponseBean modifySalary() throws CustomException {
-        return ResponseBean.builder().msg("薪资信息调整成功！").build().success();
+    public ResponseBean modifySalary(MpProfile profile) throws CustomException {
+        return ResponseBean.builder().msg("薪资信息调整成功！").data(hrService.modifySalary(profile)).build().success();
     }
 }

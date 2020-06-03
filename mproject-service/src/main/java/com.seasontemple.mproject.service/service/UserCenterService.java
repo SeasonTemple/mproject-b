@@ -1,5 +1,6 @@
 package com.seasontemple.mproject.service.service;
 
+import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.entity.MpAttendance;
 import com.seasontemple.mproject.dao.entity.MpReport;
 import com.seasontemple.mproject.dao.entity.MpRequest;
@@ -21,6 +22,13 @@ public interface UserCenterService {
      * @author: Season Temple
      */
     Map getBelongTo();
+
+    /**
+     * @description: 个人信息修改
+     * @return: java.util.Map
+     * @author: Season Temple
+     */
+    String modifyDetail(UserDetail userDetail);
 
     /**
      * @description: 系统消息初始化

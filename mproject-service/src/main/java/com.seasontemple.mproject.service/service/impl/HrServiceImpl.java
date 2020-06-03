@@ -14,11 +14,13 @@ import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
 import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
+import com.seasontemple.mproject.dao.dto.SalaryDto;
 import com.seasontemple.mproject.dao.dto.UserDetail;
 import com.seasontemple.mproject.dao.dto.UserRole;
 import com.seasontemple.mproject.dao.entity.*;
 import com.seasontemple.mproject.dao.mapper.*;
 import com.seasontemple.mproject.service.service.HrService;
+import com.seasontemple.mproject.service.service.MpRequestService;
 import com.seasontemple.mproject.utils.custom.NormalConstant;
 import com.seasontemple.mproject.utils.custom.ResponseBean;
 import com.seasontemple.mproject.utils.token.TokenUtil;
@@ -65,6 +67,9 @@ public class HrServiceImpl implements HrService {
     @Autowired
     private MpAttendanceMapper mpAttendanceMapper;
 
+    @Autowired
+    private MpRequestService mpRequestService;
+
     @Override
     public Map initUserList() {
         List<UserDetail> userDetails = new LambdaQueryChainWrapper<>(userDetailMapper).list();
@@ -100,14 +105,6 @@ public class HrServiceImpl implements HrService {
 
     @Override
     public String modifyUser(UserDetail userDetail) {
-//        Map<String, Object> user = BeanUtil.beanToMap(userDetail);
-//        MpUser mpUser = BeanUtil.mapToBean(user, MpUser.class, true);
-//        AES aes = SecureUtil.aes(mpUser.getSalt());
-//        mpUser.setPassWord(aes.encryptHex(mpUser.getPassWord()));
-//        StaticLog.warn("modifyUser mpUser:{}", mpUser);
-//        user.remove("id");
-//        MpProfile profile = BeanUtil.mapToBean(user, MpProfile.class, true);
-//        StaticLog.warn("modifyUser profile:{}", profile);
         MpUser mpUser = parseMpUser(userDetail);
         MpProfile profile = parseMpProfile(userDetail);
         if (!BeanUtil.isEmpty(mpUser) && !BeanUtil.isEmpty(profile)) {
@@ -184,17 +181,20 @@ public class HrServiceImpl implements HrService {
     }
 
     @Override
-    public String handleRequest(int[] ids) {
-        return null;
+    public String handleRequest(String requests) {
+        List<MpRequest> requestList = JSONUtil.parseArray(requests).toList(MpRequest.class);
+        return mpRequestService.updateBatchById(requestList) ? "申请审批成功！" : "申请审批失败！";
     }
 
     @Override
     public Map initSalary() {
-        return MapUtil.builder("salaryList", new LambdaQueryChainWrapper<>(mpAttendanceMapper).list()).build();
+        List<SalaryDto> attendances = mpAttendanceMapper.getSalary();
+        return MapUtil.builder().put("attendances", attendances).build();
     }
 
     @Override
-    public String modifySalary(Integer id) {
+        public String modifySalary(MpProfile profile) {
+
         return null;
     }
 

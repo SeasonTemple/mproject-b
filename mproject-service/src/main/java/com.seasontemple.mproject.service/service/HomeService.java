@@ -3,6 +3,8 @@ package com.seasontemple.mproject.service.service;
 import com.seasontemple.mproject.dao.dto.EchartsDto;
 import com.seasontemple.mproject.dao.dto.UserDetail;
 
+import java.util.Map;
+
 /**
  * @author Season Temple
  * @program: mproject
@@ -12,5 +14,5 @@ public interface HomeService {
 
     UserDetail initUserDetail(String userName);
 
-    EchartsDto initChart(String id);
+    Map initChart(UserDetail userDetail);
 }
